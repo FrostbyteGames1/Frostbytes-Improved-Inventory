@@ -1,0 +1,33 @@
+{
+	"schemaVersion": 1,
+	"id": "inventory",
+	"version": "${version}",
+	"name": "Frostbyte's Improved Inventory",
+	"description": "Makes parts of the inventory and HUD more useful",
+	"authors": [
+		"FrostbyteGames"
+	],
+	"contact": {
+
+	},
+	"license": "CC-BY-NC",
+	"icon": "assets/inventory/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.frostbyte.inventory.ImprovedInventory"
+		]
+	},
+	"mixins": [
+		"inventory.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.14.19",
+		"minecraft": "~1.19.4",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
