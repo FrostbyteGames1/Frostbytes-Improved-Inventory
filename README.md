@@ -1,4 +1,4 @@
-# Frostbyte's Maximum Mobility (Fabric)
+# Frostbyte's Improved Inventory (Fabric)
 
 **Overview:**
 
