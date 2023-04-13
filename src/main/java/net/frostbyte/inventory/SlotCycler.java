@@ -20,6 +20,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.PlayerScreenHandler;
+import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -86,68 +87,56 @@ public class SlotCycler implements ClientTickEvents.EndTick, HudRenderCallback {
     }
 
     void cycleDown(ClientPlayerEntity player) {
-        int currentSlot = player.getInventory().selectedSlot;
-        int targetSlot = -1;
+        int current = player.getInventory().selectedSlot;
+        int target = current;
+        int top = 1 * 9 + current;
+        int middle = 2 * 9 + current;
+        int bottom = 3 * 9 + current;
         for (int i = 1; i < 4; i++) {
-            if (!player.getInventory().getStack(i * 9 + currentSlot).isEmpty()) {
-                targetSlot = i * 9 + currentSlot;
+            if (!player.getInventory().getStack(i * 9 + current).isEmpty()) {
+                target = i * 9 + current;
                 break;
             }
         }
-        if (targetSlot == 1 * 9 + currentSlot) {
-            ItemStack top = player.getInventory().getStack(1 * 9 + currentSlot);
-            ItemStack middle = player.getInventory().getStack(2 * 9 + currentSlot);
-            ItemStack bottom = player.getInventory().getStack(3 * 9 + currentSlot);
-            ItemStack current = player.getInventory().getStack(currentSlot);
-            player.getInventory().setStack(1 * 9 + currentSlot, current);
-            player.getInventory().setStack(2 * 9 + currentSlot, top);
-            player.getInventory().setStack(3 * 9 + currentSlot, middle);
-            player.getInventory().setStack(currentSlot, bottom);
-        } else if (targetSlot == 2 * 9 + currentSlot) {
-            ItemStack middle = player.getInventory().getStack(2 * 9 + currentSlot);
-            ItemStack bottom = player.getInventory().getStack(3 * 9 + currentSlot);
-            ItemStack current = player.getInventory().getStack(currentSlot);
-            player.getInventory().setStack(2 * 9 + currentSlot, current);
-            player.getInventory().setStack(3 * 9 + currentSlot, middle);
-            player.getInventory().setStack(currentSlot, bottom);
-        } else if (targetSlot == 3 * 9 + currentSlot) {
-            ItemStack bottom = player.getInventory().getStack(3 * 9 + currentSlot);
-            ItemStack current = player.getInventory().getStack(currentSlot);
-            player.getInventory().setStack(3 * 9 + currentSlot, current);
-            player.getInventory().setStack(currentSlot, bottom);
+        if (target == top) {
+            mc.interactionManager.clickSlot(mc.player.playerScreenHandler.syncId, bottom, middle, SlotActionType.SWAP, mc.player);
+            mc.interactionManager.clickSlot(mc.player.playerScreenHandler.syncId, middle, top, SlotActionType.SWAP, mc.player);
+            mc.interactionManager.clickSlot(mc.player.playerScreenHandler.syncId, top, current, SlotActionType.SWAP, mc.player);
+            mc.player.getInventory().markDirty();
+        } else if (target == middle) {
+            mc.interactionManager.clickSlot(mc.player.playerScreenHandler.syncId, bottom, middle, SlotActionType.SWAP, mc.player);
+            mc.interactionManager.clickSlot(mc.player.playerScreenHandler.syncId, middle, current, SlotActionType.SWAP, mc.player);
+            mc.player.getInventory().markDirty();
+        } else if (target == bottom) {
+            mc.interactionManager.clickSlot(mc.player.playerScreenHandler.syncId, bottom, current, SlotActionType.SWAP, mc.player);
+            mc.player.getInventory().markDirty();
         }
     }
 
     void cycleUp(ClientPlayerEntity player) {
-        int currentSlot = player.getInventory().selectedSlot;
-        int targetSlot = -1;
+        int current = player.getInventory().selectedSlot;
+        int target = current;
+        int top = 1 * 9 + current;
+        int middle = 2 * 9 + current;
+        int bottom = 3 * 9 + current;
         for (int i = 1; i < 4; i++) {
-            if (!player.getInventory().getStack(i * 9 + currentSlot).isEmpty()) {
-                targetSlot = i * 9 + currentSlot;
+            if (!player.getInventory().getStack(i * 9 + current).isEmpty()) {
+                target = i * 9 + current;
                 break;
             }
         }
-        if (targetSlot == 1 * 9 + currentSlot) {
-            ItemStack top = player.getInventory().getStack(1 * 9 + currentSlot);
-            ItemStack middle = player.getInventory().getStack(2 * 9 + currentSlot);
-            ItemStack bottom = player.getInventory().getStack(3 * 9 + currentSlot);
-            ItemStack current = player.getInventory().getStack(currentSlot);
-            player.getInventory().setStack(1 * 9 + currentSlot, middle);
-            player.getInventory().setStack(2 * 9 + currentSlot, bottom);
-            player.getInventory().setStack(3 * 9 + currentSlot, current);
-            player.getInventory().setStack(currentSlot, top);
-        } else if (targetSlot == 2 * 9 + currentSlot) {
-            ItemStack middle = player.getInventory().getStack(2 * 9 + currentSlot);
-            ItemStack bottom = player.getInventory().getStack(3 * 9 + currentSlot);
-            ItemStack current = player.getInventory().getStack(currentSlot);
-            player.getInventory().setStack(2 * 9 + currentSlot, bottom);
-            player.getInventory().setStack(3 * 9 + currentSlot, current);
-            player.getInventory().setStack(currentSlot, middle);
-        } else if (targetSlot == 3 * 9 + currentSlot) {
-            ItemStack bottom = player.getInventory().getStack(3 * 9 + currentSlot);
-            ItemStack current = player.getInventory().getStack(currentSlot);
-            player.getInventory().setStack(3 * 9 + currentSlot, current);
-            player.getInventory().setStack(currentSlot, bottom);
+        if (target == top) {
+            mc.interactionManager.clickSlot(mc.player.playerScreenHandler.syncId, top, current, SlotActionType.SWAP, mc.player);
+            mc.interactionManager.clickSlot(mc.player.playerScreenHandler.syncId, middle, top, SlotActionType.SWAP, mc.player);
+            mc.interactionManager.clickSlot(mc.player.playerScreenHandler.syncId, bottom, middle, SlotActionType.SWAP, mc.player);
+            mc.player.getInventory().markDirty();
+        } else if (target == middle) {
+            mc.interactionManager.clickSlot(mc.player.playerScreenHandler.syncId, middle, current, SlotActionType.SWAP, mc.player);
+            mc.interactionManager.clickSlot(mc.player.playerScreenHandler.syncId, bottom, middle, SlotActionType.SWAP, mc.player);
+            mc.player.getInventory().markDirty();
+        } else if (target == bottom) {
+            mc.interactionManager.clickSlot(mc.player.playerScreenHandler.syncId, bottom, current, SlotActionType.SWAP, mc.player);
+            mc.player.getInventory().markDirty();
         }
     }
 

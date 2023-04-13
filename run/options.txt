@@ -23,8 +23,8 @@ darkMojangStudiosBackground:false
 hideLightningFlashes:false
 mouseSensitivity:0.5
 fov:0.5
-screenEffectScale:1.0
-fovEffectScale:1.0
+screenEffectScale:0.1056338028169014
+fovEffectScale:0.25709184685578257
 darknessEffectScale:1.0
 glintSpeed:0.5
 glintStrength:0.75
@@ -34,13 +34,13 @@ gamma:0.5
 renderDistance:9
 simulationDistance:9
 entityDistanceScaling:1.0
-guiScale:3
+guiScale:0
 particles:0
 maxFps:260
 graphicsMode:1
 ao:true
 prioritizeChunkUpdates:0
-biomeBlendRadius:2
+biomeBlendRadius:3
 renderClouds:"true"
 resourcePacks:["vanilla","fabric","file/Frostbyte Games.zip"]
 incompatibleResourcePacks:[]
@@ -123,7 +123,6 @@ key_Cycle Slot Down:key.mouse.5
 key_Toggle Tool Auto Switch:key.keyboard.unknown
 key_Toggle Stack Refill:key.keyboard.unknown
 key_Toggle Durability Display:key.keyboard.unknown
-key_Sort Inventory:key.mouse.left
 soundCategory_master:1.0
 soundCategory_music:1.0
 soundCategory_record:1.0

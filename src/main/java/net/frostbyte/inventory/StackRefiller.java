@@ -59,8 +59,6 @@ public class StackRefiller implements ClientTickEvents.EndTick {
         }
 
         processKeyBinds();
-
-        player.getInventory().markDirty();
     }
 
     private void message() {

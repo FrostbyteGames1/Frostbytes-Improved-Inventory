@@ -64,52 +64,76 @@ public class DurabilityDisplayer implements ClientTickEvents.EndTick, HudRenderC
             DrawableHelper.drawTexture(matrixStack,x - 22,y - 68,0,0,22,22, 22,22);
             DrawableHelper.drawTexture(matrixStack,x - 22,y - 45,0,0,22,22, 22,22);
             DrawableHelper.drawTexture(matrixStack,x - 22,y - 22,0,0,22,22, 22,22);
-            int red = 11141120;
-            int orange = 16755200;
+            int red = 16733525;
+            int yellow = 16777045;
             int green = 5635925;
             if (!mc.player.getInventory().getStack(39).isEmpty()) {
                 int headDura = mc.player.getInventory().getStack(39).getMaxDamage() - mc.player.getInventory().getStack(39).getDamage();
-                mc.getItemRenderer().renderInGui(matrixStack, mc.player.getInventory().getStack(39), x - 19, y - 88);
+                matrixStack.push();
+                matrixStack.scale(0.9f,0.9f,0.9f);
+                mc.getItemRenderer().renderInGui(matrixStack, mc.player.getInventory().getStack(39), (int) ((x - 13) * 1.1f), (int) ((y - 86) * 1.1f));
+                matrixStack.pop();
+                matrixStack.push();
+                matrixStack.scale(0.5f,0.5f,0.5f);
                 if (headDura > mc.player.getInventory().getStack(39).getMaxDamage() * 0.5f) {
-                    mc.textRenderer.drawWithShadow(matrixStack, String.valueOf(headDura), x - 20, y - 79, green, true);
+                    mc.textRenderer.drawWithShadow(matrixStack, String.valueOf(headDura), (x - 18) * 2, (y - 76) * 2, green, true);
                 } else if (headDura > mc.player.getInventory().getStack(39).getMaxDamage() * 0.25f) {
-                    mc.textRenderer.drawWithShadow(matrixStack, String.valueOf(headDura), x - 20, y - 79, orange, true);
+                    mc.textRenderer.drawWithShadow(matrixStack, String.valueOf(headDura), (x - 18) * 2, (y - 76) * 2, yellow, true);
                 } else if (headDura > 0) {
-                    mc.textRenderer.drawWithShadow(matrixStack, String.valueOf(headDura), x - 20, y - 79, red, true);
+                    mc.textRenderer.drawWithShadow(matrixStack, String.valueOf(headDura), (x - 18) * 2, (y - 76) * 2, red, true);
                 }
+                matrixStack.pop();
             }
             if (!mc.player.getInventory().getStack(38).isEmpty()) {
                 int chestDura = mc.player.getInventory().getStack(38).getMaxDamage() - mc.player.getInventory().getStack(38).getDamage();
-                mc.getItemRenderer().renderInGui(matrixStack, mc.player.getInventory().getStack(38), x - 19, y - 65);
+                matrixStack.push();
+                matrixStack.scale(0.9f,0.9f,0.9f);
+                mc.getItemRenderer().renderInGui(matrixStack, mc.player.getInventory().getStack(38), (int) ((x - 13) * 1.1f), (int) ((y - 63) * 1.1f));
+                matrixStack.pop();
+                matrixStack.push();
+                matrixStack.scale(0.5f,0.5f,0.5f);
                 if (chestDura > mc.player.getInventory().getStack(38).getMaxDamage() * 0.5f) {
-                    mc.textRenderer.drawWithShadow(matrixStack, String.valueOf(chestDura), x - 20, y - 56, green, true);
+                    mc.textRenderer.drawWithShadow(matrixStack, String.valueOf(chestDura), (x - 18) * 2, (y - 53) * 2, green, true);
                 } else if (chestDura > mc.player.getInventory().getStack(38).getMaxDamage() * 0.25f) {
-                    mc.textRenderer.drawWithShadow(matrixStack, String.valueOf(chestDura), x - 20, y - 56, orange, true);
+                    mc.textRenderer.drawWithShadow(matrixStack, String.valueOf(chestDura), (x - 18) * 2, (y - 53) * 2, yellow, true);
                 } else if (chestDura > 0) {
-                    mc.textRenderer.drawWithShadow(matrixStack, String.valueOf(chestDura), x - 20, y - 56, red, true);
+                    mc.textRenderer.drawWithShadow(matrixStack, String.valueOf(chestDura), (x - 18) * 2, (y - 53) * 2, red, true);
                 }
+                matrixStack.pop();
             }
             if (!mc.player.getInventory().getStack(37).isEmpty()) {
                 int legDura = mc.player.getInventory().getStack(37).getMaxDamage() - mc.player.getInventory().getStack(37).getDamage();
-                mc.getItemRenderer().renderInGui(matrixStack, mc.player.getInventory().getStack(37), x - 19, y - 42);
+                matrixStack.push();
+                matrixStack.scale(0.9f,0.9f,0.9f);
+                mc.getItemRenderer().renderInGui(matrixStack, mc.player.getInventory().getStack(37), (int) ((x - 13) * 1.1f), (int) ((y - 40) * 1.1f));
+                matrixStack.pop();
+                matrixStack.push();
+                matrixStack.scale(0.5f,0.5f,0.5f);
                 if (legDura > mc.player.getInventory().getStack(37).getMaxDamage() * 0.5f) {
-                    mc.textRenderer.drawWithShadow(matrixStack, String.valueOf(legDura), x - 20, y - 33, green, true);
+                    mc.textRenderer.drawWithShadow(matrixStack, String.valueOf(legDura), (x - 18) * 2, (y - 30) * 2, green, true);
                 } else if (legDura > mc.player.getInventory().getStack(37).getMaxDamage() * 0.25f) {
-                    mc.textRenderer.drawWithShadow(matrixStack, String.valueOf(legDura), x - 20, y - 33, orange, true);
+                    mc.textRenderer.drawWithShadow(matrixStack, String.valueOf(legDura), (x - 18) * 2, (y - 30) * 2, yellow, true);
                 } else if (legDura > 0) {
-                    mc.textRenderer.drawWithShadow(matrixStack, String.valueOf(legDura), x - 20, y - 33, red, true);
+                    mc.textRenderer.drawWithShadow(matrixStack, String.valueOf(legDura), (x - 18) * 2, (y - 30) * 2, red, true);
                 }
+                matrixStack.pop();
             }
             if (!mc.player.getInventory().getStack(36).isEmpty()) {
                 int footDura = mc.player.getInventory().getStack(36).getMaxDamage() - mc.player.getInventory().getStack(36).getDamage();
-                mc.getItemRenderer().renderInGui(matrixStack, mc.player.getInventory().getStack(36), x - 19, y - 19);
+                matrixStack.push();
+                matrixStack.scale(0.9f,0.9f,0.9f);
+                mc.getItemRenderer().renderInGui(matrixStack, mc.player.getInventory().getStack(36), (int) ((x - 13) * 1.1f), (int) ((y - 17) * 1.1f));
+                matrixStack.pop();
+                matrixStack.push();
+                matrixStack.scale(0.5f,0.5f,0.5f);
                 if (footDura > mc.player.getInventory().getStack(36).getMaxDamage() * 0.5f) {
-                    mc.textRenderer.drawWithShadow(matrixStack, String.valueOf(footDura), x - 20, y - 10, green, true);
+                    mc.textRenderer.drawWithShadow(matrixStack, String.valueOf(footDura), (x - 18) * 2, (y - 7) * 2, green, true);
                 } else if (footDura > mc.player.getInventory().getStack(37).getMaxDamage() * 0.25f) {
-                    mc.textRenderer.drawWithShadow(matrixStack, String.valueOf(footDura), x - 20, y - 10, orange, true);
+                    mc.textRenderer.drawWithShadow(matrixStack, String.valueOf(footDura), (x - 18) * 2, (y - 7) * 2, yellow, true);
                 } else if (footDura > 0) {
-                    mc.textRenderer.drawWithShadow(matrixStack, String.valueOf(footDura), x - 20, y - 10, red, true);
+                    mc.textRenderer.drawWithShadow(matrixStack, String.valueOf(footDura), (x - 18) * 2, (y - 7) * 2, red, true);
                 }
+                matrixStack.pop();
             }
         }
     }
