@@ -1,6 +1,6 @@
-version:3337
+version:3465
 autoJump:false
-operatorItemsTab:false
+operatorItemsTab:true
 autoSuggestions:true
 chatColors:true
 chatLinks:true
@@ -18,7 +18,7 @@ touchscreen:false
 fullscreen:false
 bobView:true
 toggleCrouch:false
-toggleSprint:false
+toggleSprint:true
 darkMojangStudiosBackground:false
 hideLightningFlashes:false
 mouseSensitivity:0.5
@@ -30,20 +30,20 @@ glintSpeed:0.5
 glintStrength:0.75
 damageTiltStrength:1.0
 highContrast:false
-gamma:0.5
-renderDistance:9
-simulationDistance:9
+gamma:1.0
+renderDistance:10
+simulationDistance:10
 entityDistanceScaling:1.0
-guiScale:0
+guiScale:3
 particles:0
 maxFps:260
 graphicsMode:1
 ao:true
 prioritizeChunkUpdates:0
-biomeBlendRadius:3
-renderClouds:"true"
-resourcePacks:["vanilla","fabric","file/Frostbyte Games.zip"]
-incompatibleResourcePacks:[]
+biomeBlendRadius:7
+renderClouds:"fast"
+resourcePacks:["vanilla","fabric","file/Frostbyte Games"]
+incompatibleResourcePacks:["file/Frostbyte Games"]
 lastServer:
 lang:en_us
 soundDevice:""
