@@ -80,7 +80,6 @@ public class ToolSelector implements ClientTickEvents.EndTick{
                 float maxDPS = getAttackDamageOfItemInSlot(player.getInventory().selectedSlot) * getAttackSpeedOfItemInSlot(player.getInventory().selectedSlot);
                 int maxDamageSlot = player.getInventory().selectedSlot;
                 for (int i = 0; i < 9; i++) {
-                    mc.player.sendMessage(Text.of("[" + (i + 1) + "] " + mc.player.getInventory().getStack(i).getItem() + ": " + getAttackSpeedOfItemInSlot(i) + " * " + getAttackDamageOfItemInSlot(i) + " = " + getAttackSpeedOfItemInSlot(i) * getAttackDamageOfItemInSlot(i)));
                     if (maxDPS < getAttackDamageOfItemInSlot(i) * getAttackSpeedOfItemInSlot(i)) {
                         maxDPS = getAttackDamageOfItemInSlot(i) * getAttackSpeedOfItemInSlot(i);
                         maxDamageSlot = i;
