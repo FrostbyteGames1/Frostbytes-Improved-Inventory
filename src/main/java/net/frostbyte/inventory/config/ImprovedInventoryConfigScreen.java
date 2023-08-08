@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -45,6 +46,10 @@ public class ImprovedInventoryConfigScreen extends Screen {
                 toolSelect = json.getAsJsonPrimitive("toolSelect").getAsBoolean();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+        if (MinecraftClient.getInstance() == null) {
+            return;
         }
 
         final CheckboxWidget duraButton =

@@ -11,6 +11,7 @@ import java.nio.file.Path;
 
 public class ImprovedInventoryConfig {
 
+    public final Path configDir = FabricLoader.getInstance().getConfigDir().resolve("frostbyte");
     public final Path configFile = FabricLoader.getInstance().getConfigDir().resolve("frostbyte/improved-inventory.json");
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
@@ -21,6 +22,9 @@ public class ImprovedInventoryConfig {
 
     public void write() {
         try {
+            if (Files.notExists(configDir)) {
+                Files.createDirectory(configDir);
+            }
             Files.deleteIfExists(configFile);
             JsonObject json = new JsonObject();
             json.addProperty("duraDisplay", duraDisplay);
