@@ -1,37 +1,28 @@
 package net.frostbyte.inventory;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 public class ToolSelector implements ClientTickEvents.EndTick{
-
-    public KeyBinding toggleAutoSwitch;
-    public boolean autoSwitch = true;
-    public static boolean firstRun = true;
+    final Path configFile = FabricLoader.getInstance().getConfigDir().resolve("frostbyte/improved-inventory.json");
+    final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    boolean toolSelect = true;
     MinecraftClient mc;
-
-    public void setKeyBindings() {
-        KeyBindingHelper.registerKeyBinding(toggleAutoSwitch = new KeyBinding("Toggle Tool Auto Switch", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_M, "Improved Inventory"));
-    }
-
-    public void processKeyBinds() {
-        if (toggleAutoSwitch.wasPressed()) {
-            autoSwitch = !autoSwitch;
-            message();
-        }
-    }
     
     public float getAttackDamageOfItemInSlot(int itemSlot) {
         String damageString = mc.player.getInventory().getStack(itemSlot)
@@ -67,14 +58,18 @@ public class ToolSelector implements ClientTickEvents.EndTick{
             return;
         }
 
-        if (firstRun) {
-            message();
-            firstRun = false;
+        try {
+            if (Files.notExists(configFile)) {
+                return;
+            }
+            JsonObject json = gson.fromJson(Files.readString(configFile), JsonObject.class);
+            if (json.has("toolSelect"))
+                toolSelect = json.getAsJsonPrimitive("toolSelect").getAsBoolean();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        processKeyBinds();
-
-        if (mc.options.attackKey.isPressed() && !player.isSpectator() && !player.isCreative() && autoSwitch) {
+        if (mc.options.attackKey.isPressed() && !player.isSpectator() && !player.isCreative() && toolSelect) {
             HitResult target = mc.crosshairTarget;
             if (target.getType() == HitResult.Type.ENTITY) {
                 float maxDPS = getAttackDamageOfItemInSlot(player.getInventory().selectedSlot) * getAttackSpeedOfItemInSlot(player.getInventory().selectedSlot);
@@ -114,16 +109,6 @@ public class ToolSelector implements ClientTickEvents.EndTick{
         }
 
         player.getInventory().markDirty();
-    }
-
-    private void message() {
-        String m = "[" + Formatting.GOLD + "Improved Inventory" + Formatting.WHITE + "] " + "Tool Switch Switch: ";
-        if (autoSwitch) {
-            m = m + Formatting.GREEN + "Active";
-        }else {
-            m = m + Formatting.RED + "Inactive";
-        }
-        mc.player.sendMessage(Text.literal(m), false);
     }
 
 }

@@ -1,9 +1,13 @@
 package net.frostbyte.inventory;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -13,8 +17,15 @@ import net.minecraft.client.util.InputUtil;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.util.Identifier;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 public class SlotCycler implements ClientTickEvents.EndTick, HudRenderCallback {
 
+    final Path configFile = FabricLoader.getInstance().getConfigDir().resolve("frostbyte/improved-inventory.json");
+    final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    boolean slotCycle = true;
     public KeyBinding cycleUpKey;
     public KeyBinding cycleDownKey;
     MinecraftClient mc;
@@ -33,11 +44,25 @@ public class SlotCycler implements ClientTickEvents.EndTick, HudRenderCallback {
 
         if (player==null)
             return;
-        if (cycleUpKey.wasPressed()){
-            cycleUp(player);
+
+        try {
+            if (Files.notExists(configFile)) {
+                return;
+            }
+            JsonObject json = gson.fromJson(Files.readString(configFile), JsonObject.class);
+            if (json.has("slotCycle"))
+                slotCycle = json.getAsJsonPrimitive("slotCycle").getAsBoolean();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        if (cycleDownKey.wasPressed()){
-            cycleDown(player);
+
+        if (slotCycle) {
+            if (cycleUpKey.wasPressed()){
+                cycleUp(player);
+            }
+            if (cycleDownKey.wasPressed()){
+                cycleDown(player);
+            }
         }
 
         player.getInventory().markDirty();
@@ -99,7 +124,7 @@ public class SlotCycler implements ClientTickEvents.EndTick, HudRenderCallback {
 
     @Override
     public void onHudRender(DrawContext drawContext, float tickDelta) {
-        if (!mc.player.isSpectator() && !mc.options.hudHidden) {
+        if (!mc.player.isSpectator() && slotCycle && !mc.options.hudHidden) {
             int x = 0;
             int y = 0;
             mc = MinecraftClient.getInstance();

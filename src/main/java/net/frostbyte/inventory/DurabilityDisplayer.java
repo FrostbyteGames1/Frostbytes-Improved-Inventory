@@ -1,37 +1,29 @@
 package net.frostbyte.inventory;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class DurabilityDisplayer implements ClientTickEvents.EndTick, HudRenderCallback {
 
-    public KeyBinding toggleDuraDisplay;
-    public boolean duraDisplay = true;
-    public static boolean firstRun = true;
+    final Path configFile = FabricLoader.getInstance().getConfigDir().resolve("frostbyte/improved-inventory.json");
+    final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    boolean duraDisplay = true;
     MinecraftClient mc;
     Identifier duraSlot = new Identifier(ImprovedInventory.MOD_ID, "textures/dura_slot.png");
-
-    public void setKeyBindings() {
-        KeyBindingHelper.registerKeyBinding(toggleDuraDisplay = new KeyBinding("Toggle Durability Display", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_COMMA, "Improved Inventory"));
-    }
-
-    public void processKeyBinds() {
-        if (toggleDuraDisplay.wasPressed()) {
-            duraDisplay = !duraDisplay;
-            message();
-        }
-    }
 
     @Override
     public void onEndTick(MinecraftClient client) {
@@ -43,22 +35,16 @@ public class DurabilityDisplayer implements ClientTickEvents.EndTick, HudRenderC
             return;
         }
 
-        if (firstRun) {
-            message();
-            firstRun = false;
+        try {
+            if (Files.notExists(configFile)) {
+                return;
+            }
+            JsonObject json = gson.fromJson(Files.readString(configFile), JsonObject.class);
+            if (json.has("duraDisplay"))
+                duraDisplay = json.getAsJsonPrimitive("duraDisplay").getAsBoolean();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        processKeyBinds();
-    }
-
-    private void message() {
-        String m = "[" + Formatting.GOLD + "Improved Inventory" + Formatting.WHITE + "] " + "Durability Display: ";
-        if (duraDisplay) {
-            m = m + Formatting.GREEN + "Active";
-        }else {
-            m = m + Formatting.RED + "Inactive";
-        }
-        mc.player.sendMessage(Text.literal(m), false);
     }
 
     @Override

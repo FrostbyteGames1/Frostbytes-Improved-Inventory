@@ -16,6 +16,9 @@
 	"entrypoints": {
 		"main": [
 			"net.frostbyte.inventory.ImprovedInventory"
+		],
+		"modmenu": [
+			"net.frostbyte.inventory.config.ModMenuIntegration"
 		]
 	},
 	"mixins": [
