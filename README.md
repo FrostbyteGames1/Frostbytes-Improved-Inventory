@@ -2,9 +2,9 @@
 
 **Overview:**
 
-This mod adds new behaviors to Minecraft's inventory and HUD, each with their own keybinds.
+This mod adds new behaviors to Minecraft's inventory and HUD, which can each be toggled independently using config.
 
-1. Slot Cycle: Allows the player to cycle the active hotbar slot with a different item in the same column. 
+1. Slot Cycle: Allows the player to cycle the active hotbar slot with a different item in the same column using keybinds. 
 2. Durability Display: Displays the durability of equipped armor on the screen.
 3. Stack Refill: Repopulates stacks of items in the hotbar with matching ones from the inventory.
 4. Tool Selection: Automatically switchs to the most effective tool for the targeted block or entity.

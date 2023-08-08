@@ -92,7 +92,7 @@ public class ImprovedInventoryConfigScreen extends Screen {
 
     @Override
     public void render(final DrawContext context, final int mouseX, final int mouseY, final float delta) {
-        this.renderBackground(context);
+        this.renderBackground(context, mouseX, mouseY, delta);
         context.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 20, 16777215);
         super.render(context, mouseX, mouseY, delta);
     }
