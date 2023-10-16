@@ -1,230 +1,954 @@
-[21:53:29] [main/INFO] (FabricLoader/GameProvider) Loading Minecraft 1.20.1 with Fabric Loader 0.14.21
-[21:53:30] [main/INFO] (FabricLoader) Loading 46 mods:
-	- fabric-api 0.84.0+1.20.1
-	- fabric-api-base 0.4.29+b04edc7a77
-	- fabric-api-lookup-api-v1 1.6.34+4d8536c977
-	- fabric-biome-api-v1 13.0.10+b3afc78b77
-	- fabric-block-api-v1 1.0.9+e022e5d177
-	- fabric-blockrenderlayer-v1 1.1.39+b3afc78b77
-	- fabric-client-tags-api-v1 1.0.20+b3afc78b77
-	- fabric-command-api-v2 2.2.11+b3afc78b77
-	- fabric-content-registries-v0 4.0.7+b3afc78b77
-	- fabric-convention-tags-v1 1.5.3+b3afc78b77
-	- fabric-crash-report-info-v1 0.2.18+aeb40ebe77
-	- fabric-data-generation-api-v1 12.1.11+b3afc78b77
-	- fabric-dimensions-v1 2.1.51+b3afc78b77
-	- fabric-entity-events-v1 1.5.21+b3afc78b77
-	- fabric-events-interaction-v0 0.6.0+b3afc78b77
-	- fabric-game-rule-api-v1 1.0.38+b04edc7a77
-	- fabric-gametest-api-v1 1.2.10+b3afc78b77
-	- fabric-item-api-v1 2.1.26+b3afc78b77
-	- fabric-item-group-api-v1 4.0.7+b3afc78b77
-	- fabric-key-binding-api-v1 1.0.36+fb8d95da77
-	- fabric-lifecycle-events-v1 2.2.20+b3afc78b77
-	- fabric-loot-api-v2 1.1.37+b3afc78b77
-	- fabric-message-api-v1 5.1.6+b3afc78b77
-	- fabric-mining-level-api-v1 2.1.47+b3afc78b77
-	- fabric-models-v0 0.3.35+b3afc78b77
-	- fabric-networking-api-v1 1.3.8+b3afc78b77
-	- fabric-object-builder-api-v1 11.0.6+b3afc78b77
-	- fabric-particles-v1 1.0.28+b3afc78b77
-	- fabric-recipe-api-v1 1.0.18+b3afc78b77
-	- fabric-registry-sync-v0 2.2.6+b3afc78b77
-	- fabric-renderer-api-v1 3.1.0+c154966e77
-	- fabric-renderer-indigo 1.4.0+c154966e77
-	- fabric-rendering-data-attachment-v1 0.3.33+b3afc78b77
-	- fabric-rendering-fluids-v1 3.0.26+b3afc78b77
-	- fabric-rendering-v1 3.0.6+b3afc78b77
-	- fabric-resource-conditions-api-v1 2.3.5+ea08f9d877
-	- fabric-resource-loader-v0 0.11.7+f7923f6d77
-	- fabric-screen-api-v1 2.0.6+b3afc78b77
-	- fabric-screen-handler-api-v1 1.3.27+b3afc78b77
-	- fabric-sound-api-v1 1.0.12+b3afc78b77
-	- fabric-transfer-api-v1 3.2.2+b3afc78b77
-	- fabric-transitive-access-wideners-v1 4.2.0+b3afc78b77
-	- fabricloader 0.14.21
-	- inventory 1.1.0
+[10:52:05] [main/INFO] (FabricLoader/GameProvider) Loading Minecraft 1.20.2 with Fabric Loader 0.14.22
+[10:52:05] [main/WARN] (FabricLoader/Resolution) Warnings were found!
+ - Mod 'LambDynamicLights' (lambdynlights) 2.3.2+1.20.1 recommends version 0.19.1 or later of quilt_loader, which is missing!
+	 - You should install version 0.19.1 or later of quilt_loader for the optimal experience.
+[10:52:05] [main/INFO] (FabricLoader) Loading 127 mods:
+	- adaptive-tooltips 1.3.0
+	   \-- com_github_llamalad7_mixinextras 0.2.0-rc.4
+	- appleskin 2.5.1+mc1.20.2
+	- balm-fabric 8.0.1
+	- carpet 1.4.118+v230921
+	- carpet-extra 1.4.118
+	- cloth-config 12.0.109
+	   \-- cloth-basic-math 0.6.1
+	- controlling 13.0.1
+	- dynamic_fps 3.2.0
+	- entity_model_features 1.0.2
+	- entity_texture_features 4.5.1
+	   \-- org_apache_httpcomponents_httpmime 4.5.10
+	- extremesoundmuffler 3.41-fabric-1.20.2
+	   \-- fiber 0.23.0-2
+	- fabric-api 0.89.2+1.20.2
+	- fabric-api-base 0.4.32+fce67b32a0
+	- fabric-api-lookup-api-v1 1.6.40+fce67b32a0
+	- fabric-biome-api-v1 13.0.11+86b12645a0
+	- fabric-block-api-v1 1.0.11+73761d2ea0
+	- fabric-block-view-api-v2 1.0.0+73761d2ea0
+	- fabric-blockrenderlayer-v1 1.1.42+f4b7e424a0
+	- fabric-client-tags-api-v1 1.1.3+86b12645a0
+	- fabric-command-api-v1 1.2.35+f71b366fa0
+	- fabric-command-api-v2 2.2.14+86b12645a0
+	- fabric-commands-v0 0.2.52+df3654b3a0
+	- fabric-containers-v0 0.1.71+df3654b3a0
+	- fabric-content-registries-v0 5.0.3+0ba8e9cea0
+	- fabric-convention-tags-v1 1.5.6+f4b7e424a0
+	- fabric-crash-report-info-v1 0.2.19+f4b7e424a0
+	- fabric-data-generation-api-v1 13.1.1+bbae80faa0
+	- fabric-dimensions-v1 2.1.55+b1229956a0
+	- fabric-entity-events-v1 1.5.24+f4b7e424a0
+	- fabric-events-interaction-v0 0.6.8+daef22a2a0
+	- fabric-events-lifecycle-v0 0.2.67+df3654b3a0
+	- fabric-game-rule-api-v1 1.0.39+f4b7e424a0
+	- fabric-gametest-api-v1 1.2.14+86b12645a0
+	- fabric-item-api-v1 2.1.31+43511215a0
+	- fabric-item-group-api-v1 4.0.12+f4b7e424a0
+	- fabric-key-binding-api-v1 1.0.37+f4b7e424a0
+	- fabric-keybindings-v0 0.2.35+df3654b3a0
+	- fabric-language-kotlin 1.10.10+kotlin.1.9.10
+	   |-- org_jetbrains_kotlin_kotlin-reflect 1.9.10
+	   |-- org_jetbrains_kotlin_kotlin-stdlib 1.9.10
+	   |-- org_jetbrains_kotlin_kotlin-stdlib-jdk7 1.9.10
+	   |-- org_jetbrains_kotlin_kotlin-stdlib-jdk8 1.9.10
+	   |-- org_jetbrains_kotlinx_atomicfu-jvm 0.22.0
+	   |-- org_jetbrains_kotlinx_kotlinx-coroutines-core-jvm 1.7.3
+	   |-- org_jetbrains_kotlinx_kotlinx-coroutines-jdk8 1.7.3
+	   |-- org_jetbrains_kotlinx_kotlinx-datetime-jvm 0.4.0
+	   |-- org_jetbrains_kotlinx_kotlinx-serialization-cbor-jvm 1.6.0
+	   |-- org_jetbrains_kotlinx_kotlinx-serialization-core-jvm 1.6.0
+	   \-- org_jetbrains_kotlinx_kotlinx-serialization-json-jvm 1.6.0
+	- fabric-lifecycle-events-v1 2.2.25+3bafade3a0
+	- fabric-loot-api-v2 2.0.1+0ba8e9cea0
+	- fabric-message-api-v1 6.0.0+fce67b32a0
+	- fabric-mining-level-api-v1 2.1.53+f4b7e424a0
+	- fabric-model-loading-api-v1 1.0.4+f4b7e424a0
+	- fabric-models-v0 0.4.3+9386d8a7a0
+	- fabric-networking-api-v1 3.0.7+74a33ae7a0
+	- fabric-object-builder-api-v1 12.1.0+b1b4f7b0a0
+	- fabric-particles-v1 1.1.3+f4b7e424a0
+	- fabric-recipe-api-v1 2.0.4+43511215a0
+	- fabric-registry-sync-v0 4.0.2+34a3e0e2a0
+	- fabric-renderer-api-v1 3.2.0+2034447ca0
+	- fabric-renderer-indigo 1.5.0+2034447ca0
+	- fabric-renderer-registries-v1 3.2.47+df3654b3a0
+	- fabric-rendering-data-attachment-v1 0.3.38+73761d2ea0
+	- fabric-rendering-fluids-v1 3.0.29+f4b7e424a0
+	- fabric-rendering-v0 1.1.50+df3654b3a0
+	- fabric-rendering-v1 3.0.9+86b12645a0
+	- fabric-resource-conditions-api-v1 2.3.8+43511215a0
+	- fabric-resource-loader-v0 0.11.10+86b12645a0
+	- fabric-screen-api-v1 2.0.10+0ba8e9cea0
+	- fabric-screen-handler-api-v1 1.3.37+86b12645a0
+	- fabric-sound-api-v1 1.0.13+f4b7e424a0
+	- fabric-transfer-api-v1 3.3.7+109a65e5a0
+	- fabric-transitive-access-wideners-v1 5.0.2+fce67b32a0
+	- fabricloader 0.14.22
+	- gammautils 1.7.17
+	- indium 1.0.27+mc1.20.1
+	- inventory 1.2.1
+	- jade 12.1.3
+	- jamlib 0.6.2+1.20.2
 	- java 17
-	- minecraft 1.20.1
-[21:53:30] [main/INFO] (FabricLoader/Mixin) SpongePowered MIXIN Subsystem Version=0.8.5 Source=file:/C:/Users/surap/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.12.5+mixin.0.8.5/8d31fb97c3e0cd7c8dad3441851c523bcfae6d8e/sponge-mixin-0.12.5+mixin.0.8.5.jar Service=Knot/Fabric Env=CLIENT
-[21:53:31] [main/INFO] (FabricLoader/Mixin) Loaded Fabric development mappings for mixin remapper!
-[21:53:31] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_16
-[21:53:31] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_17
-[21:53:40] [Datafixer Bootstrap/INFO] (Minecraft) 188 Datafixer optimizations took 463 milliseconds
-[21:53:44] [Render thread/INFO] (Minecraft) Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
-[21:53:44] [Render thread/ERROR] (Minecraft) Failed to verify authentication
+	- jei 16.0.0.28
+	- kleeslabs 16.0.0
+	- lambdynlights 2.3.2+1.20.1
+	   |-- pride 1.2.0+1.19.4
+	   \-- spruceui 5.0.0+1.20
+	- lithium 0.12.0
+	- maptooltip 3.0.0
+	- minecraft 1.20.2
+	- mobility 1.2.1
+	- mod-loading-screen 1.0.3
+	   |-- com_formdev_flatlaf 3.0
+	   \-- net_lenni0451_reflect 1.0.2
+	- modmenu 8.0.0
+	- mousetweaks 2.25
+	- noexpensive 1.20.2-1.9.0
+	- notenoughcrashes 4.4.6+1.20.2
+	- overpoweredmending 2.13.0
+	- reeses-sodium-options 1.6.5+mc1.20.2-build.96
+	- remember-my-txt 1.0.1+MC1.20
+	- rightclickharvest 3.2.3+1.19.x-1.20.1-fabric
+	- searchables 1.0.2
+	- shulkerboxtooltip 4.0.5+1.20.2
+	- skinlayers 1.5.6-mc1.20.2
+	- slabsandstairs 1.7.1
+	- sodium 0.5.3
+	- sodium-extra 0.5.2+mc1.20.2-build.113
+	   |-- caffeineconfig 1.3.0+1.17
+	   \-- crowdin-translate 1.4+1.19.3
+	- starlight 1.1.2+fabric.bdaeb21
+	- status-effect-bars 1.0.4
+	- trade_cycling 1.20.2-1.0.7
+	- xaerominimap 23.8.2
+	- xaeroworldmap 1.34.1
+	- yet_another_config_lib_v3 3.2.1+1.20.2
+	   |-- com_twelvemonkeys_common_common-image 3.10.0-SNAPSHOT
+	   |-- com_twelvemonkeys_common_common-io 3.10.0-SNAPSHOT
+	   |-- com_twelvemonkeys_common_common-lang 3.10.0-SNAPSHOT
+	   |-- com_twelvemonkeys_imageio_imageio-core 3.10.0-SNAPSHOT
+	   |-- com_twelvemonkeys_imageio_imageio-metadata 3.10.0-SNAPSHOT
+	   |-- com_twelvemonkeys_imageio_imageio-webp 3.10.0-SNAPSHOT
+	   |-- org_quiltmc_parsers_gson 0.2.1
+	   \-- org_quiltmc_parsers_json 0.2.1
+[10:52:22] [main/INFO] (FabricLoader/Mixin) SpongePowered MIXIN Subsystem Version=0.8.5 Source=file:/C:/Users/surap/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.12.5+mixin.0.8.5/8d31fb97c3e0cd7c8dad3441851c523bcfae6d8e/sponge-mixin-0.12.5+mixin.0.8.5.jar Service=Knot/Fabric Env=CLIENT
+[10:52:23] [main/INFO] (FabricLoader/Mixin) Loaded Fabric development mappings for mixin remapper!
+[10:52:23] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_16
+[10:52:23] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_17
+[10:52:25] [main/INFO] (Lithium) Loaded configuration file for Lithium: 125 options available, 0 override(s) found
+[10:52:25] [main/WARN] (FabricLoader/Mixin) Reference map 'entity_model_features_fabric_1.20.2-fabric-refmap.json' for entity_model_features.mixins.json could not be read. If this is a development environment you can ignore this message
+[10:52:25] [main/INFO] (Sodium) Loaded configuration file for Sodium: 41 options available, 0 override(s) found
+[10:52:25] [main/INFO] (Sodium Extra Config) Loaded configuration file for Sodium Extra: 33 options available, 0 override(s) found
+[10:52:29] [main/WARN] (FabricLoader/Mixin) Error loading class: net/coderbot/iris/Iris (java.lang.ClassNotFoundException: net/coderbot/iris/Iris)
+[10:52:29] [main/WARN] (FabricLoader/Mixin) @Mixin target net.coderbot.iris.Iris was not found notenoughcrashes.fabric.mixins.json:iris.SilentNEC from mod notenoughcrashes
+[10:52:32] [main/WARN] (FabricLoader/Mixin) Error loading class: org/jetbrains/annotations/ApiStatus$Internal (java.lang.ClassNotFoundException: org/jetbrains/annotations/ApiStatus$Internal)
+[10:52:32] [main/INFO] (Sodium-GraphicsAdapterProbe) Searching for graphics cards...
+[10:52:32] [main/INFO] (FabricLoader/MixinExtras|Service) Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.2.0-rc.4).
+[10:52:35] [main/INFO] (Sodium-GraphicsAdapterProbe) Found graphics card: GraphicsAdapterInfo[vendor=INTEL, name=Intel(R) UHD Graphics, version=DriverVersion=31.0.101.4255]
+[10:52:35] [main/INFO] (Sodium-GraphicsAdapterProbe) Found graphics card: GraphicsAdapterInfo[vendor=NVIDIA, name=NVIDIA GeForce RTX 3080 Laptop GPU, version=DriverVersion=31.0.15.3742]
+[10:52:35] [main/WARN] (Sodium-Workarounds) Sodium has applied one or more workarounds to prevent crashes or other issues on your system: [NVIDIA_THREADED_OPTIMIZATIONS]
+[10:52:35] [main/WARN] (Sodium-Workarounds) This is not necessarily an issue, but it may result in certain features or optimizations being disabled. You can sometimes fix these issues by upgrading your graphics driver.
+[10:53:02] [Datafixer Bootstrap/INFO] (Minecraft) 192 Datafixer optimizations took 597 milliseconds
+[10:53:11] [Render thread/WARN] (FabricLoader/Mixin) Error loading class: org/quiltmc/loader/impl/entrypoint/minecraft/hooks/EntrypointClient (java.lang.ClassNotFoundException: org/quiltmc/loader/impl/entrypoint/minecraft/hooks/EntrypointClient)
+[10:53:11] [Render thread/WARN] (FabricLoader/Mixin) Method overwrite conflict for getPausedTickDelta in entity_model_features-common.mixins.json:accessor.MinecraftClientAccessor from mod entity_model_features, previously written by carpet.mixins.Minecraft_pausedShakeMixin. Skipping method.
+[10:53:12] [Render thread/INFO] (Minecraft) Environment: Environment[accountsHost=https://api.mojang.com, sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
+[10:53:13] [Render thread/ERROR] (Minecraft) Failed to verify authentication
 com.mojang.authlib.exceptions.InvalidCredentialsException: Status: 401
-	at com.mojang.authlib.exceptions.MinecraftClientHttpException.toAuthenticationException(MinecraftClientHttpException.java:56) ~[authlib-4.0.43.jar:?]
-	at com.mojang.authlib.yggdrasil.YggdrasilUserApiService.fetchProperties(YggdrasilUserApiService.java:156) ~[authlib-4.0.43.jar:?]
-	at com.mojang.authlib.yggdrasil.YggdrasilUserApiService.<init>(YggdrasilUserApiService.java:55) ~[authlib-4.0.43.jar:?]
-	at com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService.createUserApiService(YggdrasilAuthenticationService.java:124) ~[authlib-4.0.43.jar:?]
-	at net.minecraft.client.MinecraftClient.createUserApiService(MinecraftClient.java:733) ~[minecraft-merged-project-root-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.9-v2.jar:?]
-	at net.minecraft.client.MinecraftClient.<init>(MinecraftClient.java:442) ~[minecraft-merged-project-root-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.9-v2.jar:?]
-	at net.minecraft.client.main.Main.main(Main.java:211) ~[minecraft-merged-project-root-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.9-v2.jar:?]
-	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:468) ~[fabric-loader-0.14.21.jar:?]
-	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:74) ~[fabric-loader-0.14.21.jar:?]
-	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23) ~[fabric-loader-0.14.21.jar:?]
+	at com.mojang.authlib.exceptions.MinecraftClientHttpException.toAuthenticationException(MinecraftClientHttpException.java:59) ~[authlib-5.0.47.jar:?]
+	at com.mojang.authlib.yggdrasil.YggdrasilUserApiService.fetchProperties(YggdrasilUserApiService.java:159) ~[authlib-5.0.47.jar:?]
+	at com.mojang.authlib.yggdrasil.YggdrasilUserApiService.<init>(YggdrasilUserApiService.java:53) ~[authlib-5.0.47.jar:?]
+	at com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService.createUserApiService(YggdrasilAuthenticationService.java:55) ~[authlib-5.0.47.jar:?]
+	at net.minecraft.client.MinecraftClient.createUserApiService(MinecraftClient.java:787) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.MinecraftClient.<init>(MinecraftClient.java:451) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.main.Main.main(Main.java:214) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:468) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:74) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23) ~[fabric-loader-0.14.22.jar:?]
 	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86) ~[dev-launch-injector-0.2.1+build.8.jar:?]
 Caused by: com.mojang.authlib.exceptions.MinecraftClientHttpException: Status: 401
-	at com.mojang.authlib.minecraft.client.MinecraftClient.readInputStream(MinecraftClient.java:85) ~[authlib-4.0.43.jar:?]
-	at com.mojang.authlib.minecraft.client.MinecraftClient.get(MinecraftClient.java:48) ~[authlib-4.0.43.jar:?]
-	at com.mojang.authlib.yggdrasil.YggdrasilUserApiService.fetchProperties(YggdrasilUserApiService.java:129) ~[authlib-4.0.43.jar:?]
+	at com.mojang.authlib.minecraft.client.MinecraftClient.readInputStream(MinecraftClient.java:100) ~[authlib-5.0.47.jar:?]
+	at com.mojang.authlib.minecraft.client.MinecraftClient.get(MinecraftClient.java:57) ~[authlib-5.0.47.jar:?]
+	at com.mojang.authlib.yggdrasil.YggdrasilUserApiService.fetchProperties(YggdrasilUserApiService.java:130) ~[authlib-5.0.47.jar:?]
 	... 9 more
-[21:53:44] [Render thread/INFO] (Minecraft) Setting user: Player23
-[21:53:44] [Render thread/INFO] (Indigo) [Indigo] Registering Indigo renderer!
-[21:53:45] [Render thread/INFO] (Minecraft) Backend library: LWJGL version 3.3.1 SNAPSHOT
-[21:53:47] [Render thread/INFO] (Minecraft) Reloading ResourceManager: vanilla, fabric (fabric-gametest-api-v1, fabric-client-tags-api-v1, fabric-item-api-v1, fabric-game-rule-api-v1, fabric-transfer-api-v1, fabric-loot-api-v2, fabric-rendering-fluids-v1, fabric-dimensions-v1, fabric-resource-loader-v0, fabric-particles-v1, fabric-renderer-api-v1, fabric-block-api-v1, fabric-convention-tags-v1, fabric-lifecycle-events-v1, fabric-api-base, fabric-entity-events-v1, fabric-resource-conditions-api-v1, fabric-biome-api-v1, fabric-api, inventory, fabric-renderer-indigo, fabric-api-lookup-api-v1, fabric-screen-api-v1, fabric-models-v0, fabric-rendering-data-attachment-v1, fabric-screen-handler-api-v1, fabric-data-generation-api-v1, fabric-object-builder-api-v1, fabric-rendering-v1, fabric-message-api-v1, fabric-sound-api-v1, fabric-networking-api-v1, fabric-item-group-api-v1, fabric-blockrenderlayer-v1, fabricloader, fabric-registry-sync-v0, fabric-content-registries-v0, fabric-recipe-api-v1, fabric-events-interaction-v0, fabric-mining-level-api-v1, fabric-crash-report-info-v1, fabric-transitive-access-wideners-v1, fabric-key-binding-api-v1, fabric-command-api-v2), file/Frostbyte Games
-[21:53:47] [Worker-Main-3/INFO] (Minecraft) Found unifont_all_no_pua-15.0.06.hex, loading
-[21:53:48] [Realms Notification Availability checker #1/INFO] (Minecraft) Could not authorize you against Realms server: Invalid session id
-[21:53:48] [Worker-Main-1/WARN] (Minecraft) Texture minecraft:block/lever_base_on with size 8x8 limits mip level from 4 to 3
-[21:53:48] [Worker-Main-1/WARN] (Minecraft) minecraft:textures/atlas/blocks.png: dropping miplevel from 4 to 3, because of minimum power of two: 8
-[21:53:50] [Render thread/WARN] (Minecraft) Missing sound for event: minecraft:item.goat_horn.play
-[21:53:50] [Render thread/WARN] (Minecraft) Missing sound for event: minecraft:entity.goat.screaming.horn_break
-[21:53:50] [Render thread/INFO] (Minecraft) OpenAL initialized on device OpenAL Soft on Speakers (Realtek(R) Audio)
-[21:53:50] [Render thread/INFO] (Minecraft) Sound engine started
-[21:53:50] [Render thread/INFO] (Minecraft) Created: 1024x512x3 minecraft:textures/atlas/blocks.png-atlas
-[21:53:51] [Render thread/INFO] (Minecraft) Created: 256x256x4 minecraft:textures/atlas/signs.png-atlas
-[21:53:51] [Render thread/INFO] (Minecraft) Created: 512x512x4 minecraft:textures/atlas/banner_patterns.png-atlas
-[21:53:51] [Render thread/INFO] (Minecraft) Created: 1024x1024x4 minecraft:textures/atlas/shield_patterns.png-atlas
-[21:53:51] [Render thread/INFO] (Minecraft) Created: 1024x1024x4 minecraft:textures/atlas/armor_trims.png-atlas
-[21:53:51] [Render thread/INFO] (Minecraft) Created: 256x256x4 minecraft:textures/atlas/chest.png-atlas
-[21:53:51] [Render thread/INFO] (Minecraft) Created: 128x64x4 minecraft:textures/atlas/decorated_pot.png-atlas
-[21:53:51] [Render thread/INFO] (Minecraft) Created: 512x256x4 minecraft:textures/atlas/beds.png-atlas
-[21:53:51] [Render thread/INFO] (Minecraft) Created: 512x256x4 minecraft:textures/atlas/shulker_boxes.png-atlas
-[21:53:52] [Render thread/WARN] (Minecraft) Shader rendertype_entity_translucent_emissive could not find sampler named Sampler2 in the specified shader program.
-[21:53:53] [Render thread/INFO] (Minecraft) Created: 256x256x0 minecraft:textures/atlas/particles.png-atlas
-[21:53:53] [Render thread/INFO] (Minecraft) Created: 256x256x0 minecraft:textures/atlas/paintings.png-atlas
-[21:53:53] [Render thread/INFO] (Minecraft) Created: 128x128x0 minecraft:textures/atlas/mob_effects.png-atlas
-[21:54:01] [Render thread/INFO] (Minecraft) Loaded 7 recipes
-[21:54:01] [Render thread/INFO] (Minecraft) Loaded 1271 advancements
-[21:54:02] [Render thread/INFO] (BiomeModificationImpl) Applied 0 biome modifications to 0 of 64 new biomes in 2.552 ms
-[21:54:02] [Server thread/INFO] (Minecraft) Starting integrated minecraft server version 1.20.1
-[21:54:02] [Server thread/INFO] (Minecraft) Generating keypair
-[21:54:05] [Server thread/INFO] (Minecraft) Preparing start region for dimension minecraft:overworld
-[21:54:09] [Render thread/INFO] (Minecraft) Preparing spawn area: 0%
-[21:54:09] [Render thread/INFO] (Minecraft) Preparing spawn area: 0%
-[21:54:09] [Render thread/INFO] (Minecraft) Preparing spawn area: 0%
-[21:54:09] [Render thread/INFO] (Minecraft) Preparing spawn area: 0%
-[21:54:09] [Render thread/INFO] (Minecraft) Preparing spawn area: 0%
-[21:54:09] [Render thread/INFO] (Minecraft) Preparing spawn area: 0%
-[21:54:09] [Render thread/INFO] (Minecraft) Preparing spawn area: 0%
-[21:54:09] [Render thread/INFO] (Minecraft) Preparing spawn area: 0%
-[21:54:09] [Render thread/INFO] (Minecraft) Preparing spawn area: 0%
-[21:54:09] [Render thread/INFO] (Minecraft) Preparing spawn area: 0%
-[21:54:10] [Render thread/INFO] (Minecraft) Preparing spawn area: 3%
-[21:54:10] [Render thread/INFO] (Minecraft) Preparing spawn area: 27%
-[21:54:11] [Render thread/INFO] (Minecraft) Time elapsed: 6178 ms
-[21:54:11] [Server thread/INFO] (Minecraft) Changing simulation distance to 10, from 0
-[21:54:13] [Server thread/INFO] (Minecraft) Player23[local:E:6c62a0b4] logged in with entity id 171 at (0.699999988079071, 74.0, 4.925000011920929)
-[21:54:13] [Server thread/INFO] (Minecraft) Player23 joined the game
-[21:54:14] [Server thread/INFO] (Minecraft) Player23 has made the advancement [Suit Up]
-[21:54:14] [Server thread/INFO] (Minecraft) Player23 has reached the goal [Sky's the Limit]
-[21:54:14] [Server thread/INFO] (Minecraft) Player23 has made the advancement [Isn't It Iron Pick]
-[21:54:14] [Server thread/INFO] (Minecraft) Player23 has made the advancement [Stone Age]
-[21:54:14] [Render thread/INFO] (Minecraft) [System] [CHAT] Player23 has made the advancement [Suit Up]
-[21:54:14] [Render thread/INFO] (Minecraft) [System] [CHAT] Player23 has reached the goal [Sky's the Limit]
-[21:54:14] [Render thread/INFO] (Minecraft) [System] [CHAT] Player23 has made the advancement [Isn't It Iron Pick]
-[21:54:14] [Render thread/INFO] (Minecraft) [System] [CHAT] Player23 has made the advancement [Stone Age]
-[21:54:14] [Render thread/INFO] (Minecraft) [System] [CHAT] [§6Improved Inventory§f] Tool Switch Switch: §aActive
-[21:54:14] [Render thread/INFO] (Minecraft) [System] [CHAT] [§6Improved Inventory§f] Stack Refill: §aActive
-[21:54:14] [Render thread/INFO] (Minecraft) [System] [CHAT] [§6Improved Inventory§f] Durability Display: §aActive
-[21:54:15] [Render thread/INFO] (Minecraft) Loaded 58 advancements
-[21:54:52] [Render thread/INFO] (Minecraft) [System] [CHAT] [1] iron_axe: 0.9000001 * 9.0 = 8.1
-[21:54:52] [Render thread/INFO] (Minecraft) [System] [CHAT] [2] iron_sword: 1.5999999 * 6.0 = 9.599999
-[21:54:52] [Render thread/INFO] (Minecraft) [System] [CHAT] [3] iron_shovel: 1.0 * 4.5 = 4.5
-[21:54:52] [Render thread/INFO] (Minecraft) [System] [CHAT] [4] bow: 4.0 * 1.0 = 4.0
-[21:54:52] [Render thread/INFO] (Minecraft) [System] [CHAT] [5] torch: 4.0 * 1.0 = 4.0
-[21:54:52] [Render thread/INFO] (Minecraft) [System] [CHAT] [6] cooked_beef: 4.0 * 1.0 = 4.0
-[21:54:52] [Render thread/INFO] (Minecraft) [System] [CHAT] [7] water_bucket: 4.0 * 1.0 = 4.0
-[21:54:52] [Render thread/INFO] (Minecraft) [System] [CHAT] [8] crafting_table: 4.0 * 1.0 = 4.0
-[21:54:52] [Render thread/INFO] (Minecraft) [System] [CHAT] [9] cobblestone: 4.0 * 1.0 = 4.0
-[21:54:58] [Render thread/INFO] (Minecraft) [System] [CHAT] [1] iron_axe: 0.9000001 * 9.0 = 8.1
-[21:54:58] [Render thread/INFO] (Minecraft) [System] [CHAT] [2] iron_pickaxe: 1.2 * 4.0 = 4.8
-[21:54:58] [Render thread/INFO] (Minecraft) [System] [CHAT] [3] iron_shovel: 1.0 * 4.5 = 4.5
-[21:54:58] [Render thread/INFO] (Minecraft) [System] [CHAT] [4] bow: 4.0 * 1.0 = 4.0
-[21:54:58] [Render thread/INFO] (Minecraft) [System] [CHAT] [5] torch: 4.0 * 1.0 = 4.0
-[21:54:58] [Render thread/INFO] (Minecraft) [System] [CHAT] [6] cooked_beef: 4.0 * 1.0 = 4.0
-[21:54:58] [Render thread/INFO] (Minecraft) [System] [CHAT] [7] water_bucket: 4.0 * 1.0 = 4.0
-[21:54:58] [Render thread/INFO] (Minecraft) [System] [CHAT] [8] crafting_table: 4.0 * 1.0 = 4.0
-[21:54:58] [Render thread/INFO] (Minecraft) [System] [CHAT] [9] cobblestone: 4.0 * 1.0 = 4.0
-[21:55:01] [Render thread/INFO] (Minecraft) [System] [CHAT] [1] iron_axe: 0.9000001 * 9.0 = 8.1
-[21:55:01] [Render thread/INFO] (Minecraft) [System] [CHAT] [2] iron_pickaxe: 1.2 * 4.0 = 4.8
-[21:55:01] [Render thread/INFO] (Minecraft) [System] [CHAT] [3] iron_shovel: 1.0 * 4.5 = 4.5
-[21:55:01] [Render thread/INFO] (Minecraft) [System] [CHAT] [4] bow: 4.0 * 1.0 = 4.0
-[21:55:01] [Render thread/INFO] (Minecraft) [System] [CHAT] [5] torch: 4.0 * 1.0 = 4.0
-[21:55:01] [Render thread/INFO] (Minecraft) [System] [CHAT] [6] cooked_beef: 4.0 * 1.0 = 4.0
-[21:55:01] [Render thread/INFO] (Minecraft) [System] [CHAT] [7] water_bucket: 4.0 * 1.0 = 4.0
-[21:55:01] [Render thread/INFO] (Minecraft) [System] [CHAT] [8] crafting_table: 4.0 * 1.0 = 4.0
-[21:55:01] [Render thread/INFO] (Minecraft) [System] [CHAT] [9] cobblestone: 4.0 * 1.0 = 4.0
-[21:55:01] [Render thread/INFO] (Minecraft) [System] [CHAT] [1] iron_axe: 0.9000001 * 9.0 = 8.1
-[21:55:01] [Render thread/INFO] (Minecraft) [System] [CHAT] [2] iron_pickaxe: 1.2 * 4.0 = 4.8
-[21:55:01] [Render thread/INFO] (Minecraft) [System] [CHAT] [3] iron_shovel: 1.0 * 4.5 = 4.5
-[21:55:01] [Render thread/INFO] (Minecraft) [System] [CHAT] [4] bow: 4.0 * 1.0 = 4.0
-[21:55:01] [Render thread/INFO] (Minecraft) [System] [CHAT] [5] torch: 4.0 * 1.0 = 4.0
-[21:55:01] [Render thread/INFO] (Minecraft) [System] [CHAT] [6] cooked_beef: 4.0 * 1.0 = 4.0
-[21:55:01] [Render thread/INFO] (Minecraft) [System] [CHAT] [7] water_bucket: 4.0 * 1.0 = 4.0
-[21:55:01] [Render thread/INFO] (Minecraft) [System] [CHAT] [8] crafting_table: 4.0 * 1.0 = 4.0
-[21:55:01] [Render thread/INFO] (Minecraft) [System] [CHAT] [9] cobblestone: 4.0 * 1.0 = 4.0
-[21:55:05] [Render thread/INFO] (Minecraft) [System] [CHAT] [1] iron_pickaxe: 1.2 * 4.0 = 4.8
-[21:55:05] [Render thread/INFO] (Minecraft) [System] [CHAT] [2] iron_pickaxe: 1.2 * 4.0 = 4.8
-[21:55:05] [Render thread/INFO] (Minecraft) [System] [CHAT] [3] iron_shovel: 1.0 * 4.5 = 4.5
-[21:55:05] [Render thread/INFO] (Minecraft) [System] [CHAT] [4] bow: 4.0 * 1.0 = 4.0
-[21:55:05] [Render thread/INFO] (Minecraft) [System] [CHAT] [5] torch: 4.0 * 1.0 = 4.0
-[21:55:05] [Render thread/INFO] (Minecraft) [System] [CHAT] [6] cooked_beef: 4.0 * 1.0 = 4.0
-[21:55:05] [Render thread/INFO] (Minecraft) [System] [CHAT] [7] water_bucket: 4.0 * 1.0 = 4.0
-[21:55:05] [Render thread/INFO] (Minecraft) [System] [CHAT] [8] crafting_table: 4.0 * 1.0 = 4.0
-[21:55:05] [Render thread/INFO] (Minecraft) [System] [CHAT] [9] cobblestone: 4.0 * 1.0 = 4.0
-[21:55:14] [Render thread/INFO] (Minecraft) [System] [CHAT] [1] iron_axe: 0.9000001 * 9.0 = 8.1
-[21:55:14] [Render thread/INFO] (Minecraft) [System] [CHAT] [2] iron_pickaxe: 1.2 * 4.0 = 4.8
-[21:55:14] [Render thread/INFO] (Minecraft) [System] [CHAT] [3] iron_shovel: 1.0 * 4.5 = 4.5
-[21:55:14] [Render thread/INFO] (Minecraft) [System] [CHAT] [4] bow: 4.0 * 1.0 = 4.0
-[21:55:14] [Render thread/INFO] (Minecraft) [System] [CHAT] [5] torch: 4.0 * 1.0 = 4.0
-[21:55:14] [Render thread/INFO] (Minecraft) [System] [CHAT] [6] cooked_beef: 4.0 * 1.0 = 4.0
-[21:55:14] [Render thread/INFO] (Minecraft) [System] [CHAT] [7] water_bucket: 4.0 * 1.0 = 4.0
-[21:55:14] [Render thread/INFO] (Minecraft) [System] [CHAT] [8] crafting_table: 4.0 * 1.0 = 4.0
-[21:55:14] [Render thread/INFO] (Minecraft) [System] [CHAT] [9] cobblestone: 4.0 * 1.0 = 4.0
-[21:55:14] [Render thread/INFO] (Minecraft) [System] [CHAT] [1] iron_axe: 0.9000001 * 9.0 = 8.1
-[21:55:14] [Render thread/INFO] (Minecraft) [System] [CHAT] [2] iron_pickaxe: 1.2 * 4.0 = 4.8
-[21:55:14] [Render thread/INFO] (Minecraft) [System] [CHAT] [3] iron_shovel: 1.0 * 4.5 = 4.5
-[21:55:14] [Render thread/INFO] (Minecraft) [System] [CHAT] [4] bow: 4.0 * 1.0 = 4.0
-[21:55:14] [Render thread/INFO] (Minecraft) [System] [CHAT] [5] torch: 4.0 * 1.0 = 4.0
-[21:55:14] [Render thread/INFO] (Minecraft) [System] [CHAT] [6] cooked_beef: 4.0 * 1.0 = 4.0
-[21:55:14] [Render thread/INFO] (Minecraft) [System] [CHAT] [7] water_bucket: 4.0 * 1.0 = 4.0
-[21:55:14] [Render thread/INFO] (Minecraft) [System] [CHAT] [8] crafting_table: 4.0 * 1.0 = 4.0
-[21:55:14] [Render thread/INFO] (Minecraft) [System] [CHAT] [9] cobblestone: 4.0 * 1.0 = 4.0
-[21:55:17] [Render thread/INFO] (Minecraft) [System] [CHAT] [1] iron_axe: 0.9000001 * 9.0 = 8.1
-[21:55:17] [Render thread/INFO] (Minecraft) [System] [CHAT] [2] iron_sword: 1.5999999 * 6.0 = 9.599999
-[21:55:17] [Render thread/INFO] (Minecraft) [System] [CHAT] [3] iron_shovel: 1.0 * 4.5 = 4.5
-[21:55:17] [Render thread/INFO] (Minecraft) [System] [CHAT] [4] bow: 4.0 * 1.0 = 4.0
-[21:55:17] [Render thread/INFO] (Minecraft) [System] [CHAT] [5] torch: 4.0 * 1.0 = 4.0
-[21:55:17] [Render thread/INFO] (Minecraft) [System] [CHAT] [6] cooked_beef: 4.0 * 1.0 = 4.0
-[21:55:17] [Render thread/INFO] (Minecraft) [System] [CHAT] [7] water_bucket: 4.0 * 1.0 = 4.0
-[21:55:17] [Render thread/INFO] (Minecraft) [System] [CHAT] [8] crafting_table: 4.0 * 1.0 = 4.0
-[21:55:17] [Render thread/INFO] (Minecraft) [System] [CHAT] [9] cobblestone: 4.0 * 1.0 = 4.0
-[21:55:17] [Render thread/INFO] (Minecraft) [System] [CHAT] [1] iron_axe: 0.9000001 * 9.0 = 8.1
-[21:55:17] [Render thread/INFO] (Minecraft) [System] [CHAT] [2] iron_sword: 1.5999999 * 6.0 = 9.599999
-[21:55:17] [Render thread/INFO] (Minecraft) [System] [CHAT] [3] iron_shovel: 1.0 * 4.5 = 4.5
-[21:55:17] [Render thread/INFO] (Minecraft) [System] [CHAT] [4] bow: 4.0 * 1.0 = 4.0
-[21:55:17] [Render thread/INFO] (Minecraft) [System] [CHAT] [5] torch: 4.0 * 1.0 = 4.0
-[21:55:17] [Render thread/INFO] (Minecraft) [System] [CHAT] [6] cooked_beef: 4.0 * 1.0 = 4.0
-[21:55:17] [Render thread/INFO] (Minecraft) [System] [CHAT] [7] water_bucket: 4.0 * 1.0 = 4.0
-[21:55:17] [Render thread/INFO] (Minecraft) [System] [CHAT] [8] crafting_table: 4.0 * 1.0 = 4.0
-[21:55:17] [Render thread/INFO] (Minecraft) [System] [CHAT] [9] cobblestone: 4.0 * 1.0 = 4.0
-[21:55:28] [Server thread/INFO] (Minecraft) Saving and pausing game...
-[21:55:28] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Test]'/minecraft:overworld
-[21:55:28] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Test]'/minecraft:the_nether
-[21:55:28] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Test]'/minecraft:the_end
-[21:55:28] [Server thread/INFO] (Minecraft) Player23 lost connection: Disconnected
-[21:55:28] [Server thread/INFO] (Minecraft) Player23 left the game
-[21:55:28] [Server thread/INFO] (Minecraft) Stopping singleplayer server as player logged out
-[21:55:28] [Server thread/INFO] (Minecraft) Stopping server
-[21:55:28] [Server thread/INFO] (Minecraft) Saving players
-[21:55:28] [Server thread/INFO] (Minecraft) Saving worlds
-[21:55:31] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Test]'/minecraft:overworld
-[21:55:31] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Test]'/minecraft:the_nether
-[21:55:31] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Test]'/minecraft:the_end
-[21:55:31] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage (Test): All chunks are saved
-[21:55:31] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
-[21:55:31] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage (DIM1): All chunks are saved
-[21:55:31] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage: All dimensions are saved
-[21:55:33] [Render thread/INFO] (Minecraft) Stopping!
+[10:53:13] [Render thread/INFO] (Minecraft) Setting user: Player867
+[10:53:14] [Render thread/INFO] (Minecraft) [STDOUT]: Hello NoExpensive world!
+[10:53:18] [Render thread/INFO] (rightclickharvest) Initializing VersionUtils
+[10:53:18] [Render thread/INFO] (rightclickharvest) VersionUtils initialized successfully
+[10:53:18] [Render thread/INFO] (jamlib) Registered config for rightclickharvest
+[10:53:18] [Render thread/INFO] (rightclickharvest) Mod initialized!
+[10:53:18] [Render thread/INFO] (jamlib) Mod initialized!
+[10:53:19] [Render thread/INFO] (ShulkerBoxTooltip) [ShulkerBoxTooltip] Could not find configuration file, creating default file
+[10:53:19] [Render thread/INFO] (WorldMap) Loading Xaero's World Map - Stage 1/2
+[10:53:22] [Render thread/INFO] (EMFClient) Loading Entity Model Features, now available for Terraria!
+[10:53:23] [Render thread/INFO] (lambdynlights) [LambDynLights] Initializing LambDynamicLights...
+[10:53:23] [Render thread/INFO] (lambdynlights) [LambDynLights] Configuration loaded.
+[10:53:24] [Render thread/INFO] (PluginCaller) Sending ConfigManager...
+[10:53:24] [Render thread/INFO] (PluginCaller) Sending ConfigManager took 8.482 ms
+[10:53:25] [Render thread/INFO] (MinimapLogs) Loading Xaero's Minimap - Stage 1/2
+[10:53:26] [Render thread/INFO] (Minecraft) [STDOUT]: [Mouse Tweaks] Main.initialize()
+[10:53:26] [Render thread/INFO] (Minecraft) [STDOUT]: [Mouse Tweaks] Generating the config file at: C:\Users\surap\IdeaProjects\Frostbytes-Improved-Inventory\run\config\MouseTweaks.cfg
+[10:53:26] [Render thread/INFO] (Minecraft) [STDOUT]: [Mouse Tweaks] Created the config file.
+[10:53:26] [Render thread/INFO] (Minecraft) [STDOUT]: [Mouse Tweaks] Initialized.
+[10:53:26] [Render thread/INFO] (Indigo) [Indigo] Different rendering plugin detected; not applying Indigo.
+[10:53:26] [Worker-Main-2/INFO] (Mod Menu/Update Checker) Checking mod updates...
+[10:53:27] [Render thread/INFO] (YetAnotherConfigLib) Config file 'C:\Users\surap\IdeaProjects\Frostbytes-Improved-Inventory\run\config\adaptive-tooltips.json' does not exist. Creating it with default values.
+[10:53:27] [Render thread/INFO] (YetAnotherConfigLib) Serializing class dev.isxander.adaptivetooltips.config.AdaptiveTooltipConfig to 'C:\Users\surap\IdeaProjects\Frostbytes-Improved-Inventory\run\config\adaptive-tooltips.json'
+[10:53:27] [Render thread/INFO] (Entity Texture Features) Loading Entity Texture Features, ,serutaeF erutxeT ytitnE gnidoaL
+[10:53:28] [Render thread/INFO] (RememberMyTxt) [Remember My Txt] Unaccepted Key: "key_Toggle Durability Display" with value: "key.keyboard.unknown"
+[10:53:28] [Render thread/INFO] (RememberMyTxt) [Remember My Txt] Unaccepted Key: "key_Toggle Stack Refill" with value: "key.keyboard.unknown"
+[10:53:28] [Render thread/INFO] (RememberMyTxt) [Remember My Txt] Unaccepted Key: "key_Toggle Tool Auto Switch" with value: "key.keyboard.unknown"
+[10:53:28] [Render thread/INFO] (Minecraft) Backend library: LWJGL version 3.3.2-snapshot
+[10:53:28] [Worker-Main-2/INFO] (Mod Menu/Update Checker) Update available for 'xaeroworldmap@1.34.1', (-> 1.35.0_Fabric_1.20.2)
+[10:53:28] [Worker-Main-2/INFO] (Mod Menu/Update Checker) Update available for 'carpet@1.4.118+v230921', (-> 1.4.121)
+[10:53:28] [Worker-Main-2/INFO] (Mod Menu/Update Checker) Update available for 'fabric-api@0.89.2+1.20.2', (-> 0.90.0+1.20.2)
+[10:53:28] [Worker-Main-2/INFO] (Mod Menu/Update Checker) Update available for 'xaerominimap@23.8.2', (-> 23.8.3_Fabric_1.20.2)
+[10:53:28] [Worker-Main-2/INFO] (Mod Menu/Update Checker) Update available for 'dynamic_fps@3.2.0', (-> 3.2.1)
+[10:53:28] [Render thread/WARN] (Sodium-NvidiaWorkarounds) Attempting to apply workarounds for the NVIDIA Graphics Driver...
+[10:53:28] [Render thread/WARN] (Sodium-NvidiaWorkarounds) If the game crashes immediately after this point, please make a bug report: https://github.com/CaffeineMC/sodium-fabric/issues
+[10:53:28] [Render thread/INFO] (Sodium-NvidiaWorkarounds) ... Successfully applied workarounds for the NVIDIA Graphics Driver!
+[10:53:29] [Render thread/INFO] (Sodium-PostlaunchChecks) OpenGL Vendor: NVIDIA Corporation
+[10:53:29] [Render thread/INFO] (Sodium-PostlaunchChecks) OpenGL Renderer: NVIDIA GeForce RTX 3080 Laptop GPU/PCIe/SSE2
+[10:53:29] [Render thread/INFO] (Sodium-PostlaunchChecks) OpenGL Version: 3.2.0 NVIDIA 537.42
+[10:53:30] [Render thread/WARN] (Minecraft) Removed resource pack file/Frostbyte Games from options because it doesn't seem to exist anymore
+[10:53:33] [Render thread/INFO] (Minecraft) Reloading ResourceManager: vanilla, fabric (mod-loading-screen, fabric-dimensions-v1, fabric-renderer-registries-v1, fabric-resource-conditions-api-v1, fabric-registry-sync-v0, fabric-particles-v1, trade_cycling, fabric-game-rule-api-v1, xaeroworldmap, fabric-convention-tags-v1, maptooltip, lithium, gammautils, fabric-biome-api-v1, fabric-events-interaction-v0, kleeslabs, notenoughcrashes, entity_model_features, fabric-screen-api-v1, fabric-api-lookup-api-v1, dynamic_fps, fabric-message-api-v1, reeses-sodium-options, jade, fabric-rendering-v1, sodium, lambdynlights, fabric-keybindings-v0, status-effect-bars, noexpensive, fabric-command-api-v1, fabric-rendering-v0, indium, yet_another_config_lib_v3, pride, controlling, fabric-screen-handler-api-v1, fabric-api-base, jei, carpet-extra, inventory, fabric-networking-api-v1, mobility, fabric-resource-loader-v0, fabric-entity-events-v1, fabric-renderer-api-v1, fabric-models-v0, fabric-block-view-api-v2, carpet, cloth-config, fabric-transitive-access-wideners-v1, fabric-lifecycle-events-v1, fabric-client-tags-api-v1, slabsandstairs, fabric-item-api-v1, fabric-mining-level-api-v1, fabric-transfer-api-v1, xaerominimap, fabric-data-generation-api-v1, fabric-key-binding-api-v1, fabric-crash-report-info-v1, extremesoundmuffler, searchables, starlight, balm-fabric, fabric-model-loading-api-v1, rightclickharvest, appleskin, remember-my-txt, caffeineconfig, sodium-extra, fabric-object-builder-api-v1, fabric-api, fabric-content-registries-v0, fabric-renderer-indigo, fabric-sound-api-v1, modmenu, adaptive-tooltips, fabric-gametest-api-v1, entity_texture_features, fabric-events-lifecycle-v0, fabric-recipe-api-v1, fabric-command-api-v2, jamlib, fabric-blockrenderlayer-v1, fabric-rendering-data-attachment-v1, fabric-containers-v0, fabric-commands-v0, fabric-item-group-api-v1, fabric-loot-api-v2, skinlayers, spruceui, fabric-block-api-v1, fabric-language-kotlin, shulkerboxtooltip, fabric-rendering-fluids-v1, fabricloader)
+[10:53:34] [Render thread/INFO] (Jade) Start loading plugin from Jade
+[10:53:34] [Worker-Main-13/INFO] (Minecraft) Found unifont_all_no_pua-15.0.06.hex, loading
+[10:53:34] [Render thread/INFO] (Jade) Start loading plugin from Jade
+[10:53:35] [Render thread/INFO] (Jade) Start loading plugin from Jade
+[10:53:35] [Render thread/INFO] (WorldMap) Loading Xaero's World Map - Stage 2/2
+[10:53:35] [Render thread/INFO] (WorldMap) New world map region cache hash code: -1578492949
+[10:53:35] [Render thread/INFO] (WorldMap) Registered player tracker system: map_synced
+[10:53:35] [Render thread/INFO] (WorldMap) Xaero's WorldMap Mod: Xaero's minimap found!
+[10:53:35] [Render thread/INFO] (WorldMap) Registered player tracker system: minimap_synced
+[10:53:35] [Render thread/INFO] (WorldMap) No Optifine!
+[10:53:35] [Render thread/INFO] (WorldMap) Xaero's World Map: No Vivecraft!
+[10:53:36] [Render thread/INFO] (MinimapLogs) Loading Xaero's Minimap - Stage 2/2
+[10:53:38] [Render thread/INFO] (MinimapLogs) Registered player tracker system: minimap_synced
+[10:53:38] [Render thread/INFO] (MinimapLogs) Xaero's Minimap: World Map found!
+[10:53:38] [Render thread/INFO] (MinimapLogs) No Optifine!
+[10:53:38] [Render thread/INFO] (MinimapLogs) Xaero's Minimap: No Vivecraft!
+[10:53:43] [Render thread/WARN] (Minecraft) Missing sound for event: minecraft:item.goat_horn.play
+[10:53:43] [Render thread/WARN] (Minecraft) Missing sound for event: minecraft:entity.goat.screaming.horn_break
+[10:53:44] [Render thread/INFO] (Minecraft) OpenAL initialized on device OpenAL Soft on Speakers (Realtek(R) Audio)
+[10:53:44] [Render thread/INFO] (Minecraft) Sound engine started
+[10:53:44] [Render thread/INFO] (Minecraft) Created: 1024x512x4 minecraft:textures/atlas/blocks.png-atlas
+[10:53:44] [Render thread/INFO] (Minecraft) Created: 256x256x4 minecraft:textures/atlas/signs.png-atlas
+[10:53:44] [Render thread/INFO] (Minecraft) Created: 512x512x4 minecraft:textures/atlas/banner_patterns.png-atlas
+[10:53:44] [Render thread/INFO] (Minecraft) Created: 512x512x4 minecraft:textures/atlas/shield_patterns.png-atlas
+[10:53:44] [Render thread/INFO] (Minecraft) Created: 1024x1024x4 minecraft:textures/atlas/armor_trims.png-atlas
+[10:53:44] [Render thread/INFO] (Minecraft) Created: 256x256x4 minecraft:textures/atlas/chest.png-atlas
+[10:53:44] [Render thread/INFO] (Minecraft) Created: 128x64x4 minecraft:textures/atlas/decorated_pot.png-atlas
+[10:53:44] [Render thread/INFO] (Minecraft) Created: 512x256x4 minecraft:textures/atlas/beds.png-atlas
+[10:53:44] [Render thread/INFO] (Minecraft) Created: 512x256x4 minecraft:textures/atlas/shulker_boxes.png-atlas
+[10:53:45] [Render thread/INFO] (Entity Texture Features) emissive suffixes loaded: {_e}
+[10:53:45] [Render thread/WARN] (Minecraft) Shader rendertype_entity_translucent_emissive could not find sampler named Sampler2 in the specified shader program.
+[10:53:45] [Render thread/INFO] (Minecraft) Created: 256x256x0 minecraft:textures/atlas/particles.png-atlas
+[10:53:45] [Render thread/INFO] (Minecraft) Created: 256x256x0 minecraft:textures/atlas/paintings.png-atlas
+[10:53:45] [Render thread/INFO] (Minecraft) Created: 512x256x0 minecraft:textures/atlas/mob_effects.png-atlas
+[10:53:45] [Render thread/INFO] (Minecraft) Created: 1024x512x0 minecraft:textures/atlas/gui.png-atlas
+[10:53:45] [Render thread/INFO] (Minecraft) Created: 256x128x0 jei:textures/atlas/gui.png-atlas
+[10:53:45] [Render thread/INFO] (WorldMap) Successfully reloaded the world map shaders!
+[10:53:45] [Render thread/INFO] (MinimapLogs) Successfully reloaded the minimap shaders!
+[10:53:46] [IO-Worker-1/INFO] (Minecraft) Could not authorize you against Realms server: Invalid session id
+[10:53:46] [IO-Worker-1/ERROR] (Minecraft) Couldn't connect to realms
+net.minecraft.client.realms.exception.RealmsServiceException: Realms authentication error with message 'Invalid session id'
+	at net.minecraft.client.realms.RealmsClient.execute(RealmsClient.java:432) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.realms.RealmsClient.clientCompatible(RealmsClient.java:218) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.realms.RealmsAvailability.method_52627(RealmsAvailability.java:45) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1768) ~[?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136) ~[?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635) ~[?:?]
+	at java.lang.Thread.run(Thread.java:833) ~[?:?]
+[10:53:52] [Render thread/INFO] (ShulkerBoxTooltip Plugins) [ShulkerBoxTooltip Plugins] Loading 1 plugin: shulkerboxtooltip
+[10:53:52] [Render thread/INFO] (ShulkerBoxTooltip Plugins) [ShulkerBoxTooltip Plugins] Registered 19 color keys for mod shulkerboxtooltip
+[10:53:52] [Render thread/INFO] (YetAnotherConfigLib) Generating YACL screen
+[10:53:54] [Render thread/ERROR] (Mod Menu | FabricIconHandler) Invalid mod icon for icon source inventory: assets.inventory.icon.png
+java.nio.file.NoSuchFileException: C:\Users\surap\IdeaProjects\Frostbytes-Improved-Inventory\build\resources\main\assets.inventory.icon.png
+	at sun.nio.fs.WindowsException.translateToIOException(WindowsException.java:85) ~[?:?]
+	at sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:103) ~[?:?]
+	at sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:108) ~[?:?]
+	at sun.nio.fs.WindowsFileSystemProvider.newByteChannel(WindowsFileSystemProvider.java:236) ~[?:?]
+	at java.nio.file.Files.newByteChannel(Files.java:380) ~[?:?]
+	at java.nio.file.Files.newByteChannel(Files.java:432) ~[?:?]
+	at java.nio.file.spi.FileSystemProvider.newInputStream(FileSystemProvider.java:422) ~[?:?]
+	at java.nio.file.Files.newInputStream(Files.java:160) ~[?:?]
+	at com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler.createIcon(FabricIconHandler.java:34) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.util.mod.fabric.FabricMod.getIcon(FabricMod.java:161) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.entries.ModListEntry.getIconTexture(ModListEntry.java:130) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.entries.ModListEntry.render(ModListEntry.java:59) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.ModListWidget.renderList(ModListWidget.java:241) ~[modmenu-7.1.0.jar:?]
+	at net.minecraft.client.gui.widget.EntryListWidget.render(EntryListWidget.java:210) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at com.terraformersmc.modmenu.gui.ModsScreen.render(ModsScreen.java:280) ~[modmenu-7.1.0.jar:?]
+	at net.minecraft.client.gui.screen.Screen.renderWithTooltip(Screen.java:110) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.render.GameRenderer.render(GameRenderer.java:946) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.MinecraftClient.render(MinecraftClient.java:1275) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.MinecraftClient.run(MinecraftClient.java:856) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.main.Main.main(Main.java:253) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:468) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:74) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86) ~[dev-launch-injector-0.2.1+build.8.jar:?]
+[10:53:54] [Render thread/WARN] (Mod Menu | FabricMod) Warning! Mod inventory has a broken icon, loading default icon
+[10:53:54] [Render thread/ERROR] (Mod Menu | FabricIconHandler) Mod icon must be a square for icon source slabsandstairs: assets/icon.png
+java.lang.IllegalStateException: Must be square icon
+	at org.apache.commons.lang3.Validate.validState(Validate.java:773) ~[commons-lang3-3.13.0.jar:3.13.0]
+	at com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler.createIcon(FabricIconHandler.java:36) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.util.mod.fabric.FabricMod.getIcon(FabricMod.java:161) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.entries.ModListEntry.getIconTexture(ModListEntry.java:130) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.entries.ModListEntry.render(ModListEntry.java:59) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.ModListWidget.renderList(ModListWidget.java:241) ~[modmenu-7.1.0.jar:?]
+	at net.minecraft.client.gui.widget.EntryListWidget.render(EntryListWidget.java:210) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at com.terraformersmc.modmenu.gui.ModsScreen.render(ModsScreen.java:280) ~[modmenu-7.1.0.jar:?]
+	at net.minecraft.client.gui.screen.Screen.renderWithTooltip(Screen.java:110) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.render.GameRenderer.render(GameRenderer.java:946) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.MinecraftClient.render(MinecraftClient.java:1275) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.MinecraftClient.run(MinecraftClient.java:856) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.main.Main.main(Main.java:253) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:468) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:74) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86) ~[dev-launch-injector-0.2.1+build.8.jar:?]
+[10:53:54] [Render thread/WARN] (Mod Menu | FabricMod) Warning! Mod slabsandstairs has a broken icon, loading default icon
+[10:53:54] [Render thread/ERROR] (Mod Menu | FabricIconHandler) Invalid mod icon for icon source jei: assets/modid/icon.png
+java.nio.file.NoSuchFileException: /assets/modid/icon.png
+	at jdk.nio.zipfs.ZipFileSystem.newInputStream(ZipFileSystem.java:861) ~[jdk.zipfs:?]
+	at jdk.nio.zipfs.ZipPath.newInputStream(ZipPath.java:749) ~[jdk.zipfs:?]
+	at jdk.nio.zipfs.ZipFileSystemProvider.newInputStream(ZipFileSystemProvider.java:261) ~[jdk.zipfs:?]
+	at java.nio.file.Files.newInputStream(Files.java:160) ~[?:?]
+	at com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler.createIcon(FabricIconHandler.java:34) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.util.mod.fabric.FabricMod.getIcon(FabricMod.java:161) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.entries.ModListEntry.getIconTexture(ModListEntry.java:130) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.entries.ModListEntry.render(ModListEntry.java:59) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.ModListWidget.renderList(ModListWidget.java:241) ~[modmenu-7.1.0.jar:?]
+	at net.minecraft.client.gui.widget.EntryListWidget.render(EntryListWidget.java:210) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at com.terraformersmc.modmenu.gui.ModsScreen.render(ModsScreen.java:280) ~[modmenu-7.1.0.jar:?]
+	at net.minecraft.client.gui.screen.Screen.renderWithTooltip(Screen.java:110) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.render.GameRenderer.render(GameRenderer.java:946) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.MinecraftClient.render(MinecraftClient.java:1275) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.MinecraftClient.run(MinecraftClient.java:856) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.main.Main.main(Main.java:253) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:468) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:74) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86) ~[dev-launch-injector-0.2.1+build.8.jar:?]
+[10:53:54] [Render thread/WARN] (Mod Menu | FabricMod) Warning! Mod jei has a broken icon, loading default icon
+[10:53:54] [Render thread/ERROR] (Mod Menu | FabricIconHandler) Invalid mod icon for icon source inventory: assets.inventory.icon.png
+java.nio.file.NoSuchFileException: C:\Users\surap\IdeaProjects\Frostbytes-Improved-Inventory\build\resources\main\assets.inventory.icon.png
+	at sun.nio.fs.WindowsException.translateToIOException(WindowsException.java:85) ~[?:?]
+	at sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:103) ~[?:?]
+	at sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:108) ~[?:?]
+	at sun.nio.fs.WindowsFileSystemProvider.newByteChannel(WindowsFileSystemProvider.java:236) ~[?:?]
+	at java.nio.file.Files.newByteChannel(Files.java:380) ~[?:?]
+	at java.nio.file.Files.newByteChannel(Files.java:432) ~[?:?]
+	at java.nio.file.spi.FileSystemProvider.newInputStream(FileSystemProvider.java:422) ~[?:?]
+	at java.nio.file.Files.newInputStream(Files.java:160) ~[?:?]
+	at com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler.createIcon(FabricIconHandler.java:34) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.util.mod.fabric.FabricMod.getIcon(FabricMod.java:161) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.entries.ModListEntry.getIconTexture(ModListEntry.java:130) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.entries.ModListEntry.render(ModListEntry.java:59) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.ModListWidget.renderList(ModListWidget.java:241) ~[modmenu-7.1.0.jar:?]
+	at net.minecraft.client.gui.widget.EntryListWidget.render(EntryListWidget.java:210) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at com.terraformersmc.modmenu.gui.ModsScreen.render(ModsScreen.java:280) ~[modmenu-7.1.0.jar:?]
+	at net.minecraft.client.gui.screen.Screen.renderWithTooltip(Screen.java:110) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.render.GameRenderer.render(GameRenderer.java:946) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.MinecraftClient.render(MinecraftClient.java:1275) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.MinecraftClient.run(MinecraftClient.java:856) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.main.Main.main(Main.java:253) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:468) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:74) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86) ~[dev-launch-injector-0.2.1+build.8.jar:?]
+[10:53:54] [Render thread/ERROR] (Mod Menu | FabricIconHandler) Mod icon must be a square for icon source slabsandstairs: assets/icon.png
+java.lang.IllegalStateException: Must be square icon
+	at org.apache.commons.lang3.Validate.validState(Validate.java:773) ~[commons-lang3-3.13.0.jar:3.13.0]
+	at com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler.createIcon(FabricIconHandler.java:36) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.util.mod.fabric.FabricMod.getIcon(FabricMod.java:161) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.entries.ModListEntry.getIconTexture(ModListEntry.java:130) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.entries.ModListEntry.render(ModListEntry.java:59) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.ModListWidget.renderList(ModListWidget.java:241) ~[modmenu-7.1.0.jar:?]
+	at net.minecraft.client.gui.widget.EntryListWidget.render(EntryListWidget.java:210) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at com.terraformersmc.modmenu.gui.ModsScreen.render(ModsScreen.java:280) ~[modmenu-7.1.0.jar:?]
+	at net.minecraft.client.gui.screen.Screen.renderWithTooltip(Screen.java:110) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.render.GameRenderer.render(GameRenderer.java:946) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.MinecraftClient.render(MinecraftClient.java:1275) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.MinecraftClient.run(MinecraftClient.java:856) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.main.Main.main(Main.java:253) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:468) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:74) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86) ~[dev-launch-injector-0.2.1+build.8.jar:?]
+[10:53:54] [Render thread/ERROR] (Mod Menu | FabricIconHandler) Invalid mod icon for icon source jei: assets/modid/icon.png
+java.nio.file.NoSuchFileException: /assets/modid/icon.png
+	at jdk.nio.zipfs.ZipFileSystem.newInputStream(ZipFileSystem.java:861) ~[jdk.zipfs:?]
+	at jdk.nio.zipfs.ZipPath.newInputStream(ZipPath.java:749) ~[jdk.zipfs:?]
+	at jdk.nio.zipfs.ZipFileSystemProvider.newInputStream(ZipFileSystemProvider.java:261) ~[jdk.zipfs:?]
+	at java.nio.file.Files.newInputStream(Files.java:160) ~[?:?]
+	at com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler.createIcon(FabricIconHandler.java:34) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.util.mod.fabric.FabricMod.getIcon(FabricMod.java:161) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.entries.ModListEntry.getIconTexture(ModListEntry.java:130) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.entries.ModListEntry.render(ModListEntry.java:59) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.ModListWidget.renderList(ModListWidget.java:241) ~[modmenu-7.1.0.jar:?]
+	at net.minecraft.client.gui.widget.EntryListWidget.render(EntryListWidget.java:210) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at com.terraformersmc.modmenu.gui.ModsScreen.render(ModsScreen.java:280) ~[modmenu-7.1.0.jar:?]
+	at net.minecraft.client.gui.screen.Screen.renderWithTooltip(Screen.java:110) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.render.GameRenderer.render(GameRenderer.java:946) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.MinecraftClient.render(MinecraftClient.java:1275) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.MinecraftClient.run(MinecraftClient.java:856) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.main.Main.main(Main.java:253) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:468) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:74) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86) ~[dev-launch-injector-0.2.1+build.8.jar:?]
+[10:53:54] [Render thread/ERROR] (Mod Menu | FabricIconHandler) Invalid mod icon for icon source inventory: assets.inventory.icon.png
+java.nio.file.NoSuchFileException: C:\Users\surap\IdeaProjects\Frostbytes-Improved-Inventory\build\resources\main\assets.inventory.icon.png
+	at sun.nio.fs.WindowsException.translateToIOException(WindowsException.java:85) ~[?:?]
+	at sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:103) ~[?:?]
+	at sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:108) ~[?:?]
+	at sun.nio.fs.WindowsFileSystemProvider.newByteChannel(WindowsFileSystemProvider.java:236) ~[?:?]
+	at java.nio.file.Files.newByteChannel(Files.java:380) ~[?:?]
+	at java.nio.file.Files.newByteChannel(Files.java:432) ~[?:?]
+	at java.nio.file.spi.FileSystemProvider.newInputStream(FileSystemProvider.java:422) ~[?:?]
+	at java.nio.file.Files.newInputStream(Files.java:160) ~[?:?]
+	at com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler.createIcon(FabricIconHandler.java:34) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.util.mod.fabric.FabricMod.getIcon(FabricMod.java:161) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.entries.ModListEntry.getIconTexture(ModListEntry.java:130) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.entries.ModListEntry.render(ModListEntry.java:59) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.ModListWidget.renderList(ModListWidget.java:241) ~[modmenu-7.1.0.jar:?]
+	at net.minecraft.client.gui.widget.EntryListWidget.render(EntryListWidget.java:210) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at com.terraformersmc.modmenu.gui.ModsScreen.render(ModsScreen.java:280) ~[modmenu-7.1.0.jar:?]
+	at net.minecraft.client.gui.screen.Screen.renderWithTooltip(Screen.java:110) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.render.GameRenderer.render(GameRenderer.java:946) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.MinecraftClient.render(MinecraftClient.java:1275) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.MinecraftClient.run(MinecraftClient.java:856) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.main.Main.main(Main.java:253) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:468) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:74) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86) ~[dev-launch-injector-0.2.1+build.8.jar:?]
+[10:53:54] [Render thread/ERROR] (Mod Menu | FabricIconHandler) Mod icon must be a square for icon source slabsandstairs: assets/icon.png
+java.lang.IllegalStateException: Must be square icon
+	at org.apache.commons.lang3.Validate.validState(Validate.java:773) ~[commons-lang3-3.13.0.jar:3.13.0]
+	at com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler.createIcon(FabricIconHandler.java:36) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.util.mod.fabric.FabricMod.getIcon(FabricMod.java:161) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.entries.ModListEntry.getIconTexture(ModListEntry.java:130) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.entries.ModListEntry.render(ModListEntry.java:59) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.ModListWidget.renderList(ModListWidget.java:241) ~[modmenu-7.1.0.jar:?]
+	at net.minecraft.client.gui.widget.EntryListWidget.render(EntryListWidget.java:210) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at com.terraformersmc.modmenu.gui.ModsScreen.render(ModsScreen.java:280) ~[modmenu-7.1.0.jar:?]
+	at net.minecraft.client.gui.screen.Screen.renderWithTooltip(Screen.java:110) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.render.GameRenderer.render(GameRenderer.java:946) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.MinecraftClient.render(MinecraftClient.java:1275) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.MinecraftClient.run(MinecraftClient.java:856) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.main.Main.main(Main.java:253) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:468) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:74) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86) ~[dev-launch-injector-0.2.1+build.8.jar:?]
+[10:53:58] [Render thread/ERROR] (Mod Menu | FabricIconHandler) Invalid mod icon for icon source inventory: assets.inventory.icon.png
+java.nio.file.NoSuchFileException: C:\Users\surap\IdeaProjects\Frostbytes-Improved-Inventory\build\resources\main\assets.inventory.icon.png
+	at sun.nio.fs.WindowsException.translateToIOException(WindowsException.java:85) ~[?:?]
+	at sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:103) ~[?:?]
+	at sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:108) ~[?:?]
+	at sun.nio.fs.WindowsFileSystemProvider.newByteChannel(WindowsFileSystemProvider.java:236) ~[?:?]
+	at java.nio.file.Files.newByteChannel(Files.java:380) ~[?:?]
+	at java.nio.file.Files.newByteChannel(Files.java:432) ~[?:?]
+	at java.nio.file.spi.FileSystemProvider.newInputStream(FileSystemProvider.java:422) ~[?:?]
+	at java.nio.file.Files.newInputStream(Files.java:160) ~[?:?]
+	at com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler.createIcon(FabricIconHandler.java:34) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.util.mod.fabric.FabricMod.getIcon(FabricMod.java:161) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.entries.ModListEntry.getIconTexture(ModListEntry.java:130) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.entries.ModListEntry.render(ModListEntry.java:59) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.ModListWidget.renderList(ModListWidget.java:241) ~[modmenu-7.1.0.jar:?]
+	at net.minecraft.client.gui.widget.EntryListWidget.render(EntryListWidget.java:210) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at com.terraformersmc.modmenu.gui.ModsScreen.render(ModsScreen.java:280) ~[modmenu-7.1.0.jar:?]
+	at net.minecraft.client.gui.screen.Screen.renderWithTooltip(Screen.java:110) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.render.GameRenderer.render(GameRenderer.java:946) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.MinecraftClient.render(MinecraftClient.java:1275) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.MinecraftClient.run(MinecraftClient.java:856) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.main.Main.main(Main.java:253) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:468) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:74) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86) ~[dev-launch-injector-0.2.1+build.8.jar:?]
+[10:53:58] [Render thread/ERROR] (Mod Menu | FabricIconHandler) Mod icon must be a square for icon source slabsandstairs: assets/icon.png
+java.lang.IllegalStateException: Must be square icon
+	at org.apache.commons.lang3.Validate.validState(Validate.java:773) ~[commons-lang3-3.13.0.jar:3.13.0]
+	at com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler.createIcon(FabricIconHandler.java:36) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.util.mod.fabric.FabricMod.getIcon(FabricMod.java:161) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.entries.ModListEntry.getIconTexture(ModListEntry.java:130) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.entries.ModListEntry.render(ModListEntry.java:59) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.ModListWidget.renderList(ModListWidget.java:241) ~[modmenu-7.1.0.jar:?]
+	at net.minecraft.client.gui.widget.EntryListWidget.render(EntryListWidget.java:210) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at com.terraformersmc.modmenu.gui.ModsScreen.render(ModsScreen.java:280) ~[modmenu-7.1.0.jar:?]
+	at net.minecraft.client.gui.screen.Screen.renderWithTooltip(Screen.java:110) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.render.GameRenderer.render(GameRenderer.java:946) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.MinecraftClient.render(MinecraftClient.java:1275) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.MinecraftClient.run(MinecraftClient.java:856) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.main.Main.main(Main.java:253) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:468) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:74) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86) ~[dev-launch-injector-0.2.1+build.8.jar:?]
+[10:54:03] [Render thread/INFO] (Minecraft) Loaded 8 recipes
+[10:54:03] [Render thread/INFO] (Minecraft) Loaded 1271 advancements
+[10:54:06] [Render thread/INFO] (Entity Texture Features) emissive suffixes loaded: {_e}
+[10:54:06] [Render thread/INFO] (BiomeModificationImpl) Applied 0 biome modifications to 0 of 64 new biomes in 2.850 ms
+[10:54:06] [Server thread/INFO] (Minecraft) Starting integrated minecraft server version 1.20.2
+[10:54:06] [Server thread/INFO] (Minecraft) Generating keypair
+[10:54:08] [Server thread/INFO] (Minecraft) Preparing start region for dimension minecraft:overworld
+[10:54:11] [Render thread/INFO] (Minecraft) Preparing spawn area: 0%
+[10:54:11] [Render thread/INFO] (Minecraft) Preparing spawn area: 0%
+[10:54:11] [Render thread/INFO] (Minecraft) Preparing spawn area: 0%
+[10:54:11] [Render thread/INFO] (Minecraft) Preparing spawn area: 0%
+[10:54:11] [Render thread/INFO] (Minecraft) Preparing spawn area: 0%
+[10:54:11] [Render thread/INFO] (Minecraft) Preparing spawn area: 0%
+[10:54:11] [Render thread/INFO] (Minecraft) Preparing spawn area: 0%
+[10:54:12] [Render thread/INFO] (Minecraft) Preparing spawn area: 31%
+[10:54:12] [Render thread/INFO] (Minecraft) Time elapsed: 3941 ms
+[10:54:12] [Server thread/INFO] (Minecraft) Changing simulation distance to 10, from 0
+[10:54:14] [Netty Local Client IO #0/INFO] (ClientPlayNetworkAddon for Player867) Negotiated common packet version 1
+[10:54:14] [Netty Server IO #1/INFO] (ServerConfigurationNetworkAddon for Player867) Negotiated common packet version 1
+[10:54:14] [Server thread/INFO] (Minecraft) Player867[local:E:90c53501] logged in with entity id 169 at (0.699999988079071, 74.0, 4.925000011920929)
+[10:54:14] [Server thread/INFO] (Jade) Syncing config to Player867 (218a3571-b707-3992-b46a-db90429dc7f7)
+[10:54:14] [Server thread/INFO] (Minecraft) Player867 joined the game
+[10:54:14] [Render thread/INFO] (WorldMap) New world map session initialized!
+[10:54:14] [Server thread/INFO] (Minecraft) Player867 has made the advancement [Suit Up]
+[10:54:14] [Render thread/INFO] (MinimapLogs) New minimap session initialized!
+[10:54:14] [Server thread/INFO] (Minecraft) Player867 has reached the goal [Sky's the Limit]
+[10:54:14] [Server thread/INFO] (Minecraft) Player867 has made the advancement [Isn't It Iron Pick]
+[10:54:14] [Server thread/INFO] (Minecraft) Player867 has made the advancement [Stone Age]
+[10:54:14] [Render thread/INFO] (ChunkBuilder) Started 10 worker threads
+[10:54:15] [Render thread/WARN] (Extreme Sound Muffler) ESM: Muffled list not found; Creating empty Muffled list
+[10:54:15] [Render thread/WARN] (Extreme Sound Muffler) ESM: Anchor list not found; Creating empty Anchor list
+[10:54:15] [Render thread/INFO] (Jade) Received config from the server: 
+[10:54:15] [Render thread/INFO] (ShulkerBoxTooltip) [ShulkerBoxTooltip] Server integration enabled, attempting handshake...
+[10:54:15] [Netty Server IO #1/INFO] (ShulkerBoxTooltip) [ShulkerBoxTooltip] Player867: protocol version: 2.0
+[10:54:15] [Netty Local Client IO #0/INFO] (ShulkerBoxTooltip) [ShulkerBoxTooltip] Handshake succeeded
+[10:54:15] [Netty Local Client IO #0/INFO] (ShulkerBoxTooltip) [ShulkerBoxTooltip] Server protocol version: 2.0
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:cherry_wood_stairs_from_cherry_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:warped_hyphae_stairs_from_warped_hyphae_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:acacia_slab_from_acacia_planks_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:bamboo_planks_from_stripped_bamboo_block_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_dark_oak_stairs_from_stripped_dark_oak_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:birch_planks_from_stripped_birch_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:cherry_planks_from_cherry_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:crimson_planks_from_stripped_crimson_stem_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_acacia_stairs_from_stripped_acacia_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:oak_planks_from_stripped_oak_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:jungle_wood_stairs_from_jungle_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:birch_log_slab_from_birch_log_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:dark_oak_planks_from_dark_oak_log_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_mangrove_stairs_from_stripped_mangrove_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:oak_planks_from_oak_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_oak_slab_from_stripped_oak_in_sawmill
+[10:54:15] [Server thread/INFO] (ShulkerBoxTooltip Plugins) [ShulkerBoxTooltip Plugins] Registered 7 providers for mod shulkerboxtooltip
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:dark_oak_wood_stairs_from_dark_oak_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:jungle_wood_slab_from_jungle_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:dark_oak_planks_from_dark_oak_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_crimson_button_from_stripped_crimson_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:bamboo_block_slab_from_bamboo_block_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:crimson_planks_from_crimson_hyphae_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:birch_log_stairs_from_birch_log_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_cherry_button_from_stripped_cherry_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:cherry_stairs_from_cherry_planks_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_birch_button_from_stripped_birch_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:oak_log_stairs_from_oak_log_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:jungle_planks_from_stripped_jungle_log_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_oak_fence_gate_from_stripped_oak_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_acacia_slab_from_stripped_acacia_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:jungle_planks_from_jungle_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:jungle_planks_from_jungle_log_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:jungle_log_stairs_from_jungle_log_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_warped_pressure_plate_from_stripped_warped_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:mangrove_planks_from_stripped_mangrove_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:crimson_hyphae_fence_gate_from_crimson_hyphae_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:spruce_wood_pressure_plate_from_spruce_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_cherry_stairs_from_stripped_cherry_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_mangrove_pressure_plate_from_stripped_mangrove_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_oak_fence_from_stripped_oak_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_acacia_button_from_stripped_acacia_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:cherry_planks_from_cherry_log_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:spruce_wood_slab_from_spruce_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:jungle_log_slab_from_jungle_log_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:warped_planks_from_stripped_warped_hyphae_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:cherry_wood_slab_from_cherry_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_crimson_slab_from_stripped_crimson_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:dark_oak_wood_slab_from_dark_oak_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:warped_planks_from_warped_stem_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_jungle_pressure_plate_from_stripped_jungle_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_spruce_slab_from_stripped_spruce_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:oak_wood_slab_from_oak_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_cherry_slab_from_stripped_cherry_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:birch_planks_from_stripped_birch_log_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:cherry_wood_fence_gate_from_cherry_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:warped_hyphae_button_from_warped_hyphae_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_jungle_button_from_stripped_jungle_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:spruce_stairs_from_spruce_planks_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_cherry_fence_from_stripped_cherry_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:mangrove_planks_from_mangrove_log_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:dark_oak_slab_from_dark_oak_planks_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:cherry_planks_from_stripped_cherry_log_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_dark_oak_fence_gate_from_stripped_dark_oak_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:spruce_log_slab_from_spruce_log_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:acacia_wood_fence_from_acacia_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:crimson_stem_slab_from_crimson_stem_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_dark_oak_fence_from_stripped_dark_oak_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:jungle_wood_button_from_jungle_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:birch_planks_from_birch_log_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:warped_stem_stairs_from_warped_stem_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_crimson_pressure_plate_from_stripped_crimson_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_birch_stairs_from_stripped_birch_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_spruce_stairs_from_stripped_spruce_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:warped_hyphae_pressure_plate_from_warped_hyphae_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:cherry_wood_pressure_plate_from_cherry_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:bamboo_slab_from_bamboo_planks_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_birch_fence_gate_from_stripped_birch_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:birch_wood_slab_from_birch_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:oak_planks_from_oak_log_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:acacia_wood_button_from_acacia_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:warped_planks_from_stripped_warped_stem_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_acacia_pressure_plate_from_stripped_acacia_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_birch_pressure_plate_from_stripped_birch_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:oak_planks_from_stripped_oak_log_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:oak_log_slab_from_oak_log_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:jungle_wood_fence_from_jungle_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_mangrove_fence_gate_from_stripped_mangrove_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_birch_slab_from_stripped_birch_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:mangrove_wood_button_from_mangrove_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_crimson_fence_gate_from_stripped_crimson_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_cherry_fence_gate_from_stripped_cherry_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_oak_pressure_plate_from_stripped_oak_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_warped_fence_gate_from_stripped_warped_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:oak_wood_fence_gate_from_oak_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:warped_hyphae_fence_from_warped_hyphae_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_jungle_stairs_from_stripped_jungle_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_crimson_stairs_from_stripped_crimson_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:cherry_slab_from_cherry_planks_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:mangrove_wood_slab_from_mangrove_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_dark_oak_slab_from_stripped_dark_oak_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_birch_fence_from_stripped_birch_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_spruce_fence_from_stripped_spruce_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:dark_oak_wood_pressure_plate_from_dark_oak_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:oak_wood_pressure_plate_from_oak_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_spruce_button_from_stripped_spruce_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:oak_slab_from_oak_planks_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:dark_oak_stairs_from_dark_oak_planks_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_acacia_fence_gate_from_stripped_acacia_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:acacia_wood_pressure_plate_from_acacia_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:birch_wood_button_from_birch_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:jungle_wood_fence_gate_from_jungle_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:crimson_hyphae_stairs_from_crimson_hyphae_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:cherry_wood_fence_from_cherry_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_crimson_fence_from_stripped_crimson_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:dark_oak_log_slab_from_dark_oak_log_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:oak_wood_stairs_from_oak_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:oak_stairs_from_oak_planks_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_warped_stairs_from_stripped_warped_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:mangrove_wood_fence_gate_from_mangrove_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:mangrove_planks_from_stripped_mangrove_log_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:acacia_planks_from_acacia_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:cherry_log_slab_from_cherry_log_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:acacia_wood_fence_gate_from_acacia_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:dark_oak_planks_from_stripped_dark_oak_log_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_oak_stairs_from_stripped_oak_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_warped_fence_from_stripped_warped_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_dark_oak_pressure_plate_from_stripped_dark_oak_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:jungle_slab_from_jungle_planks_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_oak_button_from_stripped_oak_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:bamboo_block_pressure_plate_from_bamboo_block_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_mangrove_button_from_stripped_mangrove_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:crimson_hyphae_slab_from_crimson_hyphae_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:dark_oak_wood_fence_gate_from_dark_oak_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:dark_oak_log_stairs_from_dark_oak_log_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:birch_slab_from_birch_planks_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:oak_wood_button_from_oak_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_cherry_pressure_plate_from_stripped_cherry_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_mangrove_slab_from_stripped_mangrove_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:crimson_planks_from_crimson_stem_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:dark_oak_wood_button_from_dark_oak_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:cherry_wood_button_from_cherry_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:birch_planks_from_birch_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:spruce_wood_fence_gate_from_spruce_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_acacia_fence_from_stripped_acacia_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:spruce_wood_button_from_spruce_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:warped_slab_from_warped_planks_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:crimson_stairs_from_crimson_planks_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_mangrove_fence_from_stripped_mangrove_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:cherry_log_stairs_from_cherry_log_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:birch_wood_stairs_from_birch_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:warped_hyphae_fence_gate_from_warped_hyphae_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_jungle_fence_gate_from_stripped_jungle_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:mangrove_planks_from_mangrove_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:acacia_planks_from_stripped_acacia_log_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:acacia_wood_stairs_from_acacia_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:birch_wood_pressure_plate_from_birch_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:birch_wood_fence_from_birch_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:mangrove_log_stairs_from_mangrove_log_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:dark_oak_planks_from_stripped_dark_oak_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_dark_oak_button_from_stripped_dark_oak_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:mangrove_stairs_from_mangrove_planks_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:jungle_planks_from_stripped_jungle_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:crimson_hyphae_button_from_crimson_hyphae_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:crimson_hyphae_pressure_plate_from_crimson_hyphae_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:jungle_wood_pressure_plate_from_jungle_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:crimson_hyphae_fence_from_crimson_hyphae_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_jungle_fence_from_stripped_jungle_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:birch_stairs_from_birch_planks_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:warped_stem_slab_from_warped_stem_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:acacia_planks_from_stripped_acacia_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:birch_wood_fence_gate_from_birch_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:mangrove_wood_stairs_from_mangrove_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:acacia_wood_slab_from_acacia_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_spruce_pressure_plate_from_stripped_spruce_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:crimson_slab_from_crimson_planks_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:mangrove_wood_fence_from_mangrove_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:spruce_slab_from_spruce_planks_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:bamboo_block_button_from_bamboo_block_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:warped_hyphae_slab_from_warped_hyphae_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:mangrove_log_slab_from_mangrove_log_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:spruce_log_stairs_from_spruce_log_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:bamboo_block_fence_from_bamboo_block_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_warped_button_from_stripped_warped_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:spruce_planks_from_spruce_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:bamboo_planks_from_bamboo_block_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:jungle_stairs_from_jungle_planks_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_spruce_fence_gate_from_stripped_spruce_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:acacia_log_slab_from_acacia_log_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:warped_planks_from_warped_hyphae_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:dark_oak_wood_fence_from_dark_oak_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:crimson_stem_stairs_from_crimson_stem_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:acacia_stairs_from_acacia_planks_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_warped_slab_from_stripped_warped_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:bamboo_block_fence_gate_from_bamboo_block_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:stripped_jungle_slab_from_stripped_jungle_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:spruce_wood_fence_from_spruce_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:cherry_planks_from_stripped_cherry_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:spruce_wood_stairs_from_spruce_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:oak_wood_fence_from_oak_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:acacia_planks_from_acacia_log_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:spruce_planks_from_stripped_spruce_log_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:spruce_planks_from_spruce_log_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:mangrove_slab_from_mangrove_planks_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:spruce_planks_from_stripped_spruce_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:bamboo_stairs_from_bamboo_planks_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:warped_stairs_from_warped_planks_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:mangrove_wood_pressure_plate_from_mangrove_wood_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:acacia_log_stairs_from_acacia_log_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:bamboo_block_stairs_from_bamboo_block_in_sawmill
+[10:54:15] [Render thread/WARN] (Minecraft) Unknown recipe category: slabsandstairs:sawmill/slabsandstairs:crimson_planks_from_stripped_crimson_hyphae_in_sawmill
+[10:54:15] [Render thread/INFO] (LoggedTimer) Starting JEI...
+[10:54:15] [Render thread/INFO] (PluginCaller) Registering item subtypes...
+[10:54:15] [Render thread/INFO] (PluginCaller) Registering item subtypes took 9.549 ms
+[10:54:15] [Render thread/INFO] (PluginCaller) Registering fluid subtypes...
+[10:54:15] [Render thread/INFO] (PluginCaller) Registering fluid subtypes took 5.914 ms
+[10:54:15] [Render thread/INFO] (PluginCaller) Registering ingredients...
+[10:54:15] [Render thread/INFO] (PluginCallerTimerRunnable) Registering ingredients: jei:minecraft took 122.5 milliseconds
+[10:54:15] [Render thread/INFO] (PluginCaller) Registering ingredients took 123.4 ms
+[10:54:15] [Render thread/INFO] (PluginCaller) Registering categories...
+[10:54:15] [Render thread/INFO] (PluginCallerTimerRunnable) Registering categories: jei:minecraft took 21.75 milliseconds
+[10:54:15] [Render thread/INFO] (PluginCaller) Registering categories took 23.74 ms
+[10:54:15] [Render thread/INFO] (PluginCaller) Registering vanilla category extensions...
+[10:54:15] [Render thread/INFO] (PluginCaller) Registering vanilla category extensions took 1.812 ms
+[10:54:15] [Render thread/INFO] (PluginCaller) Registering recipe catalysts...
+[10:54:15] [Render thread/INFO] (PluginCaller) Registering recipe catalysts took 1.435 ms
+[10:54:15] [Render thread/INFO] (PluginCaller) Registering advanced plugins...
+[10:54:15] [Render thread/INFO] (PluginCaller) Registering advanced plugins took 307.9 ?s
+[10:54:15] [Render thread/INFO] (LoggedTimer) Building recipe registry...
+[10:54:15] [Render thread/INFO] (LoggedTimer) Building recipe registry took 19.77 ms
+[10:54:15] [Render thread/INFO] (PluginCaller) Registering recipes...
+[10:54:16] [Render thread/INFO] (PluginCallerTimerRunnable) Registering recipes: jei:minecraft took 352.4 milliseconds
+[10:54:16] [Render thread/INFO] (PluginCaller) Registering recipes took 353.1 ms
+[10:54:16] [Render thread/INFO] (PluginCaller) Registering recipes transfer handlers...
+[10:54:16] [Render thread/INFO] (PluginCaller) Registering recipes transfer handlers took 8.214 ms
+[10:54:16] [Render thread/INFO] (LoggedTimer) Building runtime...
+[10:54:16] [Render thread/INFO] (PluginCaller) Registering gui handlers...
+[10:54:16] [Render thread/INFO] (PluginCallerTimerRunnable) Registering gui handlers: jei:gui took 13.91 milliseconds
+[10:54:16] [Render thread/INFO] (PluginCaller) Registering gui handlers took 21.55 ms
+[10:54:16] [Render thread/INFO] (PluginCaller) Registering Runtime...
+[10:54:16] [Render thread/INFO] (JeiGuiStarter) Starting JEI GUI
+[10:54:16] [Render thread/INFO] (LoggedTimer) Building ingredient list...
+[10:54:16] [Render thread/INFO] (LoggedTimer) Building ingredient list took 4.504 ms
+[10:54:16] [Render thread/INFO] (LoggedTimer) Building ingredient filter...
+[10:54:16] [Render thread/INFO] (IngredientFilter) Adding 1912 ingredients
+[10:54:16] [Render thread/INFO] (IngredientFilter) Added 1912 ingredients
+[10:54:16] [Render thread/INFO] (LoggedTimer) Building ingredient filter took 263.9 ms
+[10:54:16] [Render thread/INFO] (PluginCallerTimerRunnable) Registering Runtime: jei:fabric_gui took 519.1 milliseconds
+[10:54:16] [Render thread/INFO] (PluginCaller) Registering Runtime took 519.7 ms
+[10:54:16] [Render thread/INFO] (LoggedTimer) Building runtime took 560.2 ms
+[10:54:16] [Render thread/INFO] (PluginCaller) Sending Runtime...
+[10:54:16] [Render thread/INFO] (PluginCaller) Sending Runtime took 385.6 ?s
+[10:54:16] [Render thread/INFO] (LoggedTimer) Starting JEI took 1.212 s
+[10:54:16] [Render thread/INFO] (MinimapLogs) Minimap updated server level id: -1255386131 for world ResourceKey[minecraft:dimension / minecraft:overworld]
+[10:54:16] [Render thread/INFO] (Minecraft) [System] [CHAT] Player867 has made the advancement [Suit Up]
+[10:54:16] [Render thread/INFO] (Minecraft) [System] [CHAT] Player867 has reached the goal [Sky's the Limit]
+[10:54:16] [Render thread/INFO] (Minecraft) [System] [CHAT] Player867 has made the advancement [Isn't It Iron Pick]
+[10:54:16] [Render thread/INFO] (Minecraft) [System] [CHAT] Player867 has made the advancement [Stone Age]
+[10:54:16] [Render thread/INFO] (Minecraft) Loaded 58 advancements
+[10:54:17] [Render thread/INFO] (MinimapLogs) Reloading entity icon resources...
+[10:54:17] [Render thread/INFO] (MinimapLogs) Done!
+[10:54:20] [Render thread/INFO] (dynamic_fps) State changed from FOCUSED to SUSPENDED.
+[10:54:21] [Server thread/INFO] (Minecraft) Saving and pausing game...
+[10:54:21] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Test]'/minecraft:overworld
+[10:54:21] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Test]'/minecraft:the_end
+[10:54:21] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Test]'/minecraft:the_nether
+[10:54:22] [Render thread/INFO] (dynamic_fps) State changed from SUSPENDED to FOCUSED.
+[10:54:42] [Render thread/INFO] (Minecraft) [System] [CHAT] [Debug]: Advanced tooltips: hidden
+[10:54:44] [Render thread/INFO] (Minecraft) [System] [CHAT] [Debug]: Advanced tooltips: shown
+[10:55:23] [Server thread/INFO] (Minecraft) Player867 has made the advancement [Take Aim]
+[10:55:23] [Render thread/INFO] (Minecraft) [System] [CHAT] Player867 has made the advancement [Take Aim]
+[10:55:23] [Render thread/INFO] (Minecraft) Loaded 63 advancements
+[10:56:14] [Render thread/INFO] (dynamic_fps) State changed from FOCUSED to SUSPENDED.
+[10:56:14] [Server thread/INFO] (Minecraft) Saving and pausing game...
+[10:56:14] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Test]'/minecraft:overworld
+[10:56:14] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Test]'/minecraft:the_end
+[10:56:14] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Test]'/minecraft:the_nether
+[10:56:15] [Render thread/INFO] (dynamic_fps) State changed from SUSPENDED to FOCUSED.
+[10:56:18] [Render thread/INFO] (EMFUtils) [Entity Model Features]: Clearing EMF data.
+[10:56:18] [Render thread/INFO] (Entity Texture Features) reloading ETF data.
+[10:56:18] [Render thread/INFO] (Entity Texture Features) emissive suffixes loaded: {_e}
+[10:56:18] [Render thread/INFO] (Minecraft) Reloading ResourceManager: vanilla, fabric (mod-loading-screen, fabric-dimensions-v1, fabric-renderer-registries-v1, fabric-resource-conditions-api-v1, fabric-registry-sync-v0, fabric-particles-v1, trade_cycling, fabric-game-rule-api-v1, xaeroworldmap, fabric-convention-tags-v1, maptooltip, lithium, gammautils, fabric-biome-api-v1, fabric-events-interaction-v0, kleeslabs, notenoughcrashes, entity_model_features, fabric-screen-api-v1, fabric-api-lookup-api-v1, dynamic_fps, fabric-message-api-v1, reeses-sodium-options, jade, fabric-rendering-v1, sodium, lambdynlights, fabric-keybindings-v0, status-effect-bars, noexpensive, fabric-command-api-v1, fabric-rendering-v0, indium, yet_another_config_lib_v3, pride, controlling, fabric-screen-handler-api-v1, fabric-api-base, jei, carpet-extra, inventory, fabric-networking-api-v1, mobility, fabric-resource-loader-v0, fabric-entity-events-v1, fabric-renderer-api-v1, fabric-models-v0, fabric-block-view-api-v2, carpet, cloth-config, fabric-transitive-access-wideners-v1, fabric-lifecycle-events-v1, fabric-client-tags-api-v1, slabsandstairs, fabric-item-api-v1, fabric-mining-level-api-v1, fabric-transfer-api-v1, xaerominimap, fabric-data-generation-api-v1, fabric-key-binding-api-v1, fabric-crash-report-info-v1, extremesoundmuffler, searchables, starlight, balm-fabric, fabric-model-loading-api-v1, rightclickharvest, appleskin, remember-my-txt, caffeineconfig, sodium-extra, fabric-object-builder-api-v1, fabric-api, fabric-content-registries-v0, fabric-renderer-indigo, fabric-sound-api-v1, modmenu, adaptive-tooltips, fabric-gametest-api-v1, entity_texture_features, fabric-events-lifecycle-v0, fabric-recipe-api-v1, fabric-command-api-v2, jamlib, fabric-blockrenderlayer-v1, fabric-rendering-data-attachment-v1, fabric-containers-v0, fabric-commands-v0, fabric-item-group-api-v1, fabric-loot-api-v2, skinlayers, spruceui, fabric-block-api-v1, fabric-language-kotlin, shulkerboxtooltip, fabric-rendering-fluids-v1, fabricloader), file/Frostbyte Games.zip
+[10:56:18] [Worker-Main-5/INFO] (Minecraft) Found unifont_all_no_pua-15.0.06.hex, loading
+[10:56:21] [Render thread/WARN] (Minecraft) Skipped language file: minecraft:lang/en_us.json (com.google.gson.JsonSyntaxException: com.google.gson.stream.MalformedJsonException: Unterminated object at line 79 column 39 path $.container.slabsandstairs.sawmill)
+[10:56:21] [Render thread/WARN] (Minecraft) Missing sound for event: minecraft:item.goat_horn.play
+[10:56:21] [Render thread/WARN] (Minecraft) Missing sound for event: minecraft:entity.goat.screaming.horn_break
+[10:56:22] [Render thread/INFO] (Minecraft) OpenAL initialized on device OpenAL Soft on Speakers (Realtek(R) Audio)
+[10:56:22] [Render thread/INFO] (Minecraft) Sound engine started
+[10:56:22] [Render thread/INFO] (Minecraft) Created: 1024x512x4 minecraft:textures/atlas/blocks.png-atlas
+[10:56:22] [Render thread/INFO] (WorldMap) New world map region cache hash code: -213653308
+[10:56:22] [Render thread/INFO] (MinimapLogs) Entity icon manager reset!
+[10:56:22] [Render thread/INFO] (MinimapLogs) Reloading entity icon resources...
+[10:56:22] [Render thread/INFO] (MinimapLogs) Done!
+[10:56:22] [Render thread/INFO] (Minecraft) Created: 256x256x4 minecraft:textures/atlas/signs.png-atlas
+[10:56:22] [Render thread/INFO] (Minecraft) Created: 512x512x4 minecraft:textures/atlas/banner_patterns.png-atlas
+[10:56:22] [Render thread/INFO] (Minecraft) Created: 1024x1024x4 minecraft:textures/atlas/shield_patterns.png-atlas
+[10:56:22] [Render thread/INFO] (Minecraft) Created: 1024x1024x4 minecraft:textures/atlas/armor_trims.png-atlas
+[10:56:22] [Render thread/INFO] (Minecraft) Created: 256x256x4 minecraft:textures/atlas/chest.png-atlas
+[10:56:22] [Render thread/INFO] (Minecraft) Created: 128x64x4 minecraft:textures/atlas/decorated_pot.png-atlas
+[10:56:22] [Render thread/INFO] (Minecraft) Created: 512x256x4 minecraft:textures/atlas/beds.png-atlas
+[10:56:22] [Render thread/INFO] (Minecraft) Created: 512x256x4 minecraft:textures/atlas/shulker_boxes.png-atlas
+[10:56:22] [Render thread/WARN] (Minecraft) Shader rendertype_entity_translucent_emissive could not find sampler named Sampler2 in the specified shader program.
+[10:56:22] [Render thread/INFO] (Minecraft) Created: 256x256x0 minecraft:textures/atlas/particles.png-atlas
+[10:56:22] [Render thread/INFO] (Minecraft) Created: 256x256x0 minecraft:textures/atlas/paintings.png-atlas
+[10:56:22] [Render thread/INFO] (Minecraft) Created: 512x256x0 minecraft:textures/atlas/mob_effects.png-atlas
+[10:56:22] [Render thread/INFO] (Minecraft) Created: 1024x512x0 minecraft:textures/atlas/gui.png-atlas
+[10:56:22] [Render thread/INFO] (Minecraft) Created: 256x128x0 jei:textures/atlas/gui.png-atlas
+[10:56:22] [Render thread/INFO] (WorldMap) Successfully reloaded the world map shaders!
+[10:56:22] [Render thread/INFO] (MinimapLogs) Successfully reloaded the minimap shaders!
+[10:56:22] [Render thread/INFO] (ChunkBuilder) Stopping worker threads
+[10:56:22] [Render thread/INFO] (ChunkBuilder) Started 10 worker threads
+[10:56:25] [Render thread/INFO] (dynamic_fps) State changed from FOCUSED to SUSPENDED.
+[10:56:25] [Render thread/INFO] (dynamic_fps) State changed from SUSPENDED to FOCUSED.
+[10:57:31] [Render thread/INFO] (Minecraft) Loaded 72 advancements
+[10:57:57] [Render thread/INFO] (dynamic_fps) State changed from FOCUSED to SUSPENDED.
+[10:57:57] [Server thread/INFO] (Minecraft) Saving and pausing game...
+[10:57:57] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Test]'/minecraft:overworld
+[10:57:57] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Test]'/minecraft:the_end
+[10:57:57] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Test]'/minecraft:the_nether
+[10:57:58] [Render thread/INFO] (YetAnotherConfigLib) Generating YACL screen
+[10:57:58] [Render thread/INFO] (dynamic_fps) State changed from SUSPENDED to FOCUSED.
+[10:57:59] [Render thread/ERROR] (Mod Menu | FabricIconHandler) Invalid mod icon for icon source inventory: assets.inventory.icon.png
+java.nio.file.NoSuchFileException: C:\Users\surap\IdeaProjects\Frostbytes-Improved-Inventory\build\resources\main\assets.inventory.icon.png
+	at sun.nio.fs.WindowsException.translateToIOException(WindowsException.java:85) ~[?:?]
+	at sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:103) ~[?:?]
+	at sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:108) ~[?:?]
+	at sun.nio.fs.WindowsFileSystemProvider.newByteChannel(WindowsFileSystemProvider.java:236) ~[?:?]
+	at java.nio.file.Files.newByteChannel(Files.java:380) ~[?:?]
+	at java.nio.file.Files.newByteChannel(Files.java:432) ~[?:?]
+	at java.nio.file.spi.FileSystemProvider.newInputStream(FileSystemProvider.java:422) ~[?:?]
+	at java.nio.file.Files.newInputStream(Files.java:160) ~[?:?]
+	at com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler.createIcon(FabricIconHandler.java:34) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.util.mod.fabric.FabricMod.getIcon(FabricMod.java:161) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.entries.ModListEntry.getIconTexture(ModListEntry.java:130) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.entries.ModListEntry.render(ModListEntry.java:59) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.ModListWidget.renderList(ModListWidget.java:241) ~[modmenu-7.1.0.jar:?]
+	at net.minecraft.client.gui.widget.EntryListWidget.render(EntryListWidget.java:210) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at com.terraformersmc.modmenu.gui.ModsScreen.render(ModsScreen.java:280) ~[modmenu-7.1.0.jar:?]
+	at net.minecraft.client.gui.screen.Screen.renderWithTooltip(Screen.java:110) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.render.GameRenderer.render(GameRenderer.java:946) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.MinecraftClient.render(MinecraftClient.java:1275) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.MinecraftClient.run(MinecraftClient.java:856) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.main.Main.main(Main.java:253) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:468) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:74) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86) ~[dev-launch-injector-0.2.1+build.8.jar:?]
+[10:58:00] [Render thread/ERROR] (Mod Menu | FabricIconHandler) Invalid mod icon for icon source inventory: assets.inventory.icon.png
+java.nio.file.NoSuchFileException: C:\Users\surap\IdeaProjects\Frostbytes-Improved-Inventory\build\resources\main\assets.inventory.icon.png
+	at sun.nio.fs.WindowsException.translateToIOException(WindowsException.java:85) ~[?:?]
+	at sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:103) ~[?:?]
+	at sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:108) ~[?:?]
+	at sun.nio.fs.WindowsFileSystemProvider.newByteChannel(WindowsFileSystemProvider.java:236) ~[?:?]
+	at java.nio.file.Files.newByteChannel(Files.java:380) ~[?:?]
+	at java.nio.file.Files.newByteChannel(Files.java:432) ~[?:?]
+	at java.nio.file.spi.FileSystemProvider.newInputStream(FileSystemProvider.java:422) ~[?:?]
+	at java.nio.file.Files.newInputStream(Files.java:160) ~[?:?]
+	at com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler.createIcon(FabricIconHandler.java:34) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.util.mod.fabric.FabricMod.getIcon(FabricMod.java:161) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.entries.ModListEntry.getIconTexture(ModListEntry.java:130) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.entries.ModListEntry.render(ModListEntry.java:59) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.ModListWidget.renderList(ModListWidget.java:241) ~[modmenu-7.1.0.jar:?]
+	at net.minecraft.client.gui.widget.EntryListWidget.render(EntryListWidget.java:210) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at com.terraformersmc.modmenu.gui.ModsScreen.render(ModsScreen.java:280) ~[modmenu-7.1.0.jar:?]
+	at net.minecraft.client.gui.screen.Screen.renderWithTooltip(Screen.java:110) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.render.GameRenderer.render(GameRenderer.java:946) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.MinecraftClient.render(MinecraftClient.java:1275) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.MinecraftClient.run(MinecraftClient.java:856) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.main.Main.main(Main.java:253) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:468) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:74) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86) ~[dev-launch-injector-0.2.1+build.8.jar:?]
+[10:58:01] [Render thread/ERROR] (Mod Menu | FabricIconHandler) Invalid mod icon for icon source inventory: assets.inventory.icon.png
+java.nio.file.NoSuchFileException: C:\Users\surap\IdeaProjects\Frostbytes-Improved-Inventory\build\resources\main\assets.inventory.icon.png
+	at sun.nio.fs.WindowsException.translateToIOException(WindowsException.java:85) ~[?:?]
+	at sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:103) ~[?:?]
+	at sun.nio.fs.WindowsException.rethrowAsIOException(WindowsException.java:108) ~[?:?]
+	at sun.nio.fs.WindowsFileSystemProvider.newByteChannel(WindowsFileSystemProvider.java:236) ~[?:?]
+	at java.nio.file.Files.newByteChannel(Files.java:380) ~[?:?]
+	at java.nio.file.Files.newByteChannel(Files.java:432) ~[?:?]
+	at java.nio.file.spi.FileSystemProvider.newInputStream(FileSystemProvider.java:422) ~[?:?]
+	at java.nio.file.Files.newInputStream(Files.java:160) ~[?:?]
+	at com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler.createIcon(FabricIconHandler.java:34) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.util.mod.fabric.FabricMod.getIcon(FabricMod.java:161) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.entries.ModListEntry.getIconTexture(ModListEntry.java:130) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.entries.ModListEntry.render(ModListEntry.java:59) ~[modmenu-7.1.0.jar:?]
+	at com.terraformersmc.modmenu.gui.widget.ModListWidget.renderList(ModListWidget.java:241) ~[modmenu-7.1.0.jar:?]
+	at net.minecraft.client.gui.widget.EntryListWidget.render(EntryListWidget.java:210) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at com.terraformersmc.modmenu.gui.ModsScreen.render(ModsScreen.java:280) ~[modmenu-7.1.0.jar:?]
+	at net.minecraft.client.gui.screen.Screen.renderWithTooltip(Screen.java:110) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.render.GameRenderer.render(GameRenderer.java:946) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.MinecraftClient.render(MinecraftClient.java:1275) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.MinecraftClient.run(MinecraftClient.java:856) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.minecraft.client.main.Main.main(Main.java:253) ~[minecraft-merged-project-root-1.20.2-net.fabricmc.yarn.1_20_2.1.20.2+build.1-v2.jar:?]
+	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:468) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:74) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23) ~[fabric-loader-0.14.22.jar:?]
+	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86) ~[dev-launch-injector-0.2.1+build.8.jar:?]
+[10:58:18] [Render thread/INFO] (dynamic_fps) State changed from FOCUSED to SUSPENDED.
+[10:58:19] [Render thread/INFO] (dynamic_fps) State changed from SUSPENDED to FOCUSED.
+[10:58:31] [Render thread/INFO] (dynamic_fps) State changed from FOCUSED to SUSPENDED.
+[10:58:31] [Server thread/INFO] (Minecraft) Saving and pausing game...
+[10:58:31] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Test]'/minecraft:overworld
+[10:58:31] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Test]'/minecraft:the_end
+[10:58:31] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Test]'/minecraft:the_nether
+[10:58:31] [Render thread/INFO] (WorldMap) Finalizing world map session...
+[10:58:31] [Thread-5/INFO] (WorldMap) World map force-cleaned!
+[10:58:31] [Render thread/INFO] (WorldMap) World map session finalized.
+[10:58:31] [Render thread/INFO] (MinimapLogs) Minimap session finalized.
+[10:58:31] [Render thread/INFO] (dynamic_fps) State changed from SUSPENDED to FOCUSED.
+[10:58:31] [Server thread/INFO] (Minecraft) Player867 lost connection: Disconnected
+[10:58:31] [Server thread/INFO] (Minecraft) Player867 left the game
+[10:58:31] [Server thread/INFO] (Minecraft) Stopping singleplayer server as player logged out
+[10:58:31] [Server thread/INFO] (Minecraft) Stopping server
+[10:58:31] [Server thread/INFO] (Minecraft) Saving players
+[10:58:31] [Server thread/INFO] (Minecraft) Saving worlds
+[10:58:32] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Test]'/minecraft:overworld
+[10:58:33] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Test]'/minecraft:the_end
+[10:58:33] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Test]'/minecraft:the_nether
+[10:58:33] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage (Test): All chunks are saved
+[10:58:33] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[10:58:33] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[10:58:33] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage: All dimensions are saved
+[10:58:33] [Render thread/INFO] (ChunkBuilder) Stopping worker threads
+[10:58:33] [Render thread/INFO] (Entity Texture Features) emissive suffixes loaded: {_e}
+[10:58:34] [Render thread/INFO] (Minecraft) Stopping!
+[10:58:34] [Render thread/INFO] (Entity Texture Features) emissive suffixes loaded: {_e}
