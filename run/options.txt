@@ -1,7 +1,4 @@
-version:3578
-key_Toggle Stack Refill:key.keyboard.unknown
-key_Toggle Tool Auto Switch:key.keyboard.unknown
-key_Toggle Durability Display:key.keyboard.unknown
+version:3698
 autoJump:false
 operatorItemsTab:true
 autoSuggestions:true
@@ -24,6 +21,7 @@ toggleCrouch:false
 toggleSprint:true
 darkMojangStudiosBackground:false
 hideLightningFlashes:false
+hideSplashTexts:false
 mouseSensitivity:0.5
 fov:0.5
 screenEffectScale:0.1056338028169014
@@ -34,7 +32,7 @@ glintStrength:0.75
 damageTiltStrength:1.0
 highContrast:false
 narratorHotkey:true
-gamma:15.0
+gamma:1.0
 renderDistance:10
 simulationDistance:10
 entityDistanceScaling:1.0
@@ -47,7 +45,7 @@ prioritizeChunkUpdates:0
 biomeBlendRadius:7
 renderClouds:"fast"
 resourcePacks:["vanilla","fabric","file/Frostbyte Games.zip"]
-incompatibleResourcePacks:[]
+incompatibleResourcePacks:["file/Frostbyte Games.zip"]
 lastServer:
 lang:en_us
 soundDevice:""
@@ -124,49 +122,6 @@ key_key.hotbar.8:key.keyboard.8
 key_key.hotbar.9:key.keyboard.9
 key_Cycle Slot Up:key.mouse.4
 key_Cycle Slot Down:key.mouse.5
-key_key.trade_cycling.cycle_trades:key.keyboard.c
-key_gui.xaero_open_map:key.keyboard.m
-key_gui.xaero_open_settings:key.keyboard.right.bracket
-key_gui.xaero_map_zoom_in:key.keyboard.unknown
-key_gui.xaero_map_zoom_out:key.keyboard.unknown
-key_gui.xaero_quick_confirm:key.keyboard.right.shift
-key_key.gamma_utils.gamma_toggle:key.keyboard.g
-key_key.gamma_utils.increase_gamma:key.keyboard.up
-key_key.gamma_utils.decrease_gamma:key.keyboard.down
-key_key.gamma_utils.max_gamma:key.keyboard.unknown
-key_key.gamma_utils.min_gamma:key.keyboard.unknown
-key_key.gamma_utils.night_vision_toggle:key.keyboard.h
-key_key.dynamic_fps.toggle_forced:key.keyboard.unknown
-key_key.dynamic_fps.toggle_disabled:key.keyboard.unknown
-key_key.jade.config:key.keyboard.keypad.0
-key_key.jade.show_overlay:key.keyboard.keypad.1
-key_key.jade.toggle_liquid:key.keyboard.keypad.2
-key_key.jade.show_recipes:key.keyboard.keypad.3
-key_key.jade.show_uses:key.keyboard.keypad.4
-key_key.jade.narrate:key.keyboard.keypad.5
-key_key.jade.show_details_alternative:key.keyboard.unknown
-key_gui.xaero_switch_waypoint_set:key.keyboard.unknown
-key_gui.xaero_instant_waypoint:key.keyboard.keypad.add
-key_gui.xaero_toggle_slime:key.keyboard.unknown
-key_gui.xaero_toggle_grid:key.keyboard.unknown
-key_gui.xaero_toggle_waypoints:key.keyboard.unknown
-key_gui.xaero_toggle_map_waypoints:key.keyboard.unknown
-key_gui.xaero_toggle_map:key.keyboard.unknown
-key_gui.xaero_enlarge_map:key.keyboard.z
-key_gui.xaero_waypoints_key:key.keyboard.u
-key_gui.xaero_zoom_in:key.keyboard.unknown
-key_gui.xaero_zoom_out:key.keyboard.unknown
-key_gui.xaero_new_waypoint:key.keyboard.b
-key_gui.xaero_display_all_sets:key.keyboard.unknown
-key_gui.xaero_toggle_light_overlay:key.keyboard.unknown
-key_gui.xaero_toggle_entity_radar:key.keyboard.unknown
-key_gui.xaero_reverse_entity_radar:key.keyboard.unknown
-key_gui.xaero_toggle_manual_cave_mode:key.keyboard.unknown
-key_gui.xaero_alternative_list_players:key.keyboard.unknown
-key_gui.xaero_toggle_tracked_players:key.keyboard.unknown
-key_gui.xaero_toggle_pac_chunk_claims:key.keyboard.unknown
-key_gui.xaero_minimap_settings:key.keyboard.y
-key_key.open_muffler_gui:key.keyboard.unknown
 key_key.modmenu.open_menu:key.keyboard.unknown
 soundCategory_master:1.0
 soundCategory_music:1.0

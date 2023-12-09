@@ -53,19 +53,31 @@ public class ImprovedInventoryConfigScreen extends Screen {
         }
 
         final CheckboxWidget duraButton =
-                new CheckboxWidget(this.width / 2 - 130, this.height / 4 - 24, 20, 20, Text.of("Durability Display"), duraDisplay);
+                CheckboxWidget.builder(Text.of("Durability Display"), this.textRenderer)
+                        .pos(this.width / 2 - 130, this.height / 4 - 24)
+                        .checked(duraDisplay)
+                        .build();
         this.addDrawableChild(duraButton);
 
         final CheckboxWidget cycleButton =
-                new CheckboxWidget(this.width / 2 - 130, this.height / 4, 20, 20, Text.of("Slot Cycle"), slotCycle);
+                CheckboxWidget.builder(Text.of("Slot Cycle"), this.textRenderer)
+                        .pos(this.width / 2 - 130, this.height / 4)
+                        .checked(slotCycle)
+                        .build();
         this.addDrawableChild(cycleButton);
 
         final CheckboxWidget refillButton =
-                new CheckboxWidget(this.width / 2 - 130, this.height / 4 + 24, 20, 20, Text.of("Stack Refill"), stackRefill);
+                CheckboxWidget.builder(Text.of("Stack Refill"), this.textRenderer)
+                        .pos(this.width / 2 - 130, this.height / 4 + 24)
+                        .checked(stackRefill)
+                        .build();
         this.addDrawableChild(refillButton);
 
         final CheckboxWidget selectButton =
-                new CheckboxWidget(this.width / 2 - 130, this.height / 4 + 48, 20, 20, Text.of("Tool Select"), toolSelect);
+                CheckboxWidget.builder(Text.of("Tool Select"), this.textRenderer)
+                        .pos(this.width / 2 - 130, this.height / 4 + 48)
+                        .checked(toolSelect)
+                        .build();
         this.addDrawableChild(selectButton);
 
         final ButtonWidget doneButton =
