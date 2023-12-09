@@ -269,5 +269,23 @@
     },
     "done": true
   },
-  "DataVersion": 3465
+  "minecraft:end/elytra": {
+    "criteria": {
+      "elytra": "2023-12-09 13:15:29 -0500"
+    },
+    "done": true
+  },
+  "minecraft:recipes/building_blocks/jack_o_lantern": {
+    "criteria": {
+      "has_carved_pumpkin": "2023-12-09 13:15:29 -0500"
+    },
+    "done": true
+  },
+  "minecraft:recipes/food/pumpkin_pie": {
+    "criteria": {
+      "has_carved_pumpkin": "2023-12-09 13:15:29 -0500"
+    },
+    "done": true
+  },
+  "DataVersion": 3700
 }
