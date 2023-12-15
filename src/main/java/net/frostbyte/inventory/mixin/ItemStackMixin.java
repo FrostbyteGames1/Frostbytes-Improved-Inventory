@@ -29,14 +29,12 @@ public abstract class ItemStackMixin {
         if (StackRefiller.stackRefill) {
             MinecraftClient mc = MinecraftClient.getInstance();
             if (amount >= getCount() && mc.player.getInventory().getSlotWithStack(this.copy()) == mc.player.getInventory().selectedSlot && mc.currentScreen == null) {
-                for (int i = 36; i > 8; i--) {
+                for (int i = 35; i > 8; i--) {
                     if (mc.player.getInventory().getStack(i).getItem().equals(this.getItem())) {
                         targetSlot = i;
                         break;
                     }
                 }
-            } else {
-                targetSlot = -1;
             }
         }
     }
@@ -45,9 +43,11 @@ public abstract class ItemStackMixin {
     public void decrementTail(int amount, CallbackInfo ci) {
         if (StackRefiller.stackRefill) {
             MinecraftClient mc = MinecraftClient.getInstance();
-            if (targetSlot != -1) {
+            if (targetSlot != 0) {
                 mc.interactionManager.clickSlot(mc.player.playerScreenHandler.syncId, targetSlot, mc.player.getInventory().selectedSlot, SlotActionType.SWAP, mc.player);
                 mc.player.getInventory().markDirty();
+                mc.player.currentScreenHandler.sendContentUpdates();
+                mc.player.currentScreenHandler.updateToClient();
             }
         }
     }

@@ -28,6 +28,10 @@ public class ImprovedInventory implements ModInitializer {
 		DurabilityDisplayer durabilityDisplayer = new DurabilityDisplayer();
 		ClientTickEvents.END_CLIENT_TICK.register(durabilityDisplayer);
 		HudRenderCallback.EVENT.register(durabilityDisplayer);
+
+		InventorySorter inventorySorter = new InventorySorter();
+		inventorySorter.setKeyBindings();
+		ClientTickEvents.END_CLIENT_TICK.register(inventorySorter);
 	}
 
 }

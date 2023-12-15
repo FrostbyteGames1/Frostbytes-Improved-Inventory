@@ -114,9 +114,7 @@ public class SlotCycler implements ClientTickEvents.EndTick, HudRenderCallback {
                 break;
             }
         }
-        player.sendMessage(Text.of(String.valueOf(target)));
         if (target == top) {
-            player.sendMessage(Text.of("Top"));
             assert mc.interactionManager != null;
             assert mc.player != null;
             mc.interactionManager.clickSlot(mc.player.playerScreenHandler.syncId, bottom, current, SlotActionType.SWAP, mc.player);
@@ -124,7 +122,6 @@ public class SlotCycler implements ClientTickEvents.EndTick, HudRenderCallback {
             mc.interactionManager.clickSlot(mc.player.playerScreenHandler.syncId, top, current, SlotActionType.SWAP, mc.player);
             mc.player.getInventory().markDirty();
         } else if (target == middle) {
-            player.sendMessage(Text.of("Middle"));
             assert mc.interactionManager != null;
             assert mc.player != null;
             mc.interactionManager.clickSlot(mc.player.playerScreenHandler.syncId, bottom, current, SlotActionType.SWAP, mc.player);

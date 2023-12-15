@@ -30,6 +30,7 @@ public class ImprovedInventoryConfigScreen extends Screen {
         boolean slotCycle = true;
         boolean stackRefill = true;
         boolean toolSelect = true;
+        boolean inventorySort = true;
 
         try {
             if (Files.notExists(configFile)) {
@@ -44,6 +45,8 @@ public class ImprovedInventoryConfigScreen extends Screen {
                 stackRefill = json.getAsJsonPrimitive("stackRefill").getAsBoolean();
             if (json.has("toolSelect"))
                 toolSelect = json.getAsJsonPrimitive("toolSelect").getAsBoolean();
+            if (json.has("inventorySort"))
+                toolSelect = json.getAsJsonPrimitive("inventorySort").getAsBoolean();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -80,6 +83,13 @@ public class ImprovedInventoryConfigScreen extends Screen {
                         .build();
         this.addDrawableChild(selectButton);
 
+        final CheckboxWidget sortButton =
+                CheckboxWidget.builder(Text.of("Sort Inventory"), this.textRenderer)
+                        .pos(this.width / 2 - 130, this.height / 4 + 72)
+                        .checked(toolSelect)
+                        .build();
+        this.addDrawableChild(sortButton);
+
         final ButtonWidget doneButton =
                 ButtonWidget.builder(Text.of("Done"), button -> save(duraButton.isChecked(), cycleButton.isChecked(), refillButton.isChecked(), selectButton.isChecked()))
                         .dimensions(this.width / 2 - 130, this.height - 28, 260, 20).build();
@@ -94,6 +104,7 @@ public class ImprovedInventoryConfigScreen extends Screen {
             json.addProperty("slotCycle", cycle);
             json.addProperty("stackRefill", refill);
             json.addProperty("toolSelect", select);
+            json.addProperty("inventorySort", select);
             Files.writeString(configFile, gson.toJson(json));
         } catch (IOException e) {
             e.printStackTrace();

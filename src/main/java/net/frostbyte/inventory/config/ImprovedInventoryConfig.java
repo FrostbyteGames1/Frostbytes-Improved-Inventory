@@ -20,6 +20,8 @@ public class ImprovedInventoryConfig {
     boolean stackRefill = true;
     boolean toolSelect = true;
 
+    boolean inventorySort = true;
+
     public void write() {
         try {
             if (Files.notExists(configDir)) {
@@ -31,6 +33,7 @@ public class ImprovedInventoryConfig {
             json.addProperty("slotCycle", slotCycle);
             json.addProperty("stackRefill", stackRefill);
             json.addProperty("toolSelect", toolSelect);
+            json.addProperty("inventorySort", inventorySort);
             Files.writeString(configFile, gson.toJson(json));
         } catch (IOException e) {
             e.printStackTrace();
@@ -52,6 +55,8 @@ public class ImprovedInventoryConfig {
                 duraDisplay = json.getAsJsonPrimitive("stackRefill").getAsBoolean();
             if (json.has("toolSelect"))
                 duraDisplay = json.getAsJsonPrimitive("toolSelect").getAsBoolean();
+            if (json.has("inventorySort"))
+                duraDisplay = json.getAsJsonPrimitive("inventorySort").getAsBoolean();
         } catch (IOException e) {
             e.printStackTrace();
         }

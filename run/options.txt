@@ -36,7 +36,7 @@ gamma:1.0
 renderDistance:10
 simulationDistance:10
 entityDistanceScaling:1.0
-guiScale:3
+guiScale:2
 particles:0
 maxFps:260
 graphicsMode:1
@@ -122,6 +122,7 @@ key_key.hotbar.8:key.keyboard.8
 key_key.hotbar.9:key.keyboard.9
 key_Cycle Slot Up:key.mouse.5
 key_Cycle Slot Down:key.mouse.4
+key_Sort Container:key.mouse.middle
 key_key.modmenu.open_menu:key.keyboard.unknown
 soundCategory_master:1.0
 soundCategory_music:1.0
