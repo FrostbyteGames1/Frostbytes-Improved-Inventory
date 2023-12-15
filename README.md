@@ -8,6 +8,7 @@ This mod adds new behaviors to Minecraft's inventory and HUD, which can each be 
 2. Durability Display: Displays the durability of equipped armor on the screen.
 3. Stack Refill: Repopulates stacks of items in the hotbar with matching ones from the inventory.
 4. Tool Selection: Automatically switchs to the most effective tool for the targeted block or entity.
+5. Inventory Sorting: Combines and sorts all item stacks inside of an open container.
 
 **Notes:**
 
