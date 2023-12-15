@@ -7,18 +7,13 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.Generic3x3ContainerScreen;
-import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
-import net.minecraft.client.gui.screen.ingame.HopperScreen;
+import net.minecraft.client.gui.screen.ingame.*;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.Generic3x3ContainerScreenHandler;
-import net.minecraft.screen.GenericContainerScreenHandler;
-import net.minecraft.screen.HopperScreenHandler;
+import net.minecraft.screen.*;
 import net.minecraft.screen.slot.SlotActionType;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWMouseButtonCallback;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -59,11 +54,17 @@ public class InventorySorter implements ClientTickEvents.EndTick {
             e.printStackTrace();
         }
 
-        if (inventorySort && (mc.currentScreen instanceof GenericContainerScreen || mc.currentScreen instanceof Generic3x3ContainerScreen || mc.currentScreen instanceof HopperScreen)) {
-            if (InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), InputUtil.fromTranslationKey(sortKey.getBoundKeyTranslationKey()).getCode())) {
-                sortContainer(mc.player.currentScreenHandler.getStacks().subList(0, mc.player.currentScreenHandler.getStacks().size() - mc.player.getInventory().size() + 5));
+        if (mc.currentScreen instanceof GenericContainerScreen || mc.currentScreen instanceof Generic3x3ContainerScreen || mc.currentScreen instanceof HopperScreen || mc.currentScreen instanceof ShulkerBoxScreen) {
+            if (inventorySort) {
+                // If key is bound to keyboard
+                if (GLFW.glfwGetKey(MinecraftClient.getInstance().getWindow().getHandle(), InputUtil.fromTranslationKey(sortKey.getBoundKeyTranslationKey()).getCode()) == 1) {
+                    sortContainer(mc.player.currentScreenHandler.getStacks().subList(0, mc.player.currentScreenHandler.getStacks().size() - mc.player.getInventory().size() + 5));
+                }
+                // If key is bound to mouse button
+                if (GLFW.glfwGetMouseButton(MinecraftClient.getInstance().getWindow().getHandle(), InputUtil.fromTranslationKey(sortKey.getBoundKeyTranslationKey()).getCode()) == 1) {
+                    sortContainer(mc.player.currentScreenHandler.getStacks().subList(0, mc.player.currentScreenHandler.getStacks().size() - mc.player.getInventory().size() + 5));
+                }
             }
-            // Also trigger if sort key is bound to mouse button
         }
     }
 
@@ -137,6 +138,8 @@ public class InventorySorter implements ClientTickEvents.EndTick {
                     } else if (mc.player.currentScreenHandler instanceof Generic3x3ContainerScreenHandler screenHandler) {
                         screenHandler.sendContentUpdates();
                     } else if (mc.player.currentScreenHandler instanceof HopperScreenHandler screenHandler) {
+                        screenHandler.sendContentUpdates();
+                    } else if (mc.player.currentScreenHandler instanceof ShulkerBoxScreenHandler screenHandler) {
                         screenHandler.sendContentUpdates();
                     }
                 }
