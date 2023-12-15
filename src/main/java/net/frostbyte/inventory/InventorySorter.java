@@ -166,6 +166,23 @@ public class InventorySorter implements ClientTickEvents.EndTick {
                 }
             }
         }
+        // Order stacks of same name by size
+        for (int i = 0; i < sortedStacks.size(); i++) {
+            for (int j = 0; j < sortedStacks.size(); j++) {
+                if (i != j) {
+                    if (mc.player.currentScreenHandler.getSlot(i).getStack().getName().equals(mc.player.currentScreenHandler.getSlot(j).getStack().getName())) {
+                        if (mc.player.currentScreenHandler.getSlot(i).getStack().getCount() > mc.player.currentScreenHandler.getSlot(j).getStack().getCount()) {
+                            assert mc.interactionManager != null;
+                            mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player.getInventory().player);
+                            mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, j, 0, SlotActionType.PICKUP, mc.player.getInventory().player);
+                            if (!mc.player.currentScreenHandler.getCursorStack().isEmpty()) {
+                                mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player.getInventory().player);
+                            }
+                        }
+                    }
+                }
+            }
+        }
         // Move sorted stacks to top left of container
         for (int i = offset; i < sortedStacks.size(); i++) {
             assert mc.interactionManager != null;
