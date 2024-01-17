@@ -9,6 +9,7 @@ This mod adds new behaviors to Minecraft's inventory and HUD, which can each be 
 3. Stack Refill: Repopulates stacks of items in the hotbar with matching ones from the inventory.
 4. Tool Selection: Automatically switchs to the most effective tool for the targeted block or entity.
 5. Inventory Sorting: Combines and sorts all item stacks inside of an open container.
+6. Zoom: Temporarily drops the FOV in order to zoom in on the center of the screen.
 
 **Notes:**
 
