@@ -32,6 +32,10 @@ public class ImprovedInventory implements ModInitializer {
 		InventorySorter inventorySorter = new InventorySorter();
 		inventorySorter.setKeyBindings();
 		ClientTickEvents.END_CLIENT_TICK.register(inventorySorter);
+
+		Zoom zoom = new Zoom();
+		zoom.setKeyBindings();
+		ClientTickEvents.END_CLIENT_TICK.register(zoom);
 	}
 
 }

@@ -19,8 +19,7 @@ public class ImprovedInventoryConfig {
     boolean slotCycle = true;
     boolean stackRefill = true;
     boolean toolSelect = true;
-
-    boolean inventorySort = true;
+    int zoomFOV = 30;
 
     public void write() {
         try {
@@ -33,7 +32,7 @@ public class ImprovedInventoryConfig {
             json.addProperty("slotCycle", slotCycle);
             json.addProperty("stackRefill", stackRefill);
             json.addProperty("toolSelect", toolSelect);
-            json.addProperty("inventorySort", inventorySort);
+            json.addProperty("zoomFOV", zoomFOV);
             Files.writeString(configFile, gson.toJson(json));
         } catch (IOException e) {
             e.printStackTrace();
@@ -50,13 +49,13 @@ public class ImprovedInventoryConfig {
             if (json.has("duraDisplay"))
                 duraDisplay = json.getAsJsonPrimitive("duraDisplay").getAsBoolean();
             if (json.has("slotCycle"))
-                duraDisplay = json.getAsJsonPrimitive("slotCycle").getAsBoolean();
+                slotCycle = json.getAsJsonPrimitive("slotCycle").getAsBoolean();
             if (json.has("stackRefill"))
-                duraDisplay = json.getAsJsonPrimitive("stackRefill").getAsBoolean();
+                stackRefill = json.getAsJsonPrimitive("stackRefill").getAsBoolean();
             if (json.has("toolSelect"))
-                duraDisplay = json.getAsJsonPrimitive("toolSelect").getAsBoolean();
-            if (json.has("inventorySort"))
-                duraDisplay = json.getAsJsonPrimitive("inventorySort").getAsBoolean();
+                toolSelect = json.getAsJsonPrimitive("toolSelect").getAsBoolean();
+            if (json.has("zoomFOV"))
+                zoomFOV = json.getAsJsonPrimitive("zoomFOV").getAsInt();
         } catch (IOException e) {
             e.printStackTrace();
         }

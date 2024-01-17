@@ -7,9 +7,12 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.CheckboxWidget;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
+import net.minecraft.util.Colors;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -30,7 +33,7 @@ public class ImprovedInventoryConfigScreen extends Screen {
         boolean slotCycle = true;
         boolean stackRefill = true;
         boolean toolSelect = true;
-        boolean inventorySort = true;
+        int zoomFOV = 30;
 
         try {
             if (Files.notExists(configFile)) {
@@ -45,8 +48,8 @@ public class ImprovedInventoryConfigScreen extends Screen {
                 stackRefill = json.getAsJsonPrimitive("stackRefill").getAsBoolean();
             if (json.has("toolSelect"))
                 toolSelect = json.getAsJsonPrimitive("toolSelect").getAsBoolean();
-            if (json.has("inventorySort"))
-                toolSelect = json.getAsJsonPrimitive("inventorySort").getAsBoolean();
+            if (json.has("zoomFOV"))
+                zoomFOV = json.getAsJsonPrimitive("zoomFOV").getAsInt();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -83,20 +86,32 @@ public class ImprovedInventoryConfigScreen extends Screen {
                         .build();
         this.addDrawableChild(selectButton);
 
-        final CheckboxWidget sortButton =
-                CheckboxWidget.builder(Text.of("Sort Inventory"), this.textRenderer)
-                        .pos(this.width / 2 - 130, this.height / 4 + 72)
-                        .checked(toolSelect)
-                        .build();
-        this.addDrawableChild(sortButton);
+        final TextFieldWidget zoomField =
+                new TextFieldWidget(textRenderer, this.width / 2 - 130, this.height / 4 + 72, 60, 20, Text.of("Zoom FOV"));
+        zoomField.setText(String.valueOf(zoomFOV));
+        zoomField.setTooltip(Tooltip.of(Text.of("Set the target FOV for zoom.\n(Defaults to 30)")));
+        zoomField.setPlaceholder(Text.of("30"));
+        this.addDrawableChild(zoomField);
 
         final ButtonWidget doneButton =
-                ButtonWidget.builder(Text.of("Done"), button -> save(duraButton.isChecked(), cycleButton.isChecked(), refillButton.isChecked(), selectButton.isChecked()))
+                ButtonWidget.builder(Text.of("Done"), button -> save(duraButton.isChecked(), cycleButton.isChecked(), refillButton.isChecked(), selectButton.isChecked(), zoomField.getText()))
                         .dimensions(this.width / 2 - 130, this.height - 28, 260, 20).build();
         this.addDrawableChild(doneButton);
     }
 
-    void save(boolean dura, boolean cycle, boolean refill, boolean select) {
+    void save(boolean dura, boolean cycle, boolean refill, boolean select, String zoom) {
+        if (zoom.matches("[0-9]+\\.[0-9]+")) {
+            zoom = zoom.split("\\.")[0];
+        } else if (!zoom.matches("[0-9]+")) {
+            zoom = "30";
+        }
+        if (Integer.parseInt(zoom) < 30) {
+            zoom = "30";
+        }
+        if (Integer.parseInt(zoom) > MinecraftClient.getInstance().options.getFov().getValue()) {
+            zoom = String.valueOf(MinecraftClient.getInstance().options.getFov().getValue());
+        }
+
         try {
             Files.deleteIfExists(configFile);
             JsonObject json = new JsonObject();
@@ -104,12 +119,13 @@ public class ImprovedInventoryConfigScreen extends Screen {
             json.addProperty("slotCycle", cycle);
             json.addProperty("stackRefill", refill);
             json.addProperty("toolSelect", select);
-            json.addProperty("inventorySort", select);
+            json.addProperty("zoomFOV", zoom);
             Files.writeString(configFile, gson.toJson(json));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        assert client != null;
         client.setScreen(this.parent);
     }
 
@@ -117,6 +133,7 @@ public class ImprovedInventoryConfigScreen extends Screen {
     public void render(final DrawContext context, final int mouseX, final int mouseY, final float delta) {
         this.renderBackground(context, mouseX, mouseY, delta);
         context.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 20, 16777215);
+        context.drawText(this.textRenderer, "Zoom FOV", this.width / 2 - 60, this.height / 4 + 78, Colors.WHITE, false);
         super.render(context, mouseX, mouseY, delta);
     }
 }

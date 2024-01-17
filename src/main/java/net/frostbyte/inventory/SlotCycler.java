@@ -15,7 +15,6 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.screen.slot.SlotActionType;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.io.IOException;
@@ -137,6 +136,7 @@ public class SlotCycler implements ClientTickEvents.EndTick, HudRenderCallback {
 
     @Override
     public void onHudRender(DrawContext drawContext, float tickDelta) {
+        assert mc.player != null;
         if (!mc.player.isSpectator() && slotCycle && !mc.options.hudHidden) {
             int x = 0;
             int y = 0;
@@ -152,6 +152,7 @@ public class SlotCycler implements ClientTickEvents.EndTick, HudRenderCallback {
             RenderSystem.setShaderTexture(0, extraSlots);
             drawContext.drawTexture(new Identifier(ImprovedInventory.MOD_ID, "textures/extra_slots.png"), x + 98,y - 23,0,0,62,24, 62,24);
             for (int i = 3; i > 0; i--) {
+                assert mc.player != null;
                 if (!mc.player.getInventory().getStack(i * 9 + mc.player.getInventory().selectedSlot).isEmpty()) {
                     drawContext.drawItem(mc.player.getInventory().getStack(i * 9 + mc.player.getInventory().selectedSlot), x + 101, y - 19);
                     break;
