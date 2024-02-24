@@ -49,6 +49,7 @@ public class DurabilityDisplayer implements ClientTickEvents.EndTick, HudRenderC
 
     @Override
     public void onHudRender(DrawContext drawContext, float tickDelta) {
+        assert mc.player != null;
         if (!mc.player.isSpectator() && duraDisplay && !mc.options.hudHidden) {
             int x = mc.getWindow().getScaledWidth();
             int y = mc.getWindow().getScaledHeight();
@@ -60,40 +61,20 @@ public class DurabilityDisplayer implements ClientTickEvents.EndTick, HudRenderC
             drawContext.drawTexture(new Identifier(ImprovedInventory.MOD_ID, "textures/dura_slot.png"),x - 22,y - 45,0,0,22,22, 22,22);
             drawContext.drawTexture(new Identifier(ImprovedInventory.MOD_ID, "textures/dura_slot.png"),x - 22,y - 22,0,0,22,22, 22,22);
             if (!mc.player.getInventory().getStack(39).isEmpty()) {
-                int dura = mc.player.getInventory().getStack(39).getMaxDamage() - mc.player.getInventory().getStack(39).getDamage();
-                if (dura > 0f) {
-                    drawContext.drawText(mc.textRenderer, String.valueOf(dura), x - 20, y - 77, mc.player.getInventory().getStack(39).getItemBarColor(), true);
-                    drawContext.drawItem(mc.player.getInventory().getStack(39), x - 19, y - 90);
-                } else {
-                    drawContext.drawItem(mc.player.getInventory().getStack(39), x - 19, y - 88);
-                }
+                drawContext.drawItem(mc.player.getInventory().getStack(39), x - 19, y - 88);
+                drawContext.drawItemInSlot(mc.textRenderer, mc.player.getInventory().getStack(39), x - 20, y - 88);
             }
             if (!mc.player.getInventory().getStack(38).isEmpty()) {
-                int dura = mc.player.getInventory().getStack(38).getMaxDamage() - mc.player.getInventory().getStack(38).getDamage();
-                if (dura > 0f) {
-                    drawContext.drawText(mc.textRenderer, String.valueOf(dura), x - 20, y - 54, mc.player.getInventory().getStack(38).getItemBarColor(), true);
-                    drawContext.drawItem(mc.player.getInventory().getStack(38), x - 19, y - 67);
-                } else {
-                    drawContext.drawItem(mc.player.getInventory().getStack(39), x - 19, y - 65);
-                }
+                drawContext.drawItem(mc.player.getInventory().getStack(38), x - 19, y - 65);
+                drawContext.drawItemInSlot(mc.textRenderer, mc.player.getInventory().getStack(38), x - 20, y - 65);
             }
             if (!mc.player.getInventory().getStack(37).isEmpty()) {
-                int dura = mc.player.getInventory().getStack(37).getMaxDamage() - mc.player.getInventory().getStack(37).getDamage();
-                if (dura > 0f) {
-                    drawContext.drawText(mc.textRenderer, String.valueOf(dura), x - 20, y - 31, mc.player.getInventory().getStack(37).getItemBarColor(), true);
-                    drawContext.drawItem(mc.player.getInventory().getStack(37), x - 19, y - 44);
-                } else {
-                    drawContext.drawItem(mc.player.getInventory().getStack(39), x - 19, y - 42);
-                }
+                drawContext.drawItem(mc.player.getInventory().getStack(37), x - 19, y - 42);
+                drawContext.drawItemInSlot(mc.textRenderer, mc.player.getInventory().getStack(37), x - 20, y - 42);
             }
             if (!mc.player.getInventory().getStack(36).isEmpty()) {
-                int dura = mc.player.getInventory().getStack(36).getMaxDamage() - mc.player.getInventory().getStack(36).getDamage();
-                if (dura > 0f) {
-                    drawContext.drawText(mc.textRenderer, String.valueOf(dura), x - 20, y - 8, mc.player.getInventory().getStack(36).getItemBarColor(), true);
-                    drawContext.drawItem(mc.player.getInventory().getStack(36), x - 19, y - 21);
-                } else {
-                    drawContext.drawItem(mc.player.getInventory().getStack(39), x - 19, y - 20);
-                }
+                drawContext.drawItem(mc.player.getInventory().getStack(36), x - 19, y - 19);
+                drawContext.drawItemInSlot(mc.textRenderer, mc.player.getInventory().getStack(36), x - 20, y - 19);
             }
         }
     }

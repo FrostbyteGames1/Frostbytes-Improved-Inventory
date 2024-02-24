@@ -52,16 +52,7 @@ public class Zoom implements ClientTickEvents.EndTick {
                 if (mc.options.getFov().getValue() == standardFOV) {
                     mc.player.playSound(SoundEvents.ITEM_SPYGLASS_USE, 1.0F, 1.0F);
                 }
-                if (mc.options.getFov().getValue() > zoomFOV) {
-                    int newFOV = mc.options.getFov().getValue() - 10;
-                    if (newFOV < zoomFOV) {
-                        newFOV = zoomFOV;
-                    }
-                    mc.options.getFov().setValue(newFOV);
-                    if (mc.options.getFov().getValue() < zoomFOV) {
-                        mc.options.getFov().setValue(zoomFOV);
-                    }
-                }
+                mc.options.getFov().setValue(zoomFOV);
             } else {
                 if (mc.options.getFov().getValue() != standardFOV) {
                     mc.player.playSound(SoundEvents.ITEM_SPYGLASS_STOP_USING, 1.0F, 1.0F);
@@ -69,7 +60,14 @@ public class Zoom implements ClientTickEvents.EndTick {
                 }
             }
         } else {
-            standardFOV = mc.options.getFov().getValue();
+            if (mc.currentScreen.shouldPause()) {
+                if (mc.options.getFov().getValue() != standardFOV) {
+                    standardFOV = mc.options.getFov().getValue();
+                }
+            } else {
+                mc.player.playSound(SoundEvents.ITEM_SPYGLASS_STOP_USING, 1.0F, 1.0F);
+                mc.options.getFov().setValue(standardFOV);
+            }
         }
     }
 }
