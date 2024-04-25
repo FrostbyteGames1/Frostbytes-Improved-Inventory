@@ -113,12 +113,6 @@
     },
     "done": true
   },
-  "minecraft:recipes/decorations/crafting_table": {
-    "criteria": {
-      "unlock_right_away": "2023-06-30 18:54:53 -0400"
-    },
-    "done": true
-  },
   "minecraft:recipes/decorations/chest": {
     "criteria": {
       "has_lots_of_items": "2023-06-30 18:54:52 -0400"
@@ -203,12 +197,6 @@
     },
     "done": true
   },
-  "minecraft:adventure/adventuring_time": {
-    "criteria": {
-      "minecraft:desert": "2023-06-30 18:54:53 -0400"
-    },
-    "done": false
-  },
   "minecraft:recipes/decorations/barrel": {
     "criteria": {
       "has_planks": "2023-06-30 18:54:52 -0400"
@@ -275,5 +263,17 @@
     },
     "done": true
   },
-  "DataVersion": 3465
+  "minecraft:recipes/decorations/crafting_table": {
+    "criteria": {
+      "unlock_right_away": "2023-06-30 18:54:53 -0400"
+    },
+    "done": true
+  },
+  "minecraft:adventure/adventuring_time": {
+    "criteria": {
+      "minecraft:desert": "2023-06-30 18:54:53 -0400"
+    },
+    "done": false
+  },
+  "DataVersion": 3837
 }

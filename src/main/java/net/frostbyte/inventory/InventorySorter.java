@@ -51,28 +51,45 @@ public class InventorySorter implements ClientTickEvents.EndTick {
             if (json.has("inventorySort"))
                 inventorySort = json.getAsJsonPrimitive("inventorySort").getAsBoolean();
         } catch (IOException e) {
-            e.printStackTrace();
+            ImprovedInventory.LOGGER.error(e.getMessage());
         }
 
-        if (mc.currentScreen instanceof GenericContainerScreen || mc.currentScreen instanceof Generic3x3ContainerScreen || mc.currentScreen instanceof HopperScreen || mc.currentScreen instanceof ShulkerBoxScreen) {
-            if (inventorySort) {
-                // If key is bound to keyboard
-                if (GLFW.glfwGetKey(MinecraftClient.getInstance().getWindow().getHandle(), InputUtil.fromTranslationKey(sortKey.getBoundKeyTranslationKey()).getCode()) == 1) {
+        if (mc.currentScreen instanceof GenericContainerScreen || mc.currentScreen instanceof ShulkerBoxScreen || mc.currentScreen instanceof HopperScreen || mc.currentScreen instanceof Generic3x3ContainerScreen) {
+            if (inventorySort && shouldSort()) {
+                long windowCode = MinecraftClient.getInstance().getWindow().getHandle();
+                int keyCode = InputUtil.fromTranslationKey(sortKey.getBoundKeyTranslationKey()).getCode();
+                if (keyCode > 31 && GLFW.glfwGetKey(windowCode, keyCode) == 1) {
                     sortContainer(mc.player.currentScreenHandler.getStacks().subList(0, mc.player.currentScreenHandler.getStacks().size() - mc.player.getInventory().size() + 5));
                 }
-                // If key is bound to mouse button
-                if (GLFW.glfwGetMouseButton(MinecraftClient.getInstance().getWindow().getHandle(), InputUtil.fromTranslationKey(sortKey.getBoundKeyTranslationKey()).getCode()) == 1) {
+                if (keyCode < 8 && GLFW.glfwGetMouseButton(windowCode, keyCode) == 1) {
                     sortContainer(mc.player.currentScreenHandler.getStacks().subList(0, mc.player.currentScreenHandler.getStacks().size() - mc.player.getInventory().size() + 5));
                 }
             }
         }
     }
 
+    // Stops items from being duped if player is in creative mode and sort is bound to pick block
+    boolean shouldSort() {
+        if (mc.currentScreen instanceof HandledScreen<?> handledScreen && mc.player != null) {
+            if (handledScreen.focusedSlot == null || handledScreen.focusedSlot.getStack().isEmpty()) {
+                return true;
+            }
+            if (!sortKey.equals(mc.options.pickItemKey)) {
+                return true;
+            }
+            if (!mc.player.isInCreativeMode()) {
+                return true;
+            }
+            return false;
+        }
+        return true;
+    }
+
     List<ItemStack> sortStacks(List<ItemStack> stacks) {
         // Combine stacks
         for (int i = 0; i < stacks.size(); i++) {
             for (int j = 0; j < stacks.size(); j++) {
-                if (i != j && ItemStack.canCombine(stacks.get(j), stacks.get(i))) {
+                if (i != j && ItemStack.areItemsAndComponentsEqual(stacks.get(i), stacks.get(j))) {
                     stacks.set(i, stacks.get(i).copyWithCount(stacks.get(i).getCount() + stacks.get(j).getCount()));
                     if (stacks.get(i).getCount() > stacks.get(i).getMaxCount()) {
                         int overflow = stacks.get(i).getCount() - stacks.get(i).getMaxCount();

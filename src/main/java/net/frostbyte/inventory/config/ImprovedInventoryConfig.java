@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import net.fabricmc.loader.api.FabricLoader;
+import net.frostbyte.inventory.ImprovedInventory;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -19,7 +20,9 @@ public class ImprovedInventoryConfig {
     boolean slotCycle = true;
     boolean stackRefill = true;
     boolean toolSelect = true;
+    boolean paperdoll = true;
     int zoomFOV = 30;
+    int gamma = 500;
 
     public void write() {
         try {
@@ -32,10 +35,12 @@ public class ImprovedInventoryConfig {
             json.addProperty("slotCycle", slotCycle);
             json.addProperty("stackRefill", stackRefill);
             json.addProperty("toolSelect", toolSelect);
+            json.addProperty("paperdoll", paperdoll);
             json.addProperty("zoomFOV", zoomFOV);
+            json.addProperty("gamma", gamma);
             Files.writeString(configFile, gson.toJson(json));
         } catch (IOException e) {
-            e.printStackTrace();
+            ImprovedInventory.LOGGER.error(e.getMessage());
         }
     }
 
@@ -54,10 +59,14 @@ public class ImprovedInventoryConfig {
                 stackRefill = json.getAsJsonPrimitive("stackRefill").getAsBoolean();
             if (json.has("toolSelect"))
                 toolSelect = json.getAsJsonPrimitive("toolSelect").getAsBoolean();
+            if (json.has("paperdoll"))
+                paperdoll = json.getAsJsonPrimitive("paperdoll").getAsBoolean();
             if (json.has("zoomFOV"))
                 zoomFOV = json.getAsJsonPrimitive("zoomFOV").getAsInt();
+            if (json.has("gamma"))
+                gamma = json.getAsJsonPrimitive("gamma").getAsInt();
         } catch (IOException e) {
-            e.printStackTrace();
+            ImprovedInventory.LOGGER.error(e.getMessage());
         }
     }
 

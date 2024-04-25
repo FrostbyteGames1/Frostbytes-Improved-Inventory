@@ -10,10 +10,10 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.item.Items;
-import net.minecraft.text.Text;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -95,30 +95,34 @@ public class ToolSelector implements ClientTickEvents.EndTick{
             Blocks.WHITE_CARPET
     ));
 
-    public float getAttackDamageOfItemInSlot(int itemSlot) {
+    public double getAttackDamageOfItemInSlot(int itemSlot) {
         assert mc.player != null;
-        String damageString = mc.player.getInventory().getStack(itemSlot)
-                .getAttributeModifiers(EquipmentSlot.MAINHAND)
-                .get(EntityAttributes.GENERIC_ATTACK_DAMAGE).toString()
-                .replaceFirst(".*?amount=([0-9]+\\.[0-9]+).*", "$1");
-        if(damageString.matches("[0-9]+\\.[0-9]+")){
-            return 1.0F + Float.parseFloat(damageString);
-        } else {
-            return 1.0F;
+        AttributeModifiersComponent component = mc.player.getInventory().getStack(itemSlot).getComponents().get(DataComponentTypes.ATTRIBUTE_MODIFIERS);
+        double modifier = 0.0F;
+        if (component != null && component.modifiers() != null && !component.modifiers().isEmpty()) {
+            for (AttributeModifiersComponent.Entry entry : component.modifiers()) {
+                if (entry.attribute().value().getTranslationKey().equals("attribute.name.generic.attack_damage")) {
+                    modifier = entry.modifier().value();
+                    break;
+                }
+            }
         }
+        return mc.player.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_DAMAGE) + modifier;
     }
 
-    public float getAttackSpeedOfItemInSlot(int itemSlot) {
+    public double getAttackSpeedOfItemInSlot(int itemSlot) {
         assert mc.player != null;
-        String speedString = mc.player.getInventory().getStack(itemSlot)
-                .getAttributeModifiers(EquipmentSlot.MAINHAND)
-                .get(EntityAttributes.GENERIC_ATTACK_SPEED).toString()
-                .replaceFirst(".*?amount=-([0-9]+\\.[0-9]+).*", "$1");
-        if(speedString.matches("[0-9]+\\.[0-9]+")){
-            return 4.0F - Float.parseFloat(speedString);
-        } else {
-            return 4.0F;
+        AttributeModifiersComponent component = mc.player.getInventory().getStack(itemSlot).getComponents().get(DataComponentTypes.ATTRIBUTE_MODIFIERS);
+        double modifier = 0.0F;
+        if (component != null && component.modifiers() != null && !component.modifiers().isEmpty()) {
+            for (AttributeModifiersComponent.Entry entry : component.modifiers()) {
+                if (entry.attribute().value().getTranslationKey().equals("attribute.name.generic.attack_speed")) {
+                    modifier = entry.modifier().value();
+                    break;
+                }
+            }
         }
+        return mc.player.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_SPEED) + modifier;
     }
 
     @Override
@@ -139,14 +143,14 @@ public class ToolSelector implements ClientTickEvents.EndTick{
             if (json.has("toolSelect"))
                 toolSelect = json.getAsJsonPrimitive("toolSelect").getAsBoolean();
         } catch (IOException e) {
-            e.printStackTrace();
+            ImprovedInventory.LOGGER.error(e.getMessage());
         }
 
         if (mc.options.attackKey.isPressed() && !player.isSpectator() && !player.isCreative() && toolSelect) {
             HitResult target = mc.crosshairTarget;
             assert target != null;
             if (target.getType() == HitResult.Type.ENTITY) {
-                float maxDPS = getAttackDamageOfItemInSlot(player.getInventory().selectedSlot) * getAttackSpeedOfItemInSlot(player.getInventory().selectedSlot);
+                double maxDPS = getAttackDamageOfItemInSlot(player.getInventory().selectedSlot) * getAttackSpeedOfItemInSlot(player.getInventory().selectedSlot);
                 int maxDamageSlot = player.getInventory().selectedSlot;
                 for (int i = 0; i < 9; i++) {
                     if (maxDPS < getAttackDamageOfItemInSlot(i) * getAttackSpeedOfItemInSlot(i)) {
@@ -178,20 +182,21 @@ public class ToolSelector implements ClientTickEvents.EndTick{
                             }
                         }
                         int slot = player.getInventory().selectedSlot;
-                        float fastestBreak = player.getInventory().getStack(slot).getItem().getMiningSpeedMultiplier(player.getInventory().getStack(slot), blockState);
+                        float fastestBreak = player.getInventory().getStack(slot).getItem().getMiningSpeed(player.getInventory().getStack(slot), blockState);
                         int fastestBreakSlot = player.getInventory().selectedSlot;
                         for (int i = 0; i < 9; i++) {
-                            if (player.getInventory().getStack(i).getItem().canMine(blockState, mc.world, blockPos, player) && player.getInventory().getStack(i).getItem().getMiningSpeedMultiplier(player.getInventory().getStack(i), blockState) > fastestBreak) {
-                                fastestBreak = player.getInventory().getStack(i).getItem().getMiningSpeedMultiplier(player.getInventory().getStack(i), blockState);
+                            assert mc.player != null;
+                            if (player.getInventory().getStack(i).getItem().canMine(blockState, mc.world, blockPos, player) && player.getInventory().getStack(i).getItem().getMiningSpeed(player.getInventory().getStack(i), blockState) > fastestBreak) {
+                                fastestBreak = player.getInventory().getStack(i).getItem().getMiningSpeed(player.getInventory().getStack(i), blockState);
                                 fastestBreakSlot = i;
                             }
                         }
-                        if (!player.getInventory().getStack(fastestBreakSlot).getItem().isSuitableFor(blockState) && player.getInventory().getStack(fastestBreakSlot).getItem().isDamageable()) {
-                            if (!player.getInventory().getMainHandStack().getItem().isDamageable()) {
+                        if (!player.getInventory().getStack(fastestBreakSlot).getItem().canMine(blockState, mc.world, blockPos, player) && player.getInventory().getStack(fastestBreakSlot).getItem().getComponents().contains(DataComponentTypes.MAX_DAMAGE)) {
+                            if (player.getInventory().getMainHandStack().getItem().getComponents().get(DataComponentTypes.MAX_DAMAGE) != null) {
                                 fastestBreakSlot = player.getInventory().selectedSlot;
                             } else {
                                 for (int i = 0; i < 9; i++) {
-                                    if (!player.getInventory().getStack(fastestBreakSlot).getItem().isDamageable()) {
+                                    if (!player.getInventory().getStack(fastestBreakSlot).getItem().getComponents().contains(DataComponentTypes.MAX_DAMAGE)) {
                                         fastestBreakSlot = i;
                                     }
                                 }

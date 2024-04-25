@@ -18,8 +18,8 @@ import java.nio.file.Path;
 public class Zoom implements ClientTickEvents.EndTick {
     final Path configFile = FabricLoader.getInstance().getConfigDir().resolve("frostbyte/improved-inventory.json");
     final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    int standardFOV;
-    int zoomFOV;
+    int standardFOV = 90;
+    int zoomFOV = 30;
     public KeyBinding zoomKey;
 
     MinecraftClient mc;
@@ -44,7 +44,7 @@ public class Zoom implements ClientTickEvents.EndTick {
             if (json.has("zoomFOV"))
                 zoomFOV = json.getAsJsonPrimitive("zoomFOV").getAsInt();
         } catch (IOException e) {
-            e.printStackTrace();
+            ImprovedInventory.LOGGER.error(e.getMessage());
         }
 
         if (mc.currentScreen == null) {
@@ -61,7 +61,10 @@ public class Zoom implements ClientTickEvents.EndTick {
             }
         } else {
             if (mc.currentScreen.shouldPause()) {
-                if (mc.options.getFov().getValue() != standardFOV) {
+                if (mc.options.getFov().getValue() == zoomFOV) {
+                    mc.player.playSound(SoundEvents.ITEM_SPYGLASS_STOP_USING, 1.0F, 1.0F);
+                    mc.options.getFov().setValue(standardFOV);
+                } else if (mc.options.getFov().getValue() != standardFOV) {
                     standardFOV = mc.options.getFov().getValue();
                 }
             } else {

@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.frostbyte.inventory.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "SimpleOptionMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

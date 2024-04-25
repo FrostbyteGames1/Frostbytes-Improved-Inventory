@@ -53,7 +53,7 @@ public class SlotCycler implements ClientTickEvents.EndTick, HudRenderCallback {
             if (json.has("slotCycle"))
                 slotCycle = json.getAsJsonPrimitive("slotCycle").getAsBoolean();
         } catch (IOException e) {
-            e.printStackTrace();
+            ImprovedInventory.LOGGER.error(e.getMessage());
         }
 
         if (slotCycle) {

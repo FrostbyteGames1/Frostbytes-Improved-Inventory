@@ -4,10 +4,13 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ImprovedInventory implements ModInitializer {
 
 	public static final String MOD_ID = "inventory";
+	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
 	@Override
 	public void onInitialize() {
@@ -36,6 +39,13 @@ public class ImprovedInventory implements ModInitializer {
 		Zoom zoom = new Zoom();
 		zoom.setKeyBindings();
 		ClientTickEvents.END_CLIENT_TICK.register(zoom);
+
+		Gamma gamma = new Gamma();
+		gamma.setKeyBindings();
+		ClientTickEvents.END_CLIENT_TICK.register(gamma);
+
+		Paperdoll paperdoll = new Paperdoll();
+		HudRenderCallback.EVENT.register(paperdoll);
 	}
 
 }
