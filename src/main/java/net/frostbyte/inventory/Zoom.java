@@ -51,10 +51,10 @@ public class Zoom implements ClientTickEvents.EndTick {
             if (zoomKey.isPressed()) {
                 if (mc.options.getFov().getValue() == standardFOV) {
                     mc.player.playSound(SoundEvents.ITEM_SPYGLASS_USE, 1.0F, 1.0F);
+                    mc.options.getFov().setValue(zoomFOV);
                 }
-                mc.options.getFov().setValue(zoomFOV);
             } else {
-                if (mc.options.getFov().getValue() != standardFOV) {
+                if (mc.options.getFov().getValue() == zoomFOV) {
                     mc.player.playSound(SoundEvents.ITEM_SPYGLASS_STOP_USING, 1.0F, 1.0F);
                     mc.options.getFov().setValue(standardFOV);
                 }
@@ -68,8 +68,10 @@ public class Zoom implements ClientTickEvents.EndTick {
                     standardFOV = mc.options.getFov().getValue();
                 }
             } else {
-                mc.player.playSound(SoundEvents.ITEM_SPYGLASS_STOP_USING, 1.0F, 1.0F);
-                mc.options.getFov().setValue(standardFOV);
+                if (mc.options.getFov().getValue() == zoomFOV) {
+                    mc.player.playSound(SoundEvents.ITEM_SPYGLASS_STOP_USING, 1.0F, 1.0F);
+                    mc.options.getFov().setValue(standardFOV);
+                }
             }
         }
     }

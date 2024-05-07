@@ -68,19 +68,10 @@ public class InventorySorter implements ClientTickEvents.EndTick {
         }
     }
 
-    // Stops items from being duped if player is in creative mode and sort is bound to pick block
+    // Prioritizes pick item over sort if player is in creative mode and both actions have the same keybind
     boolean shouldSort() {
         if (mc.currentScreen instanceof HandledScreen<?> handledScreen && mc.player != null) {
-            if (handledScreen.focusedSlot == null || handledScreen.focusedSlot.getStack().isEmpty()) {
-                return true;
-            }
-            if (!sortKey.equals(mc.options.pickItemKey)) {
-                return true;
-            }
-            if (!mc.player.isInCreativeMode()) {
-                return true;
-            }
-            return false;
+            return handledScreen.focusedSlot == null || handledScreen.focusedSlot.getStack().isEmpty() || !sortKey.equals(mc.options.pickItemKey) || !mc.player.isInCreativeMode();
         }
         return true;
     }
