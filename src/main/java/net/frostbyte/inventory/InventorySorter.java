@@ -8,8 +8,10 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.*;
+import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.*;
 import net.minecraft.screen.slot.SlotActionType;
@@ -18,9 +20,6 @@ import org.lwjgl.glfw.GLFW;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Comparator;
-import java.util.List;
-import java.util.function.Predicate;
 
 public class InventorySorter implements ClientTickEvents.EndTick {
 
@@ -30,6 +29,7 @@ public class InventorySorter implements ClientTickEvents.EndTick {
     public KeyBinding sortKey;
 
     MinecraftClient mc;
+    ClientPlayerInteractionManager interactionManager;
 
     public void setKeyBindings() {
         KeyBindingHelper.registerKeyBinding(sortKey = new KeyBinding("Sort Container", InputUtil.Type.MOUSE, 2, "Improved Inventory"));
@@ -38,6 +38,7 @@ public class InventorySorter implements ClientTickEvents.EndTick {
     @Override
     public void onEndTick(MinecraftClient client) {
         mc = client;
+        interactionManager = mc.interactionManager;
 
         if (mc.player == null) {
             return;
@@ -59,158 +60,79 @@ public class InventorySorter implements ClientTickEvents.EndTick {
                 long windowCode = MinecraftClient.getInstance().getWindow().getHandle();
                 int keyCode = InputUtil.fromTranslationKey(sortKey.getBoundKeyTranslationKey()).getCode();
                 if (keyCode > 31 && GLFW.glfwGetKey(windowCode, keyCode) == 1) {
-                    sortContainer(mc.player.currentScreenHandler.getStacks().subList(0, mc.player.currentScreenHandler.getStacks().size() - mc.player.getInventory().size() + 5));
+                    sortStacks(((HandledScreen<?>) mc.currentScreen).getScreenHandler());
                 }
                 if (keyCode < 8 && GLFW.glfwGetMouseButton(windowCode, keyCode) == 1) {
-                    sortContainer(mc.player.currentScreenHandler.getStacks().subList(0, mc.player.currentScreenHandler.getStacks().size() - mc.player.getInventory().size() + 5));
+                    sortStacks(((HandledScreen<?>) mc.currentScreen).getScreenHandler());
                 }
             }
         }
     }
 
-    // Stops items from being duped if player is in creative mode and sort is bound to pick block
+    // Prioritizes pick item over sort if player is in creative mode and both actions have the same keybind
     boolean shouldSort() {
         if (mc.currentScreen instanceof HandledScreen<?> handledScreen && mc.player != null) {
-            if (handledScreen.focusedSlot == null || handledScreen.focusedSlot.getStack().isEmpty()) {
-                return true;
-            }
-            if (!sortKey.equals(mc.options.pickItemKey)) {
-                return true;
-            }
-            if (!mc.player.isInCreativeMode()) {
-                return true;
-            }
-            return false;
+            return handledScreen.focusedSlot == null || handledScreen.focusedSlot.getStack().isEmpty() || !sortKey.equals(mc.options.pickItemKey) || !mc.player.isInCreativeMode();
         }
         return true;
     }
 
-    List<ItemStack> sortStacks(List<ItemStack> stacks) {
-        // Combine stacks
-        for (int i = 0; i < stacks.size(); i++) {
-            for (int j = 0; j < stacks.size(); j++) {
-                if (i != j && ItemStack.areItemsAndComponentsEqual(stacks.get(i), stacks.get(j))) {
-                    stacks.set(i, stacks.get(i).copyWithCount(stacks.get(i).getCount() + stacks.get(j).getCount()));
-                    if (stacks.get(i).getCount() > stacks.get(i).getMaxCount()) {
-                        int overflow = stacks.get(i).getCount() - stacks.get(i).getMaxCount();
-                        stacks.set(i, stacks.get(i).copyWithCount(stacks.get(i).getCount() - overflow));
-                        stacks.set(j, stacks.get(j).copyWithCount(overflow));
-                    } else {
-                        stacks.set(j, ItemStack.EMPTY);
-                    }
-                }
+    // Returns the number of non-player inventory slots on screen
+    int getNumSlots(ScreenHandler screenHandler) {
+        int num = 0;
+        for (int i = 0; i < screenHandler.slots.size(); i++) {
+            if (!(screenHandler.getSlot(i).inventory instanceof PlayerInventory)) {
+                num++;
             }
         }
-        // Remove empty stacks
-        int emptySlots = 0;
-        for (ItemStack stack : stacks) {
-            if (stack.isEmpty()) {
-                emptySlots++;
-            }
-        }
-        stacks.removeIf(Predicate.isEqual(ItemStack.EMPTY));
-        // Sort remaining stacks
-        stacks.sort(new NameComparator());
-        // Add empty stacks to ends
-        for (int i = 0; i < emptySlots; i++) {
-            stacks.add(ItemStack.EMPTY);
-        }
-        return stacks;
+        return num;
     }
 
-    void sortContainer(List<ItemStack> stacks) {
-        // Combine stacks
-        List<ItemStack> sortedStacks = sortStacks(stacks);
-        int targetNumSlots = 0;
-        for (ItemStack stack : sortedStacks) {
-            if (!stack.isEmpty()) {
-                targetNumSlots++;
-            }
-        }
-        int currentNumSlots = 0;
-        assert mc.player != null;
-        for (ItemStack stack : mc.player.currentScreenHandler.getStacks().subList(0, mc.player.currentScreenHandler.getStacks().size() - mc.player.getInventory().size() + 5)) {
-            if (!stack.isEmpty()) {
-                currentNumSlots++;
-            }
-        }
-        while (targetNumSlots != currentNumSlots) {
-            for (int i = 0; i < mc.player.currentScreenHandler.getStacks().size() - mc.player.getInventory().size() + 4; i++) {
-                if (!mc.player.currentScreenHandler.getSlot(i).getStack().isEmpty()) {
-                    assert mc.interactionManager != null;
-                    mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, i + 1, 0, SlotActionType.PICKUP, mc.player.getInventory().player);
-                    mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player.getInventory().player);
-                    if (!mc.player.currentScreenHandler.getCursorStack().isEmpty()) {
-                        mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, i + 1, 0, SlotActionType.PICKUP, mc.player.getInventory().player);
-                    }
-                    if (mc.player.currentScreenHandler instanceof GenericContainerScreenHandler screenHandler) {
-                        screenHandler.getInventory().markDirty();
-                    } else if (mc.player.currentScreenHandler instanceof Generic3x3ContainerScreenHandler screenHandler) {
-                        screenHandler.sendContentUpdates();
-                    } else if (mc.player.currentScreenHandler instanceof HopperScreenHandler screenHandler) {
-                        screenHandler.sendContentUpdates();
-                    } else if (mc.player.currentScreenHandler instanceof ShulkerBoxScreenHandler screenHandler) {
-                        screenHandler.sendContentUpdates();
-                    }
-                }
-                currentNumSlots = 0;
-                for (ItemStack stack : mc.player.currentScreenHandler.getStacks().subList(0, mc.player.currentScreenHandler.getStacks().size() - mc.player.getInventory().size() + 5)) {
-                    if (!stack.isEmpty()) {
-                        currentNumSlots++;
-                    }
-                }
-            }
-        }
-        // Sort combined stacks
-        for (int i = 0; i < sortedStacks.size(); i++) {
-            for (int j = 0; j < sortedStacks.size(); j++) {
-                if (i != j) {
-                    if (mc.player.currentScreenHandler.getSlot(i).getStack().getItem().getDefaultStack().getName().toString().compareToIgnoreCase(mc.player.currentScreenHandler.getSlot(j).getStack().getItem().getDefaultStack().getName().toString()) < 0) {
-                        assert mc.interactionManager != null;
-                        mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player.getInventory().player);
-                        mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, j, 0, SlotActionType.PICKUP, mc.player.getInventory().player);
-                        if (!mc.player.currentScreenHandler.getCursorStack().isEmpty()) {
-                            mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player.getInventory().player);
-                        }
-                    }
-                }
-            }
-        }
-        // Order stacks of same name by size
-        for (int i = 0; i < sortedStacks.size(); i++) {
-            for (int j = 0; j < sortedStacks.size(); j++) {
-                if (i != j) {
-                    if (mc.player.currentScreenHandler.getSlot(i).getStack().getItem().getDefaultStack().getName().equals(mc.player.currentScreenHandler.getSlot(j).getStack().getName())) {
-                        if (mc.player.currentScreenHandler.getSlot(i).getStack().getCount() > mc.player.currentScreenHandler.getSlot(j).getStack().getCount()) {
-                            assert mc.interactionManager != null;
-                            mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player.getInventory().player);
-                            mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, j, 0, SlotActionType.PICKUP, mc.player.getInventory().player);
-                            if (!mc.player.currentScreenHandler.getCursorStack().isEmpty()) {
-                                mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player.getInventory().player);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        for (int i = 0; i < sortedStacks.size(); i++) {
-            if (!mc.player.currentScreenHandler.getSlot(i).getStack().isEmpty()) {
-                for (int j = 0; j < i; j++) {
-                    if (mc.player.currentScreenHandler.getSlot(j).getStack().isEmpty()) {
-                        assert mc.interactionManager != null;
-                        mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player.getInventory().player);
-                        mc.interactionManager.clickSlot(mc.player.currentScreenHandler.syncId, j, 0, SlotActionType.PICKUP, mc.player.getInventory().player);
-                        break;
+    // Combines stacks of the same item
+    void combineStacks(ScreenHandler screenHandler) {
+        ItemStack stack;
+        for (int i = 0; i < getNumSlots(screenHandler); i++) {
+            stack = screenHandler.getSlot(i).getStack();
+            if (!stack.isEmpty() && stack.getMaxCount() > stack.getCount()) {
+                for (int j = i + 1; j < getNumSlots(screenHandler); j++) {
+                    if (screenHandler.getSlot(j).getStack().getItem().equals(stack.getItem())) {
+                        interactionManager.clickSlot(screenHandler.syncId, j, 0, SlotActionType.PICKUP, mc.player);
+                        interactionManager.clickSlot(screenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player);
+                        interactionManager.clickSlot(screenHandler.syncId, j, 0, SlotActionType.PICKUP, mc.player);
                     }
                 }
             }
         }
     }
 
-    static class NameComparator implements Comparator<ItemStack> {
-        @Override
-        public int compare(ItemStack a, ItemStack b) {
-            return a.getName().getString().compareToIgnoreCase(b.getName().getString());
+    // Compares non-empty stacks by localized item name
+    int compareStacks(ItemStack a, ItemStack b) {
+        if (a.isEmpty()) {
+            return 1;
+        }
+        if (b.isEmpty()) {
+            return -1;
+        }
+        if (a.getItem().equals(b.getItem())) {
+            return a.getCount() > b.getCount() ? -1 : 1;
+        }
+        return a.getName().toString().compareToIgnoreCase(b.getItem().getName().toString());
+    }
+
+    // Sorts stacks
+    void sortStacks(ScreenHandler screenHandler) {
+        combineStacks(screenHandler);
+        for (int i = 0; i < getNumSlots(screenHandler); i++) {
+            for (int j = 0; j < getNumSlots(screenHandler); j++) {
+                if (i != j && compareStacks(screenHandler.getSlot(i).getStack(), screenHandler.getSlot(j).getStack()) < 0) {
+                    interactionManager.clickSlot(screenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player);
+                    interactionManager.clickSlot(screenHandler.syncId, j, 0, SlotActionType.PICKUP, mc.player);
+                    if (!screenHandler.getCursorStack().isEmpty()) {
+                        interactionManager.clickSlot(screenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player);
+                    }
+                }
+            }
         }
     }
+
 }

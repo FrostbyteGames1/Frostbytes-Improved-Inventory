@@ -9,6 +9,9 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -48,6 +51,11 @@ public class Gamma implements ClientTickEvents.EndTick {
 
         if (gammaKey.wasPressed()) {
             enabled = !enabled;
+            if (enabled) {
+                client.inGameHud.setOverlayMessage(Text.of("Gamma set to " + gamma).getWithStyle(Style.EMPTY.withFormatting(Formatting.GOLD)).getFirst(), false);
+            } else {
+                client.inGameHud.setOverlayMessage(Text.of("Gamma disabled").getWithStyle(Style.EMPTY.withFormatting(Formatting.GOLD)).getFirst(), false);
+            }
         }
 
         if (enabled) {

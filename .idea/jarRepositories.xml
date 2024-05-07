@@ -56,5 +56,10 @@
       <option name="name" value="LoomLocalRemappedMods" />
       <option name="url" value="file:/$PROJECT_DIR$/.gradle/loom-cache/remapped_mods/" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="Modrinth" />
+      <option name="name" value="Modrinth" />
+      <option name="url" value="https://api.modrinth.com/maven" />
+    </remote-repository>
   </component>
 </project>
