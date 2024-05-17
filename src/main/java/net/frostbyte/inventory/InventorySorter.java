@@ -13,7 +13,7 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.*;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.SlotActionType;
 import org.lwjgl.glfw.GLFW;
 
@@ -109,15 +109,18 @@ public class InventorySorter implements ClientTickEvents.EndTick {
     // Compares non-empty stacks by localized item name
     int compareStacks(ItemStack a, ItemStack b) {
         if (a.isEmpty()) {
-            return 1;
+            return b.isEmpty() ? 0 : 1;
         }
         if (b.isEmpty()) {
             return -1;
         }
         if (a.getItem().equals(b.getItem())) {
+            if (a.getCount() == b.getCount()) {
+                return 0;
+            }
             return a.getCount() > b.getCount() ? -1 : 1;
         }
-        return a.getName().toString().compareToIgnoreCase(b.getItem().getName().toString());
+        return a.getName().toString().compareTo(b.getItem().getName().toString());
     }
 
     // Collects combined stacks into an ArrayList and sorts the array
