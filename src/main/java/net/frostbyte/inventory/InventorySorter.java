@@ -20,6 +20,7 @@ import org.lwjgl.glfw.GLFW;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 
 public class InventorySorter implements ClientTickEvents.EndTick {
 
@@ -119,20 +120,35 @@ public class InventorySorter implements ClientTickEvents.EndTick {
         return a.getName().toString().compareToIgnoreCase(b.getItem().getName().toString());
     }
 
-    // Sorts stacks
-    void sortStacks(ScreenHandler screenHandler) {
-        combineStacks(screenHandler);
+    // Collects combined stacks into an ArrayList and sorts the array
+    ArrayList<ItemStack> getSortedStackArray(ScreenHandler screenHandler) {
+        ArrayList<ItemStack> stacks = new ArrayList<>();
         for (int i = 0; i < getNumSlots(screenHandler); i++) {
-            for (int j = 0; j < getNumSlots(screenHandler); j++) {
-                if (i != j && compareStacks(screenHandler.getSlot(i).getStack(), screenHandler.getSlot(j).getStack()) < 0) {
-                    interactionManager.clickSlot(screenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player);
-                    interactionManager.clickSlot(screenHandler.syncId, j, 0, SlotActionType.PICKUP, mc.player);
-                    if (!screenHandler.getCursorStack().isEmpty()) {
-                        interactionManager.clickSlot(screenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player);
-                    }
+            stacks.add(screenHandler.getSlot(i).getStack());
+        }
+        stacks.sort(this::compareStacks);
+        return stacks;
+    }
+
+    // Sorts container
+    void sortStacks(ScreenHandler screenHandler) {
+        screenHandler.enableSyncing();
+        combineStacks(screenHandler);
+        ArrayList<ItemStack> sortedStacks = getSortedStackArray(screenHandler);
+        for (int i = 0; i < sortedStacks.size(); i++) {
+            if (!screenHandler.getSlot(i).getStack().equals(sortedStacks.get(i))) {
+                int slot = screenHandler.getStacks().indexOf(sortedStacks.get(i));
+                interactionManager.clickSlot(screenHandler.syncId, slot, 0, SlotActionType.PICKUP, mc.player);
+                interactionManager.clickSlot(screenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player);
+                if (!screenHandler.getCursorStack().isEmpty()) {
+                    interactionManager.clickSlot(screenHandler.syncId, slot, 0, SlotActionType.PICKUP, mc.player);
                 }
             }
         }
+        if (!screenHandler.getCursorStack().isEmpty() && screenHandler.getStacks().contains(ItemStack.EMPTY)) {
+            interactionManager.clickSlot(screenHandler.syncId, screenHandler.getStacks().indexOf(ItemStack.EMPTY), 0, SlotActionType.PICKUP, mc.player);
+        }
+        screenHandler.sendContentUpdates();
     }
 
 }
