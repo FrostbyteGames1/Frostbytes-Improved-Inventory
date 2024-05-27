@@ -1,10 +1,9 @@
 package net.frostbyte.inventory;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.loader.api.FabricLoader;
+import net.frostbyte.inventory.config.ImprovedInventoryConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -18,18 +17,12 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+@Environment(EnvType.CLIENT)
 public class ToolSelector implements ClientTickEvents.EndTick{
-    final Path configFile = FabricLoader.getInstance().getConfigDir().resolve("frostbyte/improved-inventory.json");
-    final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    boolean toolSelect = true;
     MinecraftClient mc;
-
     int ticksSinceMiningStarted = 0;
     Block currentlyMiningBlock = Blocks.AIR;
 
@@ -135,18 +128,7 @@ public class ToolSelector implements ClientTickEvents.EndTick{
             return;
         }
 
-        try {
-            if (Files.notExists(configFile)) {
-                return;
-            }
-            JsonObject json = gson.fromJson(Files.readString(configFile), JsonObject.class);
-            if (json.has("toolSelect"))
-                toolSelect = json.getAsJsonPrimitive("toolSelect").getAsBoolean();
-        } catch (IOException e) {
-            ImprovedInventory.LOGGER.error(e.getMessage());
-        }
-
-        if (mc.options.attackKey.isPressed() && !player.isSpectator() && !player.isCreative() && toolSelect) {
+        if (mc.options.attackKey.isPressed() && !player.isSpectator() && !player.isCreative() && ImprovedInventoryConfig.toolSelect) {
             HitResult target = mc.crosshairTarget;
             assert target != null;
             if (target.getType() == HitResult.Type.ENTITY) {

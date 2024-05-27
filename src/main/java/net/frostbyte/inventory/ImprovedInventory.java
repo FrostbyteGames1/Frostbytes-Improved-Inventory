@@ -4,18 +4,14 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ImprovedInventory implements ModInitializer {
 
 	public static final String MOD_ID = "inventory";
-	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
 	@Override
 	public void onInitialize() {
-		ImprovedInventoryConfig config = new ImprovedInventoryConfig();
-		config.read();
+		ImprovedInventoryConfig.read();
 
 		SlotCycler slotCycler = new SlotCycler();
 		slotCycler.setKeyBindings();
@@ -29,7 +25,6 @@ public class ImprovedInventory implements ModInitializer {
 		ClientTickEvents.END_CLIENT_TICK.register(stackRefiller);
 
 		DurabilityDisplayer durabilityDisplayer = new DurabilityDisplayer();
-		ClientTickEvents.END_CLIENT_TICK.register(durabilityDisplayer);
 		HudRenderCallback.EVENT.register(durabilityDisplayer);
 
 		InventorySorter inventorySorter = new InventorySorter();
@@ -46,6 +41,10 @@ public class ImprovedInventory implements ModInitializer {
 
 		Paperdoll paperdoll = new Paperdoll();
 		HudRenderCallback.EVENT.register(paperdoll);
+
+		//GUITextRenderer guiTextRenderer = new GUITextRenderer();
+		//ClientTickEvents.END_CLIENT_TICK.register(guiTextRenderer);
+		//HudRenderCallback.EVENT.register(guiTextRenderer);
 	}
 
 }

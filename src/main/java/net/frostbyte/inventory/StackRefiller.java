@@ -1,30 +1,23 @@
 package net.frostbyte.inventory;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.loader.api.FabricLoader;
+import net.frostbyte.inventory.config.ImprovedInventoryConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.screen.slot.SlotActionType;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+@Environment(EnvType.CLIENT)
 public class StackRefiller implements ClientTickEvents.EndTick {
-    final Path configFile = FabricLoader.getInstance().getConfigDir().resolve("frostbyte/improved-inventory.json");
-    final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    public static boolean stackRefill = true;
     MinecraftClient mc;
     Item item = Items.AIR;
     int slot = -1;
-
     public static final ArrayList<Item> FOOD_REFILL_BLACKLIST = new ArrayList<>(Arrays.asList(
             Items.GOLDEN_APPLE,
             Items.ENCHANTED_GOLDEN_APPLE,
@@ -40,18 +33,7 @@ public class StackRefiller implements ClientTickEvents.EndTick {
             return;
         }
 
-        try {
-            if (Files.notExists(configFile)) {
-                return;
-            }
-            JsonObject json = gson.fromJson(Files.readString(configFile), JsonObject.class);
-            if (json.has("stackRefill"))
-                stackRefill = json.getAsJsonPrimitive("stackRefill").getAsBoolean();
-        } catch (IOException e) {
-            ImprovedInventory.LOGGER.error(e.getMessage());
-        }
-
-        if (stackRefill) {
+        if (ImprovedInventoryConfig.stackRefill) {
             tryRefillStack();
         }
     }

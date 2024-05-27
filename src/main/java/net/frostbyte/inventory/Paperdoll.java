@@ -1,39 +1,26 @@
 package net.frostbyte.inventory;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.fabricmc.loader.api.FabricLoader;
+import net.frostbyte.inventory.config.ImprovedInventoryConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
 import static net.minecraft.client.gui.screen.ingame.InventoryScreen.drawEntity;
 
+@Environment(EnvType.CLIENT)
 public class Paperdoll implements HudRenderCallback {
-    final Path configFile = FabricLoader.getInstance().getConfigDir().resolve("frostbyte/improved-inventory.json");
-    final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    boolean paperdoll = true;
     @Override
     public void onHudRender(DrawContext drawContext, float tickDelta) {
-        try {
-            if (Files.notExists(configFile)) {
-                return;
-            }
-            JsonObject json = gson.fromJson(Files.readString(configFile), JsonObject.class);
-            if (json.has("paperdoll"))
-                paperdoll = json.getAsJsonPrimitive("paperdoll").getAsBoolean();
-        } catch (IOException e) {
-            ImprovedInventory.LOGGER.error(e.getMessage());
-        }
         MinecraftClient mc = MinecraftClient.getInstance();
         assert mc.player != null;
-        if (!mc.player.isSpectator() && paperdoll && !mc.options.hudHidden && mc.currentScreen == null && !mc.inGameHud.getDebugHud().shouldShowDebugHud()) {
-            drawEntity(drawContext, 0, 0, 64, 64, 20, 0.0625F, 64, 20, mc.player);
+        if (!mc.player.isSpectator() && ImprovedInventoryConfig.paperdoll && !mc.options.hudHidden && mc.currentScreen == null && !mc.inGameHud.getDebugHud().shouldShowDebugHud()) {
+            int y = 0;
+            if (!GUITextRenderer.lines.isEmpty()) {
+                y = 4 + 10 * (GUITextRenderer.lines.size() - 1);
+            }
+            drawEntity(drawContext, 0, y, 64, y + 64, 20, 0.0625F, 64, y + 20, mc.player);
         }
     }
 
