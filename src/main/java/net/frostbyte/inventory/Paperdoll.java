@@ -17,9 +17,6 @@ public class Paperdoll implements HudRenderCallback {
         assert mc.player != null;
         if (!mc.player.isSpectator() && ImprovedInventoryConfig.paperdoll && !mc.options.hudHidden && mc.currentScreen == null && !mc.inGameHud.getDebugHud().shouldShowDebugHud()) {
             int y = 0;
-            if (!GUITextRenderer.lines.isEmpty()) {
-                y = 4 + 10 * (GUITextRenderer.lines.size() - 1);
-            }
             drawEntity(drawContext, 0, y, 64, y + 64, 20, 0.0625F, 64, y + 20, mc.player);
         }
     }

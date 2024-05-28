@@ -41,10 +41,6 @@ public class ImprovedInventory implements ModInitializer {
 
 		Paperdoll paperdoll = new Paperdoll();
 		HudRenderCallback.EVENT.register(paperdoll);
-
-		//GUITextRenderer guiTextRenderer = new GUITextRenderer();
-		//ClientTickEvents.END_CLIENT_TICK.register(guiTextRenderer);
-		//HudRenderCallback.EVENT.register(guiTextRenderer);
 	}
 
 }

@@ -26,8 +26,8 @@ dependencies {
 
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	modApi "com.terraformersmc:modmenu:${project.modmenu_version}"
-	modImplementation("dev.isxander:yet-another-config-lib:${project.yacl_version}")
+	modCompileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
+	modImplementation "dev.isxander:yet-another-config-lib:${project.yacl_version}"
 }
 
 processResources {
@@ -39,14 +39,10 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 21
+	it.options.release.set(21)
 }
 
 java {
-	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-	// if it is present.
-	// If you remove this line, sources will not be generated.
-	withSourcesJar()
 }
 
 jar {
