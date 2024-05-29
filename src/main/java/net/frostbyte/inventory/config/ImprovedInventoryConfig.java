@@ -7,6 +7,7 @@ import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.YetAnotherConfigLib;
+import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.fabricmc.loader.api.FabricLoader;
@@ -23,10 +24,12 @@ public class ImprovedInventoryConfig {
     public static final Path configFile = FabricLoader.getInstance().getConfigDir().resolve("frostbyte/improved-inventory.json");
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     public static boolean duraDisplay = true;
+    public static boolean duraDisplaySide = true;
     public static boolean slotCycle = true;
     public static boolean stackRefill = true;
     public static boolean toolSelect = true;
     public static boolean paperdoll = true;
+    public static boolean paperdollSide = true;
     public static int zoomFOV = 30;
     public static int gamma = 500;
     public static int maxInteractions = 0;
@@ -69,6 +72,12 @@ public class ImprovedInventoryConfig {
                     .controller(TickBoxControllerBuilder::create)
                     .build())
                 .option(Option.<Boolean>createBuilder()
+                    .name(Text.of("Durability Display Location"))
+                    .description(OptionDescription.of(Text.of("The side of the screen to display the armor durability on")))
+                    .binding(false, () -> duraDisplaySide, newVal -> duraDisplaySide = newVal)
+                    .controller(ImprovedInventoryConfig::leftRightControllerBuilder)
+                    .build())
+                .option(Option.<Boolean>createBuilder()
                     .name(Text.of("Slot Cycling Preview"))
                     .description(OptionDescription.of(Text.of("Displays a preview of the item stacks that would be cycled to")))
                     .binding(true, () -> slotCycle, newVal -> slotCycle = newVal)
@@ -79,6 +88,12 @@ public class ImprovedInventoryConfig {
                     .description(OptionDescription.of(Text.of("Displays the player model on the screen like in Bedrock Edition")))
                     .binding(true, () -> paperdoll, newVal -> paperdoll = newVal)
                     .controller(TickBoxControllerBuilder::create)
+                    .build())
+                .option(Option.<Boolean>createBuilder()
+                    .name(Text.of("Bedrock Paperdoll Location"))
+                    .description(OptionDescription.of(Text.of("The side of the screen to display the player model on")))
+                    .binding(true, () -> paperdollSide, newVal -> paperdollSide = newVal)
+                    .controller(ImprovedInventoryConfig::leftRightControllerBuilder)
                     .build())
                 .build())
         
@@ -110,6 +125,11 @@ public class ImprovedInventoryConfig {
             .step(step);
     }
 
+   private static BooleanControllerBuilder leftRightControllerBuilder(Option<Boolean> option) {
+        return BooleanControllerBuilder.create(option)
+            .formatValue(value -> value ? Text.of("LEFT") : Text.of("RIGHT"));
+   }
+
     public static void write() {
         try {
             if (Files.notExists(configDir)) {
@@ -118,13 +138,16 @@ public class ImprovedInventoryConfig {
             Files.deleteIfExists(configFile);
             JsonObject json = new JsonObject();
             json.addProperty("duraDisplay", duraDisplay);
+            json.addProperty("duraDisplaySide", duraDisplaySide ? "LEFT" : "RIGHT");
             json.addProperty("slotCycle", slotCycle);
             json.addProperty("stackRefill", stackRefill);
             json.addProperty("toolSelect", toolSelect);
             json.addProperty("paperdoll", paperdoll);
+            json.addProperty("paperdollSide", paperdollSide ? "LEFT" : "RIGHT");
             json.addProperty("zoomFOV", zoomFOV);
             json.addProperty("gamma", gamma);
             json.addProperty("maxInteractions", maxInteractions);
+            Files.writeString(configFile, gson.toJson(json));
         } catch (IOException ignored) {
         }
     }
@@ -137,6 +160,8 @@ public class ImprovedInventoryConfig {
             JsonObject json = gson.fromJson(Files.readString(configFile), JsonObject.class);
             if (json.has("duraDisplay"))
                 duraDisplay = json.getAsJsonPrimitive("duraDisplay").getAsBoolean();
+            if (json.has("duraDisplaySide"))
+                duraDisplaySide = json.getAsJsonPrimitive("duraDisplaySide").getAsString().equalsIgnoreCase("LEFT");
             if (json.has("slotCycle"))
                 slotCycle = json.getAsJsonPrimitive("slotCycle").getAsBoolean();
             if (json.has("stackRefill"))
@@ -145,6 +170,8 @@ public class ImprovedInventoryConfig {
                 toolSelect = json.getAsJsonPrimitive("toolSelect").getAsBoolean();
             if (json.has("paperdoll"))
                 paperdoll = json.getAsJsonPrimitive("paperdoll").getAsBoolean();
+            if (json.has("paperdollSide"))
+                paperdollSide = json.getAsJsonPrimitive("paperdollSide").getAsString().equalsIgnoreCase("LEFT");
             if (json.has("zoomFOV"))
                 zoomFOV = json.getAsJsonPrimitive("zoomFOV").getAsInt();
             if (json.has("gamma"))

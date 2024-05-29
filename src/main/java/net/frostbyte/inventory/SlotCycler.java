@@ -14,6 +14,7 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.screen.slot.SlotActionType;
+import net.minecraft.util.Arm;
 import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
@@ -129,18 +130,34 @@ public class SlotCycler implements ClientTickEvents.EndTick, HudRenderCallback {
             RenderSystem.setShader(GameRenderer::getPositionTexProgram);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             RenderSystem.setShaderTexture(0, extraSlots);
-            drawContext.drawTexture(new Identifier(ImprovedInventory.MOD_ID, "textures/extra_slots.png"), x + 98,y - 23,0,0,62,24, 62,24);
+            assert mc.player != null;
+            if (mc.player.getMainArm().equals(Arm.LEFT)) {
+                drawContext.drawTexture(new Identifier(ImprovedInventory.MOD_ID, "textures/extra_slots.png"), x - 160, y - 23, 0, 0, 62, 24, 62, 24);
+            } else {
+                drawContext.drawTexture(new Identifier(ImprovedInventory.MOD_ID, "textures/extra_slots.png"), x + 98, y - 23, 0, 0, 62, 24, 62, 24);
+            }
             for (int i = 3; i > 0; i--) {
-                assert mc.player != null;
                 if (!mc.player.getInventory().getStack(i * 9 + mc.player.getInventory().selectedSlot).isEmpty()) {
-                    drawContext.drawItem(mc.player.getInventory().getStack(i * 9 + mc.player.getInventory().selectedSlot), x + 101, y - 19);
+                    if (mc.player.getMainArm().equals(Arm.LEFT)) {
+                        drawContext.drawItem(mc.player.getInventory().getStack(i * 9 + mc.player.getInventory().selectedSlot), x - 157, y - 19);
+                    } else {
+                        drawContext.drawItem(mc.player.getInventory().getStack(i * 9 + mc.player.getInventory().selectedSlot), x + 101, y - 19);
+                    }
                     break;
                 }
             }
-            drawContext.drawItem(mc.player.getInventory().getMainHandStack(), x + 121, y - 19);
+            if (mc.player.getMainArm().equals(Arm.LEFT)) {
+                drawContext.drawItem(mc.player.getInventory().getMainHandStack(), x - 137, y - 19);
+            } else {
+                drawContext.drawItem(mc.player.getInventory().getMainHandStack(), x + 121, y - 19);
+            }
             for (int i = 1; i < 4; i++) {
                 if (!mc.player.getInventory().getStack(i * 9 + mc.player.getInventory().selectedSlot).isEmpty()) {
-                    drawContext.drawItem(mc.player.getInventory().getStack(i * 9 + mc.player.getInventory().selectedSlot), x + 141, y - 19);
+                    if (mc.player.getMainArm().equals(Arm.LEFT)) {
+                        drawContext.drawItem(mc.player.getInventory().getStack(i * 9 + mc.player.getInventory().selectedSlot), x - 117, y - 19);
+                    } else {
+                        drawContext.drawItem(mc.player.getInventory().getStack(i * 9 + mc.player.getInventory().selectedSlot), x + 141, y - 19);
+                    }
                     break;
                 }
             }

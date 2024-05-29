@@ -16,8 +16,11 @@ public class Paperdoll implements HudRenderCallback {
         MinecraftClient mc = MinecraftClient.getInstance();
         assert mc.player != null;
         if (!mc.player.isSpectator() && ImprovedInventoryConfig.paperdoll && !mc.options.hudHidden && mc.currentScreen == null && !mc.inGameHud.getDebugHud().shouldShowDebugHud()) {
-            int y = 0;
-            drawEntity(drawContext, 0, y, 64, y + 64, 20, 0.0625F, 64, y + 20, mc.player);
+            if (ImprovedInventoryConfig.paperdollSide) {
+                drawEntity(drawContext, -16, 0, 48, 64, 20, 0.0625F, 64, 20, mc.player);
+            } else {
+                drawEntity(drawContext, mc.getWindow().getScaledWidth() - 48, 0, mc.getWindow().getScaledWidth() + 16, 64, 20, 0.0625F, mc.getWindow().getScaledWidth() - 64, 20, mc.player);
+            }
         }
     }
 
