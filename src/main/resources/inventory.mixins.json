@@ -4,6 +4,12 @@
   "package": "net.frostbyte.inventory.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "HandledScreenMixin",
+    "HeldItemRendererMixin",
+    "InGameHudMixin",
+    "MouseMixin",
+    "ScreenMixin",
+    "ShulkerBoxBlockMixin",
     "SimpleOptionMixin"
   ],
   "injectors": {

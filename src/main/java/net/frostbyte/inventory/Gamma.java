@@ -14,6 +14,7 @@ import net.minecraft.util.Formatting;
 
 @Environment(EnvType.CLIENT)
 public class Gamma implements ClientTickEvents.EndTick {
+    double standardBrightness = 1;
     private boolean enabled;
     public static KeyBinding gammaKey;
     MinecraftClient mc;
@@ -28,21 +29,20 @@ public class Gamma implements ClientTickEvents.EndTick {
             return;
         }
 
+        if (mc.currentScreen != null && mc.currentScreen.shouldPause() && !enabled) {
+            standardBrightness = mc.options.getGamma().getValue();
+        }
+
         if (gammaKey.wasPressed()) {
             enabled = !enabled;
             if (enabled) {
-                client.inGameHud.setOverlayMessage(Text.of("Gamma set to " + ImprovedInventoryConfig.gamma).getWithStyle(Style.EMPTY.withFormatting(Formatting.GREEN)).getFirst(), false);
-            } else {
-                client.inGameHud.setOverlayMessage(Text.of("Gamma disabled").getWithStyle(Style.EMPTY.withFormatting(Formatting.RED)).getFirst(), false);
-            }
-        }
-
-        if (enabled) {
-            if (mc.options.getGamma().getValue() != ImprovedInventoryConfig.gamma) {
+                standardBrightness = mc.options.getGamma().getValue();
                 mc.options.getGamma().setValue((double) ImprovedInventoryConfig.gamma);
+                client.inGameHud.setOverlayMessage(Text.of("Gamma set to " + ImprovedInventoryConfig.gamma + "%").getWithStyle(Style.EMPTY.withFormatting(Formatting.GREEN)).getFirst(), false);
+            } else {
+                mc.options.getGamma().setValue(standardBrightness);
+                client.inGameHud.setOverlayMessage(Text.of("Gamma set to " + ((int) (standardBrightness * 100)) + "%").getWithStyle(Style.EMPTY.withFormatting(Formatting.RED)).getFirst(), false);
             }
-        } else {
-            mc.options.getGamma().setValue(1.0);
         }
     }
 }

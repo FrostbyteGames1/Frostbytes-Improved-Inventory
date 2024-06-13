@@ -12,6 +12,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.util.Arm;
@@ -22,7 +23,7 @@ public class SlotCycler implements ClientTickEvents.EndTick, HudRenderCallback {
     public static KeyBinding cycleUpKey;
     public static KeyBinding cycleDownKey;
     MinecraftClient mc;
-    Identifier extraSlots = new Identifier(ImprovedInventory.MOD_ID, "textures/extra_slots.png");
+    final Identifier PREVIEW_SLOTS = Identifier.of(ImprovedInventory.MOD_ID, "textures/extra_slots.png");
 
     public void setKeyBindings() {
         KeyBindingHelper.registerKeyBinding(cycleUpKey = new KeyBinding("Cycle Slot Up", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_J, "Improved Inventory"));
@@ -115,51 +116,44 @@ public class SlotCycler implements ClientTickEvents.EndTick, HudRenderCallback {
     }
 
     @Override
-    public void onHudRender(DrawContext drawContext, float tickDelta) {
+    public void onHudRender(DrawContext drawContext, RenderTickCounter tickCounter) {
         assert mc.player != null;
         if (!mc.player.isSpectator() && ImprovedInventoryConfig.slotCycle && !mc.options.hudHidden) {
-            int x = 0;
-            int y = 0;
-            mc = MinecraftClient.getInstance();
-            if (mc != null) {
-                int width = mc.getWindow().getScaledWidth();
-                int height = mc.getWindow().getScaledHeight();
-                x = width / 2;
-                y = height;
-            }
+            int width = mc.getWindow().getScaledWidth();
+            int height = mc.getWindow().getScaledHeight();
+            int x = width / 2;
             RenderSystem.setShader(GameRenderer::getPositionTexProgram);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            RenderSystem.setShaderTexture(0, extraSlots);
+            RenderSystem.setShaderTexture(0, PREVIEW_SLOTS);
             assert mc.player != null;
             if (mc.player.getMainArm().equals(Arm.LEFT)) {
-                drawContext.drawTexture(new Identifier(ImprovedInventory.MOD_ID, "textures/extra_slots.png"), x - 160, y - 23, 0, 0, 62, 24, 62, 24);
+                drawContext.drawTexture(PREVIEW_SLOTS, x - 160, height - 23, 0, 0, 62, 24, 62, 24);
             } else {
-                drawContext.drawTexture(new Identifier(ImprovedInventory.MOD_ID, "textures/extra_slots.png"), x + 98, y - 23, 0, 0, 62, 24, 62, 24);
+                drawContext.drawTexture(PREVIEW_SLOTS, x + 98, height - 23, 0, 0, 62, 24, 62, 24);
             }
-            for (int i = 3; i > 0; i--) {
-                if (!mc.player.getInventory().getStack(i * 9 + mc.player.getInventory().selectedSlot).isEmpty()) {
-                    if (mc.player.getMainArm().equals(Arm.LEFT)) {
-                        drawContext.drawItem(mc.player.getInventory().getStack(i * 9 + mc.player.getInventory().selectedSlot), x - 157, y - 19);
-                    } else {
-                        drawContext.drawItem(mc.player.getInventory().getStack(i * 9 + mc.player.getInventory().selectedSlot), x + 101, y - 19);
-                    }
-                    break;
-                }
-            }
+            // Item in top slot
             if (mc.player.getMainArm().equals(Arm.LEFT)) {
-                drawContext.drawItem(mc.player.getInventory().getMainHandStack(), x - 137, y - 19);
+                drawContext.drawItem(mc.player.getInventory().getStack(27 + mc.player.getInventory().selectedSlot), x - 157, height - 19);
+                drawContext.drawItemInSlot(mc.textRenderer, mc.player.getInventory().getStack(27 + mc.player.getInventory().selectedSlot), x - 157, height - 19);
             } else {
-                drawContext.drawItem(mc.player.getInventory().getMainHandStack(), x + 121, y - 19);
+                drawContext.drawItem(mc.player.getInventory().getStack(27 + mc.player.getInventory().selectedSlot), x + 101, height - 19);
+                drawContext.drawItemInSlot(mc.textRenderer, mc.player.getInventory().getStack(27 + mc.player.getInventory().selectedSlot), x + 101, height - 19);
             }
-            for (int i = 1; i < 4; i++) {
-                if (!mc.player.getInventory().getStack(i * 9 + mc.player.getInventory().selectedSlot).isEmpty()) {
-                    if (mc.player.getMainArm().equals(Arm.LEFT)) {
-                        drawContext.drawItem(mc.player.getInventory().getStack(i * 9 + mc.player.getInventory().selectedSlot), x - 117, y - 19);
-                    } else {
-                        drawContext.drawItem(mc.player.getInventory().getStack(i * 9 + mc.player.getInventory().selectedSlot), x + 141, y - 19);
-                    }
-                    break;
-                }
+            // Item in middle slot
+            if (mc.player.getMainArm().equals(Arm.LEFT)) {
+                drawContext.drawItem(mc.player.getInventory().getStack(18 + mc.player.getInventory().selectedSlot), x - 137, height - 19);
+                drawContext.drawItemInSlot(mc.textRenderer, mc.player.getInventory().getStack(18 + mc.player.getInventory().selectedSlot), x - 137, height - 19);
+            } else {
+                drawContext.drawItem(mc.player.getInventory().getStack(18 + mc.player.getInventory().selectedSlot), x + 121, height - 19);
+                drawContext.drawItemInSlot(mc.textRenderer, mc.player.getInventory().getStack(18 + mc.player.getInventory().selectedSlot), x + 121, height - 19);
+            }
+            // Item in bottom slot
+            if (mc.player.getMainArm().equals(Arm.LEFT)) {
+                drawContext.drawItem(mc.player.getInventory().getStack(9 + mc.player.getInventory().selectedSlot), x - 117, height - 19);
+                drawContext.drawItemInSlot(mc.textRenderer, mc.player.getInventory().getStack(9 + mc.player.getInventory().selectedSlot), x - 117, height - 19);
+            } else {
+                drawContext.drawItem(mc.player.getInventory().getStack(9 + mc.player.getInventory().selectedSlot), x + 141, height - 19);
+                drawContext.drawItemInSlot(mc.textRenderer, mc.player.getInventory().getStack(9 + mc.player.getInventory().selectedSlot), x + 141, height - 19);
             }
         }
     }

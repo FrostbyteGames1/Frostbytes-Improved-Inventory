@@ -111,10 +111,12 @@ public class InventorySorter implements ClientTickEvents.EndTick {
         if (b.isEmpty()) {
             return -1;
         }
-        if (a.getItem().equals(b.getItem())) {
+        int temp = a.getItem().getName().getString().compareTo(b.getItem().getName().getString());
+        if (temp == 0) {
             return Integer.compare(b.getCount(), a.getCount());
+        } else {
+            return Integer.compare(temp, 0);
         }
-        return Integer.compare(a.getItem().getName().getString().compareTo(b.getItem().getName().getString()), 0);
     }
 
     // Collects combined stacks into an ArrayList and sorts the array

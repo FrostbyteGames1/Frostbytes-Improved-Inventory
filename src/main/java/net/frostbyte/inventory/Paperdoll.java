@@ -6,13 +6,14 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.render.RenderTickCounter;
 
 import static net.minecraft.client.gui.screen.ingame.InventoryScreen.drawEntity;
 
 @Environment(EnvType.CLIENT)
 public class Paperdoll implements HudRenderCallback {
     @Override
-    public void onHudRender(DrawContext drawContext, float tickDelta) {
+    public void onHudRender(DrawContext drawContext, RenderTickCounter tickCounter) {
         MinecraftClient mc = MinecraftClient.getInstance();
         assert mc.player != null;
         if (!mc.player.isSpectator() && ImprovedInventoryConfig.paperdoll && !mc.options.hudHidden && mc.currentScreen == null && !mc.inGameHud.getDebugHud().shouldShowDebugHud()) {

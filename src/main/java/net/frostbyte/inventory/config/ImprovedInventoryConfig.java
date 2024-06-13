@@ -14,7 +14,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -33,6 +32,11 @@ public class ImprovedInventoryConfig {
     public static int zoomFOV = 30;
     public static int gamma = 500;
     public static int maxInteractions = 0;
+    public static boolean containerTab = true;
+    public static boolean shulkerBoxTooltip = true;
+    public static boolean mapTooltip = true;
+    public static boolean heldItemsVisibleInBoat = true;
+    public static boolean armorBarColors = true;
 
     public static Screen createScreen(Screen parent) {
         read();
@@ -59,6 +63,12 @@ public class ImprovedInventoryConfig {
                     .description(OptionDescription.of(Text.of("Limits the number of interactions created each tick when sorting a container (If set to 0, this setting is ignored)")))
                     .binding(0, () -> maxInteractions, newVal -> maxInteractions = newVal)
                     .controller(option -> integerSliderController(option, 0, 100, 10))
+                    .build())
+                .option(Option.<Boolean>createBuilder()
+                    .name(Text.of("Tabs To Nearby Containers"))
+                    .description(OptionDescription.of(Text.of("Allows the player to access all containers within reach using either a keybind or the tab created in the inventory screen")))
+                    .binding(true, () -> containerTab, newVal -> containerTab = newVal)
+                    .controller(TickBoxControllerBuilder::create)
                     .build())
                 .build())
         
@@ -95,10 +105,39 @@ public class ImprovedInventoryConfig {
                     .binding(true, () -> paperdollSide, newVal -> paperdollSide = newVal)
                     .controller(ImprovedInventoryConfig::leftRightControllerBuilder)
                     .build())
+                .option(Option.<Boolean>createBuilder()
+                    .name(Text.of("Held Items Visible In Boats"))
+                    .description(OptionDescription.of(Text.of("Stops held items being hidden when riding a boat")))
+                    .binding(true, () -> heldItemsVisibleInBoat, newVal -> heldItemsVisibleInBoat = newVal)
+                    .controller(TickBoxControllerBuilder::create)
+                    .build())
+                .option(Option.<Boolean>createBuilder()
+                    .name(Text.of("Colored Armor Bar"))
+                    .description(OptionDescription.of(Text.of("Colors the armor bar icons to match the materials of the equipped armor")))
+                    .binding(true, () -> armorBarColors, newVal -> armorBarColors = newVal)
+                    .controller(TickBoxControllerBuilder::create)
+                    .build())
+                .build())
+
+            .category(ConfigCategory.createBuilder()
+                .name(Text.of("Tooltips"))
+                .tooltip(Text.of("Options that add additional information to item tooltips"))
+                .option(Option.<Boolean>createBuilder()
+                    .name(Text.of("Shulker Box Preview"))
+                    .description(OptionDescription.of(Text.of("Displays a shulker box's inventory in its tooltip")))
+                    .binding(true, () -> shulkerBoxTooltip, newVal -> shulkerBoxTooltip = newVal)
+                    .controller(TickBoxControllerBuilder::create)
+                    .build())
+                .option(Option.<Boolean>createBuilder()
+                    .name(Text.of("Map Preview"))
+                    .description(OptionDescription.of(Text.of("Display's a map's contents in its tooltip")))
+                    .binding(true, () -> mapTooltip, newVal -> mapTooltip = newVal)
+                    .controller(TickBoxControllerBuilder::create)
+                    .build())
                 .build())
         
             .category(ConfigCategory.createBuilder()
-                .name(Text.of("Screen"))
+                .name(Text.of("Screen Effects"))
                 .tooltip(Text.of("Options that modify the entire screen"))
                 .option(Option.<Integer>createBuilder()
                     .name(Text.of("Target Zoom FOV"))
@@ -147,9 +186,13 @@ public class ImprovedInventoryConfig {
             json.addProperty("zoomFOV", zoomFOV);
             json.addProperty("gamma", gamma);
             json.addProperty("maxInteractions", maxInteractions);
+            json.addProperty("containerTab", containerTab);
+            json.addProperty("shulkerBoxTooltip", shulkerBoxTooltip);
+            json.addProperty("mapBoxTooltip", mapTooltip);
+            json.addProperty("heldItemsVisibleInBoat", heldItemsVisibleInBoat);
+            json.addProperty("armorBarColors", armorBarColors);
             Files.writeString(configFile, gson.toJson(json));
-        } catch (IOException ignored) {
-        }
+        } catch (Exception ignored) {}
     }
 
     public static void read() {
@@ -158,28 +201,52 @@ public class ImprovedInventoryConfig {
                 write();
             }
             JsonObject json = gson.fromJson(Files.readString(configFile), JsonObject.class);
-            if (json.has("duraDisplay"))
+            if (json.has("duraDisplay")) {
                 duraDisplay = json.getAsJsonPrimitive("duraDisplay").getAsBoolean();
-            if (json.has("duraDisplaySide"))
+            }
+            if (json.has("duraDisplaySide")) {
                 duraDisplaySide = json.getAsJsonPrimitive("duraDisplaySide").getAsString().equalsIgnoreCase("LEFT");
-            if (json.has("slotCycle"))
+            }
+            if (json.has("slotCycle")) {
                 slotCycle = json.getAsJsonPrimitive("slotCycle").getAsBoolean();
-            if (json.has("stackRefill"))
+            }
+            if (json.has("stackRefill")) {
                 stackRefill = json.getAsJsonPrimitive("stackRefill").getAsBoolean();
-            if (json.has("toolSelect"))
+            }
+            if (json.has("toolSelect")) {
                 toolSelect = json.getAsJsonPrimitive("toolSelect").getAsBoolean();
-            if (json.has("paperdoll"))
+            }
+            if (json.has("paperdoll")) {
                 paperdoll = json.getAsJsonPrimitive("paperdoll").getAsBoolean();
-            if (json.has("paperdollSide"))
+            }
+            if (json.has("paperdollSide")) {
                 paperdollSide = json.getAsJsonPrimitive("paperdollSide").getAsString().equalsIgnoreCase("LEFT");
-            if (json.has("zoomFOV"))
+            }
+            if (json.has("zoomFOV")) {
                 zoomFOV = json.getAsJsonPrimitive("zoomFOV").getAsInt();
-            if (json.has("gamma"))
+            }
+            if (json.has("gamma")) {
                 gamma = json.getAsJsonPrimitive("gamma").getAsInt();
-            if (json.has("maxInteractions"))
+            }
+            if (json.has("maxInteractions")) {
                 maxInteractions = json.getAsJsonPrimitive("maxInteractions").getAsInt();
-        } catch (IOException ignored) {
-        }
+            }
+            if (json.has("containerTab")) {
+                containerTab = json.getAsJsonPrimitive("containerTab").getAsBoolean();
+            }
+            if (json.has("shulkerBoxTooltip")) {
+                shulkerBoxTooltip = json.getAsJsonPrimitive("shulkerBoxTooltip").getAsBoolean();
+            }
+            if (json.has("mapTooltip")) {
+                mapTooltip = json.getAsJsonPrimitive("mapTooltip").getAsBoolean();
+            }
+            if (json.has("heldItemsVisibleInBoat")) {
+                heldItemsVisibleInBoat = json.getAsJsonPrimitive("heldItemsVisibleInBoat").getAsBoolean();
+            }
+            if (json.has("armorBarColors")) {
+                armorBarColors = json.getAsJsonPrimitive("armorBarColors").getAsBoolean();
+            }
+        } catch (Exception ignored) {}
     }
 
 }

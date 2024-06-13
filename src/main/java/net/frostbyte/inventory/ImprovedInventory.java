@@ -3,6 +3,9 @@ package net.frostbyte.inventory;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
+import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
+import net.fabricmc.fabric.impl.client.screen.ScreenExtensions;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
 
 public class ImprovedInventory implements ModInitializer {
@@ -41,6 +44,10 @@ public class ImprovedInventory implements ModInitializer {
 
 		Paperdoll paperdoll = new Paperdoll();
 		HudRenderCallback.EVENT.register(paperdoll);
+
+		NearbyContainerViewer nearbyContainerViewer = new NearbyContainerViewer();
+		ClientTickEvents.END_CLIENT_TICK.register(nearbyContainerViewer);
+		nearbyContainerViewer.setKeybindings();
 	}
 
 }
