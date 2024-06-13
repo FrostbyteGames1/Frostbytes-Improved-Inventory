@@ -12,13 +12,13 @@
 
 This mod adds new behaviors to Minecraft's inventory, HUD, and screens. All behaviors be toggled independently by editing the config file directly, through modmenu's config screen, or by disabling the related keybinds.
 
-1. Slot Cycle: Allows the player to cycle the active hotbar slot with a different item in the same column using keybinds. 
-2. Durability Display: Displays the durability of equipped armor on the screen.
-3. Stack Refill: Repopulates stacks of items in the hotbar with matching ones from the inventory.
-4. Tool Selection: Automatically switchs to the most effective tool for the targeted block or entity.
-5. Inventory Sorting: Combines and sorts all item stacks inside of an open container.
-6. Zoom: Temporarily drops the FOV in order to zoom in on the center of the screen.
-7. Paperdoll: Renders the player model on the screen (like in Bedrock Edition).
+- Slot Cycle: Allows the player to cycle the active hotbar slot with a different item in the same column using keybinds. 
+- Durability Display: Displays the durability of equipped armor on the screen.
+- Stack Refill: Repopulates stacks of items in the hotbar with matching ones from the inventory.
+- Tool Selection: Automatically switchs to the most effective tool for the targeted block or entity.
+- Inventory Sorting: Combines and sorts all item stacks inside of an open container.
+- Zoom: Temporarily drops the FOV in order to zoom in on the center of the screen.
+- Paperdoll: Renders the player model on the screen (like in Bedrock Edition).
 
 **FAQs:**
 
