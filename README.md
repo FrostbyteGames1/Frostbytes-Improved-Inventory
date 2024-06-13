@@ -20,7 +20,7 @@ This mod adds new behaviors to Minecraft's inventory, HUD, and screens. All beha
 - Zoom: Temporarily drops the FOV in order to zoom in on the center of the screen.
 - Paperdoll: Renders the player model on the screen (like in Bedrock Edition).
 - Gamma: Allows the brightness to be set higher than 100%.
-- Items Visibile in Boats: Stops held items from being hidden when rowing a boat.
+- Items Visible in Boats: Stops held items from being hidden when rowing a boat.
 - Armor Bar Colors: Colors the armor bar to match the currently equipped armor.
 - Container Tabs: Allows tabbing to any block inventory within reach when an inventory screen is open.
 - Map Preview Tooltip: Renders a preview of the currently hovered map.
