@@ -195,7 +195,8 @@ public class NearbyContainerViewer implements ClientTickEvents.EndTick {
                         }
                     }
                 }
-            } else if (blocksWithGUIs.contains(client.world.getBlockState(blockPos).getBlock())) {
+            }
+            if (blocksWithGUIs.contains(client.world.getBlockState(blockPos).getBlock())) {
                 for (Vec3d blockOffsetVector : blockOffsetVectors) {
                     BlockHitResult hitResult = client.player.getWorld().raycast(new RaycastContext(client.player.getEyePos(), Vec3d.of(blockPos).add(blockOffsetVector), RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, client.player));
                     if (hitResult.getBlockPos().equals(blockPos) && !containers.contains(blockPos)) {

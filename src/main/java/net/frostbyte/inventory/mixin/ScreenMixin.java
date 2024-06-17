@@ -12,7 +12,6 @@ import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ProfileComponent;
-import net.minecraft.entity.vehicle.VehicleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
@@ -39,13 +38,28 @@ public abstract class ScreenMixin {
         Identifier.of("container/creative_inventory/tab_top_selected_1")
     );
     @Unique
+    private static final ButtonTextures TEXTURES_LEFT_SELECTED = new ButtonTextures(
+        Identifier.of("container/creative_inventory/tab_top_selected_1"),
+        Identifier.of("container/creative_inventory/tab_top_selected_1")
+    );
+    @Unique
     private static final ButtonTextures TEXTURES_MID = new ButtonTextures(
         Identifier.of("container/creative_inventory/tab_top_unselected_2"),
         Identifier.of("container/creative_inventory/tab_top_selected_2")
     );
     @Unique
+    private static final ButtonTextures TEXTURES_MID_SELECTED = new ButtonTextures(
+        Identifier.of("container/creative_inventory/tab_top_selected_2"),
+        Identifier.of("container/creative_inventory/tab_top_selected_2")
+    );
+    @Unique
     private static final ButtonTextures TEXTURES_RIGHT = new ButtonTextures(
         Identifier.of("container/creative_inventory/tab_top_unselected_7"),
+        Identifier.of("container/creative_inventory/tab_top_selected_7")
+    );
+    @Unique
+    private static final ButtonTextures TEXTURES_RIGHT_SELECTED = new ButtonTextures(
+        Identifier.of("container/creative_inventory/tab_top_selected_7"),
         Identifier.of("container/creative_inventory/tab_top_selected_7")
     );
     @Unique
@@ -60,11 +74,13 @@ public abstract class ScreenMixin {
     );
     @Unique
     int screenWidth = 176;
+    @Unique
+    int screenHeight = 166;
+
     @Inject(method = "init", at = @At("HEAD"))
     public void init(MinecraftClient client, int width, int height, CallbackInfo ci) {
-        if (ImprovedInventoryConfig.containerTab && client.world != null && client.player != null && client.interactionManager != null && client.currentScreen instanceof HandledScreen<?> screen && !(client.currentScreen instanceof CreativeInventoryScreen)) {
+        if (ImprovedInventoryConfig.containerTab && !containers.isEmpty() && client.world != null && client.player != null && client.interactionManager != null && client.currentScreen instanceof HandledScreen<?> screen && !(client.currentScreen instanceof CreativeInventoryScreen) && !(client.currentScreen instanceof MerchantScreen)) {
 
-            int screenHeight = 166;
             if (screen instanceof GenericContainerScreen containerScreen) {
                 screenHeight = 114 + containerScreen.getScreenHandler().getRows() * 18;
             } else if (screen instanceof HopperScreen) {
@@ -73,13 +89,25 @@ public abstract class ScreenMixin {
 
             ItemStack playerHead = new ItemStack(Items.PLAYER_HEAD);
             playerHead.set(DataComponentTypes.PROFILE, new ProfileComponent(client.player.getGameProfile()));
-            TexturedButtonWithItemStackWidget tab = new TexturedButtonWithItemStackWidget(width / 2 - screenWidth / 2, height / 2 - screenHeight / 2 - 28, 26, 32, TEXTURES_LEFT, playerHead, button -> {
-                if (client.interactionManager.hasRidingInventory()) {
-                    client.player.openRidingInventory();
-                } else {
-                    client.setScreen(new InventoryScreen(client.player));
-                }
-            });
+            TexturedButtonWithItemStackWidget tab;
+            if (client.currentScreen instanceof AbstractInventoryScreen<?>) {
+                tab = new TexturedButtonWithItemStackWidget(width / 2 - screenWidth / 2, height / 2 - screenHeight / 2 - 28, 26, 32, TEXTURES_LEFT_SELECTED, playerHead, button -> {
+                    if (client.interactionManager.hasRidingInventory()) {
+                        client.player.openRidingInventory();
+                    } else {
+                        client.setScreen(new InventoryScreen(client.player));
+                    }
+                });
+            } else {
+                tab = new TexturedButtonWithItemStackWidget(width / 2 - screenWidth / 2, height / 2 - screenHeight / 2 - 28, 26, 28, TEXTURES_LEFT, playerHead, button -> {
+                    if (client.interactionManager.hasRidingInventory()) {
+                        client.player.openRidingInventory();
+                    } else {
+                        client.setScreen(new InventoryScreen(client.player));
+                    }
+                });
+            }
+
             tab.setTooltip(Tooltip.of(client.player.getDisplayName()));
             addDrawableChild(tab);
             int numTabs = Math.min(6, containers.size());
@@ -88,9 +116,17 @@ public abstract class ScreenMixin {
                 Text displayName = getDisplayName(containers.get(container));
                 ItemStack displayStack = getDisplayStack(containers.get(container));
                 if (i == 5) {
-                    tab = new TexturedButtonWithItemStackWidget(width / 2 + screenWidth / 2 - 26, height / 2 - screenHeight / 2 - 28, 26, 32, TEXTURES_RIGHT, displayStack, button -> openContainer(container));
+                    if (!(client.currentScreen instanceof AbstractInventoryScreen<?>) && current == container) {
+                        tab = new TexturedButtonWithItemStackWidget(width / 2 + screenWidth / 2 - 26, height / 2 - screenHeight / 2 - 28, 26, 32, TEXTURES_RIGHT_SELECTED, displayStack, button -> openContainer(container));
+                    } else {
+                        tab = new TexturedButtonWithItemStackWidget(width / 2 + screenWidth / 2 - 26, height / 2 - screenHeight / 2 - 28, 26, 28, TEXTURES_RIGHT, displayStack, button -> openContainer(container));
+                    }
                 } else {
-                    tab = new TexturedButtonWithItemStackWidget(width / 2 - screenWidth / 2 + (i + 1) * 25, height / 2 - screenHeight / 2 - 28, 26, 32, TEXTURES_MID, displayStack, button -> openContainer(container));
+                    if (!(client.currentScreen instanceof AbstractInventoryScreen<?>) && current == container) {
+                        tab = new TexturedButtonWithItemStackWidget(width / 2 - screenWidth / 2 + (i + 1) * 25, height / 2 - screenHeight / 2 - 28, 26, 32, TEXTURES_MID_SELECTED, displayStack, button -> openContainer(container));
+                    } else {
+                        tab = new TexturedButtonWithItemStackWidget(width / 2 - screenWidth / 2 + (i + 1) * 25, height / 2 - screenHeight / 2 - 28, 26, 28, TEXTURES_MID, displayStack, button -> openContainer(container));
+                    }
                 }
                 tab.setTooltip(Tooltip.of(displayName));
                 addDrawableChild(tab);
