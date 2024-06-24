@@ -33,6 +33,7 @@ public class ImprovedInventoryConfig {
     public static int gamma = 500;
     public static int maxInteractions = 0;
     public static boolean containerTab = true;
+    public static boolean containerTabFreeCursor = true;
     public static boolean shulkerBoxTooltip = true;
     public static boolean mapTooltip = true;
     public static boolean heldItemsVisibleInBoat = true;
@@ -62,12 +63,18 @@ public class ImprovedInventoryConfig {
                     .name(Text.of("Maximum Interactions Per Tick"))
                     .description(OptionDescription.of(Text.of("Limits the number of interactions created each tick when sorting a container (If set to 0, this setting is ignored)")))
                     .binding(0, () -> maxInteractions, newVal -> maxInteractions = newVal)
-                    .controller(option -> integerSliderController(option, 0, 100, 10))
+                    .controller(option -> integerSliderController(option, 0, 100, 1))
                     .build())
                 .option(Option.<Boolean>createBuilder()
-                    .name(Text.of("Tabs To Nearby Containers"))
+                    .name(Text.of("Tab To Nearby Containers"))
                     .description(OptionDescription.of(Text.of("Allows the player to access all containers within reach using either a keybind or the tab created in the inventory screen")))
                     .binding(true, () -> containerTab, newVal -> containerTab = newVal)
+                    .controller(TickBoxControllerBuilder::create)
+                    .build())
+                .option(Option.<Boolean>createBuilder()
+                    .name(Text.of("Unlocked Cursor"))
+                    .description(OptionDescription.of(Text.of("Stops the cursor from snapping to the center of the screen when accessing a nearby container using a tab (If Tab to Nearby Containers is disabled, this setting is ignored)")))
+                    .binding(true, () -> containerTabFreeCursor, newVal -> containerTabFreeCursor = newVal)
                     .controller(TickBoxControllerBuilder::create)
                     .build())
                 .build())
@@ -187,8 +194,9 @@ public class ImprovedInventoryConfig {
             json.addProperty("gamma", gamma);
             json.addProperty("maxInteractions", maxInteractions);
             json.addProperty("containerTab", containerTab);
+            json.addProperty("containerTabFreeCursor", containerTabFreeCursor);
             json.addProperty("shulkerBoxTooltip", shulkerBoxTooltip);
-            json.addProperty("mapBoxTooltip", mapTooltip);
+            json.addProperty("mapTooltip", mapTooltip);
             json.addProperty("heldItemsVisibleInBoat", heldItemsVisibleInBoat);
             json.addProperty("armorBarColors", armorBarColors);
             Files.writeString(configFile, gson.toJson(json));
@@ -233,6 +241,9 @@ public class ImprovedInventoryConfig {
             }
             if (json.has("containerTab")) {
                 containerTab = json.getAsJsonPrimitive("containerTab").getAsBoolean();
+            }
+            if (json.has("containerTabFreeCursor")) {
+                containerTabFreeCursor = json.getAsJsonPrimitive("containerTabFreeCursor").getAsBoolean();
             }
             if (json.has("shulkerBoxTooltip")) {
                 shulkerBoxTooltip = json.getAsJsonPrimitive("shulkerBoxTooltip").getAsBoolean();

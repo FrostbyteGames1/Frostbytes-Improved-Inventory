@@ -25,6 +25,7 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.*;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
@@ -40,6 +41,7 @@ public class NearbyContainerViewer implements ClientTickEvents.EndTick {
     public static KeyBinding containerKey;
     public static ArrayList<Vec3i> containers = new ArrayList<>();
     public static int current = 0;
+    public static boolean shouldCenterCursor = true;
     int tabButtonCooldown;
     public void setKeybindings() {
         KeyBindingHelper.registerKeyBinding(containerKey = new KeyBinding("Open Next Container (Hold Shift to Open Previous)", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_TAB, "Improved Inventory"));
@@ -75,6 +77,22 @@ public class NearbyContainerViewer implements ClientTickEvents.EndTick {
             }
         } else {
             updateContainerList();
+            current = 0;
+            if (!containers.isEmpty() && client.options.useKey.isPressed() && client.crosshairTarget != null && client.crosshairTarget.getType() == HitResult.Type.BLOCK) {
+                double d = client.crosshairTarget.getPos().distanceTo(new BlockPos(containers.get(0)).toCenterPos());
+                int closest = 0;
+                for (int i = 0; i < containers.size(); i++) {
+                    if (client.crosshairTarget.getPos().distanceTo(new BlockPos(containers.get(i)).toCenterPos()) < d) {
+                        d = client.crosshairTarget.getPos().distanceTo(new BlockPos(containers.get(i)).toCenterPos());
+                        closest = i;
+                    }
+                }
+                current = closest;
+            }
+            if (!shouldCenterCursor) {
+                shouldCenterCursor = true;
+                client.mouse.lockCursor();
+            }
         }
     }
 
@@ -109,7 +127,7 @@ public class NearbyContainerViewer implements ClientTickEvents.EndTick {
         // Get text from sign
         List<SignBlockEntity> signs = getAttachedBlocks(client.world, new BlockPos(blockPos), (w, p) -> w.getBlockEntity(p) instanceof SignBlockEntity sbe ? sbe : null);
         if (!signs.isEmpty()) {
-            name = Arrays.stream(signs.get(0).getFrontText().getMessages(false)).map(Text::getString).filter(s -> !s.isBlank()).collect(Collectors.joining(" ")).isBlank() ? name : Text.of(Arrays.stream(signs.get(0).getFrontText().getMessages(false)).map(Text::getString).filter(s -> !s.isBlank()).collect(Collectors.joining(" ")));
+            name = Arrays.stream(signs.get(0).getFrontText().getMessages(false)).map(Text::getString).filter(s -> !s.isBlank()).collect(Collectors.joining("\n")).isBlank() ? name : Text.of(Arrays.stream(signs.get(0).getFrontText().getMessages(false)).map(Text::getString).filter(s -> !s.isBlank()).collect(Collectors.joining("\n")));
         }
 
         // Get name of item in item frame
@@ -238,8 +256,9 @@ public class NearbyContainerViewer implements ClientTickEvents.EndTick {
         Vec3i targetPos = containers.get(current);
         client.player.currentScreenHandler.updateToClient();
         client.player.currentScreenHandler.sendContentUpdates();
-        client.player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, Vec3d.of(targetPos));
+        client.player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, new BlockPos(targetPos).toCenterPos());
         client.interactionManager.interactBlock(client.player, Hand.MAIN_HAND, new BlockHitResult(Vec3d.of(targetPos), Direction.EAST, new BlockPos(targetPos), false));
+        shouldCenterCursor = client.currentScreen == null;
     }
 
 }

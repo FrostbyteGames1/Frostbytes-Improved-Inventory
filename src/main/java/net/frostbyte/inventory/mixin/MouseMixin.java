@@ -5,12 +5,15 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.Mouse;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import static net.frostbyte.inventory.NearbyContainerViewer.shouldCenterCursor;
 
 @Mixin(Mouse.class)
 public abstract class MouseMixin {
@@ -22,7 +25,7 @@ public abstract class MouseMixin {
 
     @Inject(method = "lockCursor", at = @At("HEAD"), cancellable = true)
     public void lockCursor(CallbackInfo ci) {
-        if (ImprovedInventoryConfig.containerTab) {
+        if (ImprovedInventoryConfig.containerTab && ImprovedInventoryConfig.containerTabFreeCursor && !shouldCenterCursor) {
             if (this.client.isWindowFocused()) {
                 if (!this.cursorLocked) {
                     if (!MinecraftClient.IS_SYSTEM_MAC) {
@@ -41,7 +44,7 @@ public abstract class MouseMixin {
 
     @Inject(method = "unlockCursor", at = @At("HEAD"), cancellable = true)
     public void unlockCursor(CallbackInfo ci) {
-        if (ImprovedInventoryConfig.containerTab) {
+        if (ImprovedInventoryConfig.containerTab && ImprovedInventoryConfig.containerTabFreeCursor && !shouldCenterCursor) {
             if (this.cursorLocked) {
                 this.cursorLocked = false;
                 InputUtil.setCursorParameters(this.client.getWindow().getHandle(), 212993, this.x, this.y);

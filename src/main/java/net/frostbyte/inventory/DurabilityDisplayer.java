@@ -36,19 +36,19 @@ public class DurabilityDisplayer implements HudRenderCallback {
             if (!mc.player.getInventory().getStack(37).isEmpty()) {
                 drawContext.drawTexture(Identifier.of(ImprovedInventory.MOD_ID, "textures/dura_slot.png"),x - 22,y - 22,0,0,22,22, 22,22);
                 drawContext.drawItem(mc.player.getInventory().getStack(37), x - 19, y - 19);
-                drawContext.drawItemInSlot(mc.textRenderer, mc.player.getInventory().getStack(37), x - 20, y - 22);
+                drawContext.drawItemInSlot(mc.textRenderer, mc.player.getInventory().getStack(37), x - 20, y - 19);
                 y -= 23;
             }
             if (!mc.player.getInventory().getStack(38).isEmpty()) {
                 drawContext.drawTexture(Identifier.of(ImprovedInventory.MOD_ID, "textures/dura_slot.png"),x - 22,y - 22,0,0,22,22, 22,22);
                 drawContext.drawItem(mc.player.getInventory().getStack(38), x - 19, y - 19);
-                drawContext.drawItemInSlot(mc.textRenderer, mc.player.getInventory().getStack(38), x - 20, y - 22);
+                drawContext.drawItemInSlot(mc.textRenderer, mc.player.getInventory().getStack(38), x - 20, y - 19);
                 y -= 23;
             }
             if (!mc.player.getInventory().getStack(39).isEmpty()) {
                 drawContext.drawTexture(Identifier.of(ImprovedInventory.MOD_ID, "textures/dura_slot.png"),x - 22,y - 22,0,0,22,22, 22,22);
                 drawContext.drawItem(mc.player.getInventory().getStack(39), x - 19, y - 19);
-                drawContext.drawItemInSlot(mc.textRenderer, mc.player.getInventory().getStack(39), x - 20, y - 22);
+                drawContext.drawItemInSlot(mc.textRenderer, mc.player.getInventory().getStack(39), x - 20, y - 19);
             }
         }
     }

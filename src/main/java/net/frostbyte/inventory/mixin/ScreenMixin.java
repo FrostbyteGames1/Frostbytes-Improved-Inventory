@@ -35,7 +35,7 @@ public abstract class ScreenMixin {
     @Unique
     private static final ButtonTextures TEXTURES_LEFT = new ButtonTextures(
         Identifier.of("container/creative_inventory/tab_top_unselected_1"),
-        Identifier.of("container/creative_inventory/tab_top_selected_1")
+        Identifier.of("container/creative_inventory/tab_top_unselected_1")
     );
     @Unique
     private static final ButtonTextures TEXTURES_LEFT_SELECTED = new ButtonTextures(
@@ -45,7 +45,7 @@ public abstract class ScreenMixin {
     @Unique
     private static final ButtonTextures TEXTURES_MID = new ButtonTextures(
         Identifier.of("container/creative_inventory/tab_top_unselected_2"),
-        Identifier.of("container/creative_inventory/tab_top_selected_2")
+        Identifier.of("container/creative_inventory/tab_top_unselected_2")
     );
     @Unique
     private static final ButtonTextures TEXTURES_MID_SELECTED = new ButtonTextures(
@@ -55,7 +55,7 @@ public abstract class ScreenMixin {
     @Unique
     private static final ButtonTextures TEXTURES_RIGHT = new ButtonTextures(
         Identifier.of("container/creative_inventory/tab_top_unselected_7"),
-        Identifier.of("container/creative_inventory/tab_top_selected_7")
+        Identifier.of("container/creative_inventory/tab_top_unselected_7")
     );
     @Unique
     private static final ButtonTextures TEXTURES_RIGHT_SELECTED = new ButtonTextures(
@@ -81,10 +81,16 @@ public abstract class ScreenMixin {
     public void init(MinecraftClient client, int width, int height, CallbackInfo ci) {
         if (ImprovedInventoryConfig.containerTab && !containers.isEmpty() && client.world != null && client.player != null && client.interactionManager != null && client.currentScreen instanceof HandledScreen<?> screen && !(client.currentScreen instanceof CreativeInventoryScreen) && !(client.currentScreen instanceof MerchantScreen)) {
 
-            if (screen instanceof GenericContainerScreen containerScreen) {
-                screenHeight = 114 + containerScreen.getScreenHandler().getRows() * 18;
-            } else if (screen instanceof HopperScreen) {
-                screenHeight = 135;
+            switch (screen) {
+                case GenericContainerScreen containerScreen ->
+                    screenHeight = 114 + containerScreen.getScreenHandler().getRows() * 18;
+                case HopperScreen ignored ->
+                    screenHeight = 135;
+                case ShulkerBoxScreen ignored ->
+                    screenHeight = 169;
+                default -> {
+                    // Do Nothing
+                }
             }
 
             ItemStack playerHead = new ItemStack(Items.PLAYER_HEAD);
@@ -107,9 +113,9 @@ public abstract class ScreenMixin {
                     }
                 });
             }
-
             tab.setTooltip(Tooltip.of(client.player.getDisplayName()));
             addDrawableChild(tab);
+
             int numTabs = Math.min(6, containers.size());
             for (int i = 0; i < numTabs; i++) {
                 int container = i;
