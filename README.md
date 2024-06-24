@@ -12,19 +12,71 @@
 
 This mod adds new behaviors to Minecraft's inventory, HUD, and screens. All behaviors be toggled independently by editing the config file directly, through modmenu's config screen, or by disabling the related keybinds.
 
-- Slot Cycle: Allows the player to cycle the active hotbar slot with a different item in the same column using keybinds. 
-- Durability Display: Displays the durability of equipped armor on the screen.
-- Stack Refill: Repopulates stacks of items in the hotbar with matching ones from the inventory.
-- Tool Selection: Automatically switchs to the most effective tool for the targeted block or entity.
-- Inventory Sorting: Combines and sorts all item stacks inside of an open container.
-- Zoom: Temporarily drops the FOV in order to zoom in on the center of the screen.
-- Paperdoll: Renders the player model on the screen (like in Bedrock Edition).
-- Gamma: Allows the brightness to be set higher than 100%.
-- Items Visible in Boats: Stops held items from being hidden when rowing a boat.
-- Armor Bar Colors: Colors the armor bar to match the currently equipped armor.
-- Container Tabs: Allows tabbing to any block inventory within reach when an inventory screen is open.
-- Map Preview Tooltip: Renders a preview of the currently hovered map.
-- Shulker Box Preview Tooltip: Renders a preveiw of the currently hovered shulker box.
+<details>
+  <summary>Slot Cycle: Allows the player to cycle the active hotbar slot with a different item in the same column using keybinds.</summary>
+  
+  ![Slot Cycle](https://github.com/FrostbyteGames1/Frostbytes-Improved-Inventory/assets/109047591/0cb13f9d-5e05-4afc-97a2-090d8774fc26)
+</details>
+<details>
+  <summary>Durability Display: Displays the durability of equipped armor on the screen.</summary>
+  
+  ![Durability Display](https://github.com/FrostbyteGames1/Frostbytes-Improved-Inventory/assets/109047591/0a38dee6-2798-49b3-aecd-cfa36d3ae010)
+</details>
+<details>
+  <summary>Stack Refill: Repopulates stacks of items in the hotbar with matching ones from the inventory.</summary>
+  
+  ![Stack Refill](https://github.com/FrostbyteGames1/Frostbytes-Improved-Inventory/assets/109047591/1b2aa15c-792b-47f1-8e53-a8e482ce9d1f)
+</details>
+<details>
+  <summary>Tool Selection: Automatically switchs to the most effective tool for the targeted block or entity.</summary>
+  
+  ![Tool Select](https://github.com/FrostbyteGames1/Frostbytes-Improved-Inventory/assets/109047591/1115e9b3-2b4c-4d2e-8394-8b39f6db75e0)
+</details>
+<details>
+  <summary>Inventory Sorting: Combines and sorts all item stacks inside of an open container.</summary>
+
+  ![Inventory Sorting](https://github.com/FrostbyteGames1/Frostbytes-Improved-Inventory/assets/109047591/e844a40d-00a5-41c8-904f-1b2ae38eaa24)
+</details>
+<details>
+  <summary>Zoom: Temporarily drops the FOV in order to zoom in on the center of the screen.</summary>
+  
+![Zoom](https://github.com/FrostbyteGames1/Frostbytes-Improved-Inventory/assets/109047591/f34f95c7-33f9-4d4f-a4b2-67d0fd42920e)
+</details>
+<details>
+  <summary>Paperdoll: Renders the player model on the screen (like in Bedrock Edition).</summary>
+  
+  ![Paperdoll](https://github.com/FrostbyteGames1/Frostbytes-Improved-Inventory/assets/109047591/318564fd-001f-48cd-9f66-e80572017cb7)
+</details>
+<details>
+  <summary>Gamma: Allows the brightness to be set higher than 100%.</summary>
+
+  ![Gamma](https://github.com/FrostbyteGames1/Frostbytes-Improved-Inventory/assets/109047591/9326c966-53e0-4e78-96d2-49ad303211d9)
+</details>
+<details>
+  <summary>Items Visible in Boats: Stops held items from being hidden when rowing a boat.</summary>
+
+  ![Items Visible in Boats](https://github.com/FrostbyteGames1/Frostbytes-Improved-Inventory/assets/109047591/a8e3a7a4-2f0d-4599-ab99-77ef0060a9f8)
+</details>
+<details>
+  <summary>Armor Bar Colors: Colors the armor bar to match the currently equipped armor.</summary>
+
+  ![Armor Bar Colors](https://github.com/FrostbyteGames1/Frostbytes-Improved-Inventory/assets/109047591/eabb2601-3ce9-443e-9013-e0331520ef7a)
+</details>
+<details>
+  <summary>Container Tabs: Allows tabbing to any block inventory within reach when an inventory screen is open.</summary>
+
+  ![Container Tabs](https://github.com/FrostbyteGames1/Frostbytes-Improved-Inventory/assets/109047591/d8b49853-59d8-43b3-b373-c499eaf21773)
+</details>
+<details>
+  <summary>Map Preview Tooltip: Renders a preview of the currently hovered map.</summary>
+  
+  ![Map Preview Tooltip](https://github.com/FrostbyteGames1/Frostbytes-Improved-Inventory/assets/109047591/527947f8-66b9-407b-86fe-01c20450ac46)
+</details>
+<details>
+  <summary>Shulker Box Preview Tooltip: Renders a preview of the currently hovered shulker box.</summary>
+  
+  ![Shulker Box Preview Tooltip](https://github.com/FrostbyteGames1/Frostbytes-Improved-Inventory/assets/109047591/a646f2be-9b2c-4a38-8b1b-e36e308272c5)
+</details>
 
 **FAQs:**
 
