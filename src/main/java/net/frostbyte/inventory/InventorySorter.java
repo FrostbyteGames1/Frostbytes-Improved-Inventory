@@ -56,12 +56,23 @@ public class InventorySorter implements ClientTickEvents.EndTick {
 
     // Prioritizes pick stack over sort if player is in creative mode and both actions have the same keybind
     boolean shouldSort() {
-        if (mc.player != null && !mc.player.currentScreenHandler.getCursorStack().isEmpty()) {
+        if (mc.player == null) {
+            // False if player doesn't exist
             return false;
+        }
+        if (!mc.player.currentScreenHandler.getCursorStack().isEmpty()) {
+            // False if cursor isn't empty
+            return false;
+        }
+        if (!mc.player.isSpectator() && !mc.player.isCreative()) {
+            // True if player is in survival mode
+            return true;
         }
         if (mc.currentScreen instanceof HandledScreen<?> handledScreen && handledScreen.focusedSlot != null && !handledScreen.focusedSlot.getStack().isEmpty()) {
+            // False if focused slot isn't empty
             return false;
         }
+        // True otherwise
         return true;
     }
 
