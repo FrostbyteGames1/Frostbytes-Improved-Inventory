@@ -18,9 +18,29 @@ public class Paperdoll implements HudRenderCallback {
         assert mc.player != null;
         if (!mc.player.isSpectator() && ImprovedInventoryConfig.paperdoll && !mc.options.hudHidden && mc.currentScreen == null && !mc.inGameHud.getDebugHud().shouldShowDebugHud()) {
             if (ImprovedInventoryConfig.paperdollSide) {
-                drawEntity(drawContext, -16, 0, 48, 64, 20, 0.0625F, 64, 20, mc.player);
+                drawEntity(
+                    drawContext,
+                    -16 + ImprovedInventoryConfig.paperdollOffsetX,
+                    ImprovedInventoryConfig.paperdollOffsetY,
+                    48 + ImprovedInventoryConfig.paperdollOffsetX,
+                    64 + ImprovedInventoryConfig.paperdollOffsetY,
+                    20,
+                    0.0625F,
+                    64 + ImprovedInventoryConfig.paperdollOffsetX,
+                    20 + ImprovedInventoryConfig.paperdollOffsetY,
+                    mc.player);
             } else {
-                drawEntity(drawContext, mc.getWindow().getScaledWidth() - 48, 0, mc.getWindow().getScaledWidth() + 16, 64, 20, 0.0625F, mc.getWindow().getScaledWidth() - 64, 20, mc.player);
+                drawEntity(
+                    drawContext,
+                    mc.getWindow().getScaledWidth() - 48 - ImprovedInventoryConfig.paperdollOffsetX,
+                    ImprovedInventoryConfig.paperdollOffsetY,
+                    mc.getWindow().getScaledWidth() + 16 - ImprovedInventoryConfig.paperdollOffsetX,
+                    64 + ImprovedInventoryConfig.paperdollOffsetY,
+                    20,
+                    0.0625F,
+                    mc.getWindow().getScaledWidth() - 64 - ImprovedInventoryConfig.paperdollOffsetX,
+                    20 + ImprovedInventoryConfig.paperdollOffsetY,
+                    mc.player);
             }
         }
     }

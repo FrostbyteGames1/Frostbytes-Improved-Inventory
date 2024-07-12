@@ -19,10 +19,10 @@ public class DurabilityDisplayer implements HudRenderCallback {
     public void onHudRender(DrawContext drawContext, RenderTickCounter tickCounter) {
         assert mc.player != null;
         if (!mc.player.isSpectator() && ImprovedInventoryConfig.duraDisplay && !mc.options.hudHidden) {
-            int x = mc.getWindow().getScaledWidth();
-            int y = mc.getWindow().getScaledHeight();
+            int x = mc.getWindow().getScaledWidth() - ImprovedInventoryConfig.duraDisplayOffsetX;
+            int y = mc.getWindow().getScaledHeight() - ImprovedInventoryConfig.duraDisplayOffsetY;
             if (ImprovedInventoryConfig.duraDisplaySide) {
-                x = 22;
+                x = 22 + ImprovedInventoryConfig.duraDisplayOffsetX;
             }
             RenderSystem.setShader(GameRenderer::getPositionTexProgram);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);

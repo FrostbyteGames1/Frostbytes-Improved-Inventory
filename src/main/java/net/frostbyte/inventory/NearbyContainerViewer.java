@@ -44,7 +44,7 @@ public class NearbyContainerViewer implements ClientTickEvents.EndTick {
     public static boolean shouldCenterCursor = true;
     int tabButtonCooldown;
     public void setKeybindings() {
-        KeyBindingHelper.registerKeyBinding(containerKey = new KeyBinding("Open Next Container (Hold Shift to Open Previous)", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_TAB, "Improved Inventory"));
+        KeyBindingHelper.registerKeyBinding(containerKey = new KeyBinding("Next Container (SHIFT for Previous)", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_TAB, "Improved Inventory"));
     }
 
     @Override

@@ -120,8 +120,13 @@ public class SlotCycler implements ClientTickEvents.EndTick, HudRenderCallback {
         assert mc.player != null;
         if (!mc.player.isSpectator() && ImprovedInventoryConfig.slotCycle && !mc.options.hudHidden) {
             int width = mc.getWindow().getScaledWidth();
-            int height = mc.getWindow().getScaledHeight();
+            int height = mc.getWindow().getScaledHeight() - ImprovedInventoryConfig.slotCycleOffsetY;
             int x = width / 2;
+            if (mc.player.getMainArm().equals(Arm.LEFT)) {
+                x -= ImprovedInventoryConfig.slotCycleOffsetX;
+            } else {
+                x += ImprovedInventoryConfig.slotCycleOffsetX;
+            }
             RenderSystem.setShader(GameRenderer::getPositionTexProgram);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             RenderSystem.setShaderTexture(0, PREVIEW_SLOTS);

@@ -19,15 +19,22 @@ public abstract class SimpleOptionMixin<T> {
     @Shadow T value;
 
     @Inject(method = "getCodec", at = @At("HEAD"), cancellable = true)
-    public void getCodec(CallbackInfoReturnable<Codec<Double>> info) {
+    public void getCodecGamma(CallbackInfoReturnable<Codec<Double>> info) {
         if (text.getString().equals(I18n.translate("options.gamma"))) {
             info.setReturnValue(Codec.DOUBLE);
         }
     }
 
+    @Inject(method = "getCodec", at = @At("HEAD"), cancellable = true)
+    public void getCodecFOV(CallbackInfoReturnable<Codec<Integer>> info) {
+        if (text.getString().equals(I18n.translate("options.fov"))) {
+            info.setReturnValue(Codec.INT);
+        }
+    }
+
     @Inject(method = "setValue", at = @At("HEAD"), cancellable = true)
     public void setValue(T value, CallbackInfo info) {
-        if (text.getString().equals(I18n.translate("options.gamma"))) {
+        if (text.getString().equals(I18n.translate("options.gamma")) || text.getString().equals(I18n.translate("options.fov"))) {
             this.value = value;
             info.cancel();
         }

@@ -3,9 +3,6 @@ package net.frostbyte.inventory;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
-import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
-import net.fabricmc.fabric.impl.client.screen.ScreenExtensions;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
 
 public class ImprovedInventory implements ModInitializer {
@@ -26,6 +23,7 @@ public class ImprovedInventory implements ModInitializer {
 
 		StackRefiller stackRefiller = new StackRefiller();
 		ClientTickEvents.END_CLIENT_TICK.register(stackRefiller);
+		HudRenderCallback.EVENT.register(stackRefiller);
 
 		DurabilityDisplayer durabilityDisplayer = new DurabilityDisplayer();
 		HudRenderCallback.EVENT.register(durabilityDisplayer);

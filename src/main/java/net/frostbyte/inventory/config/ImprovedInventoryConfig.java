@@ -3,17 +3,17 @@ package net.frostbyte.inventory.config;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import dev.isxander.yacl3.api.ConfigCategory;
-import dev.isxander.yacl3.api.Option;
-import dev.isxander.yacl3.api.OptionDescription;
-import dev.isxander.yacl3.api.YetAnotherConfigLib;
+import dev.isxander.yacl3.api.*;
 import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
+import dev.isxander.yacl3.impl.controller.ColorControllerBuilderImpl;
+import dev.isxander.yacl3.impl.controller.IntegerFieldControllerBuilderImpl;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 
+import java.awt.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -24,12 +24,22 @@ public class ImprovedInventoryConfig {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     public static boolean duraDisplay = true;
     public static boolean duraDisplaySide = true;
+    public static int duraDisplayOffsetX = 0;
+    public static int duraDisplayOffsetY = 0;
     public static boolean slotCycle = true;
+    public static int slotCycleOffsetX = 0;
+    public static int slotCycleOffsetY = 0;
     public static boolean stackRefill = true;
+    public static boolean stackRefillPreview = true;
+    public static Color stackRefillPreviewColor = Color.WHITE;
     public static boolean toolSelect = true;
     public static boolean paperdoll = true;
     public static boolean paperdollSide = true;
+    public static int paperdollOffsetX = 0;
+    public static int paperdollOffsetY = 0;
     public static int zoomFOV = 30;
+    public static boolean zoomScrollRequiresControl = true;
+    public static boolean zoomSound = true;
     public static int gamma = 500;
     public static int maxInteractions = 0;
     public static boolean containerTab = true;
@@ -47,116 +57,241 @@ public class ImprovedInventoryConfig {
             .category(ConfigCategory.createBuilder()
                 .name(Text.of("Inventory"))
                 .tooltip(Text.of("Options that interact with the player's inventory"))
-                .option(Option.<Boolean>createBuilder()
+
+                .group(OptionGroup.createBuilder()
                     .name(Text.of("Hotbar Stack Refilling"))
-                    .description(OptionDescription.of(Text.of("Refills the hotbar with a new stack of the same item from the inventory")))
-                    .binding(true, () -> stackRefill, newVal -> stackRefill = newVal)
-                    .controller(TickBoxControllerBuilder::create)
+                    .collapsed(true)
+                    .option(Option.<Boolean>createBuilder()
+                        .name(Text.of("Hotbar Stack Refilling"))
+                        .description(OptionDescription.of(Text.of("Refills the hotbar with a new stack of the same item from the inventory")))
+                        .binding(true, () -> stackRefill, newVal -> stackRefill = newVal)
+                        .controller(TickBoxControllerBuilder::create)
+                        .build())
+                    .option(Option.<Boolean>createBuilder()
+                        .name(Text.of("Hotbar Stack Refilling Preview"))
+                        .description(OptionDescription.of(Text.of("Adds a preview of the number of matching items in the inventory to the selected hotbar stack")))
+                        .binding(true, () -> stackRefillPreview, newVal -> stackRefillPreview = newVal)
+                        .controller(TickBoxControllerBuilder::create)
+                        .build())
+                    .option(Option.<Color>createBuilder()
+                        .name(Text.of("Hotbar Stack Refilling Preview Color"))
+                        .description(OptionDescription.of(Text.of("Sets the font color of the hotbar stack refilling preview")))
+                        .binding(Color.WHITE, () -> stackRefillPreviewColor, newVal -> stackRefillPreviewColor = newVal)
+                        .controller(ColorControllerBuilderImpl::new)
+                        .build())
                     .build())
-                .option(Option.<Boolean>createBuilder()
+
+                .group(OptionGroup.createBuilder()
                     .name(Text.of("Automatic Tool Selection"))
-                    .description(OptionDescription.of(Text.of("Automatically swaps to the hotbar slot with the best tool when mining and the best weapon when attacking")))
-                    .binding(true, () -> toolSelect, newVal -> toolSelect = newVal)
-                    .controller(TickBoxControllerBuilder::create)
+                    .collapsed(true)
+                    .option(Option.<Boolean>createBuilder()
+                        .name(Text.of("Automatic Tool Selection"))
+                        .description(OptionDescription.of(Text.of("Automatically swaps to the hotbar slot with the best tool when mining and the best weapon when attacking")))
+                        .binding(true, () -> toolSelect, newVal -> toolSelect = newVal)
+                        .controller(TickBoxControllerBuilder::create)
+                        .build())
                     .build())
-                .option(Option.<Integer>createBuilder()
-                    .name(Text.of("Maximum Interactions Per Tick"))
-                    .description(OptionDescription.of(Text.of("Limits the number of interactions created each tick when sorting a container (If set to 0, this setting is ignored)")))
-                    .binding(0, () -> maxInteractions, newVal -> maxInteractions = newVal)
-                    .controller(option -> integerSliderController(option, 0, 100, 1))
+
+                .group(OptionGroup.createBuilder()
+                    .name(Text.of("Inventory Sorting"))
+                    .collapsed(true)
+                    .option(Option.<Integer>createBuilder()
+                        .name(Text.of("Maximum Interactions Per Tick"))
+                        .description(OptionDescription.of(Text.of("Limits the number of interactions created each tick when sorting a container (If set to 0, this setting is ignored)")))
+                        .binding(0, () -> maxInteractions, newVal -> maxInteractions = newVal)
+                        .controller(option -> integerSliderController(option, 0, 100, 1))
+                        .build())
                     .build())
-                .option(Option.<Boolean>createBuilder()
+
+                .group(OptionGroup.createBuilder()
                     .name(Text.of("Tab To Nearby Containers"))
-                    .description(OptionDescription.of(Text.of("Allows the player to access all containers within reach using either a keybind or the tab created in the inventory screen")))
-                    .binding(true, () -> containerTab, newVal -> containerTab = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build())
-                .option(Option.<Boolean>createBuilder()
-                    .name(Text.of("Unlocked Cursor"))
-                    .description(OptionDescription.of(Text.of("Stops the cursor from snapping to the center of the screen when accessing a nearby container using a tab (If Tab to Nearby Containers is disabled, this setting is ignored)")))
-                    .binding(true, () -> containerTabFreeCursor, newVal -> containerTabFreeCursor = newVal)
-                    .controller(TickBoxControllerBuilder::create)
+                    .collapsed(true)
+                    .option(Option.<Boolean>createBuilder()
+                        .name(Text.of("Tab To Nearby Containers"))
+                        .description(OptionDescription.of(Text.of("Allows the player to access all containers within reach using either a keybind or the tab created in the inventory screen")))
+                        .binding(true, () -> containerTab, newVal -> containerTab = newVal)
+                        .controller(TickBoxControllerBuilder::create)
+                        .build())
+                    .option(Option.<Boolean>createBuilder()
+                        .name(Text.of("Unlocked Cursor"))
+                        .description(OptionDescription.of(Text.of("Stops the cursor from snapping to the center of the screen when accessing a nearby container using a tab (If Tab to Nearby Containers is disabled, this setting is ignored)")))
+                        .binding(true, () -> containerTabFreeCursor, newVal -> containerTabFreeCursor = newVal)
+                        .controller(TickBoxControllerBuilder::create)
+                        .build())
                     .build())
                 .build())
         
             .category(ConfigCategory.createBuilder()
                 .name(Text.of("HUD"))
-                .tooltip(Text.of("Options that add additional information to the HUD (heads-up display"))
-                .option(Option.<Boolean>createBuilder()
+                .tooltip(Text.of("Options that add additional information to the heads-up display"))
+
+                .group(OptionGroup.createBuilder()
                     .name(Text.of("Armor Durability Display"))
-                    .description(OptionDescription.of(Text.of("Displays the currently equipped armor items on the screen")))
-                    .binding(true, () -> duraDisplay, newVal -> duraDisplay = newVal)
-                    .controller(TickBoxControllerBuilder::create)
+                    .collapsed(true)
+                    .option(Option.<Boolean>createBuilder()
+                        .name(Text.of("Armor Durability Display"))
+                        .description(OptionDescription.of(Text.of("Displays the currently equipped armor items on the screen")))
+                        .binding(true, () -> duraDisplay, newVal -> duraDisplay = newVal)
+                        .controller(TickBoxControllerBuilder::create)
+                        .build())
+                    .option(Option.<Boolean>createBuilder()
+                        .name(Text.of("Durability Display Location"))
+                        .description(OptionDescription.of(Text.of("The side of the screen to display the armor durability on")))
+                        .binding(false, () -> duraDisplaySide, newVal -> duraDisplaySide = newVal)
+                        .controller(ImprovedInventoryConfig::leftRightControllerBuilder)
+                        .build())
+                    .option(Option.<Integer>createBuilder()
+                        .name(Text.of("Durability Display X Offset"))
+                        .description(OptionDescription.of(Text.of("Adjusts the x position of the durability display")))
+                        .binding(0, () -> duraDisplayOffsetX, newVal -> duraDisplayOffsetX = newVal)
+                        .controller(IntegerFieldControllerBuilderImpl::new)
+                        .build())
+                    .option(Option.<Integer>createBuilder()
+                        .name(Text.of("Durability Display Y Offset"))
+                        .description(OptionDescription.of(Text.of("Adjusts the y position of the durability display")))
+                        .binding(0, () -> duraDisplayOffsetY, newVal -> duraDisplayOffsetY = newVal)
+                        .controller(IntegerFieldControllerBuilderImpl::new)
+                        .build())
                     .build())
-                .option(Option.<Boolean>createBuilder()
-                    .name(Text.of("Durability Display Location"))
-                    .description(OptionDescription.of(Text.of("The side of the screen to display the armor durability on")))
-                    .binding(false, () -> duraDisplaySide, newVal -> duraDisplaySide = newVal)
-                    .controller(ImprovedInventoryConfig::leftRightControllerBuilder)
+
+                .group(OptionGroup.createBuilder()
+                    .name(Text.of("Slot Cycling"))
+                    .collapsed(true)
+                    .option(Option.<Boolean>createBuilder()
+                        .name(Text.of("Slot Cycling Preview"))
+                        .description(OptionDescription.of(Text.of("Displays a preview of the item stacks that would be cycled to")))
+                        .binding(true, () -> slotCycle, newVal -> slotCycle = newVal)
+                        .controller(TickBoxControllerBuilder::create)
+                        .build())
+                    .option(Option.<Integer>createBuilder()
+                        .name(Text.of("Slot Cycling Preview X Offset"))
+                        .description(OptionDescription.of(Text.of("Adjusts the x position of the slot cycle preview")))
+                        .binding(0, () -> slotCycleOffsetX, newVal -> slotCycleOffsetX = newVal)
+                        .controller(IntegerFieldControllerBuilderImpl::new)
+                        .build())
+                    .option(Option.<Integer>createBuilder()
+                        .name(Text.of("Slot Cycling Preview Y Offset"))
+                        .description(OptionDescription.of(Text.of("Adjusts the y position of the slot cycle preview")))
+                        .binding(0, () -> slotCycleOffsetY, newVal -> slotCycleOffsetY = newVal)
+                        .controller(IntegerFieldControllerBuilderImpl::new)
+                        .build())
                     .build())
-                .option(Option.<Boolean>createBuilder()
-                    .name(Text.of("Slot Cycling Preview"))
-                    .description(OptionDescription.of(Text.of("Displays a preview of the item stacks that would be cycled to")))
-                    .binding(true, () -> slotCycle, newVal -> slotCycle = newVal)
-                    .controller(TickBoxControllerBuilder::create)
-                    .build())
-                .option(Option.<Boolean>createBuilder()
+
+                .group(OptionGroup.createBuilder()
                     .name(Text.of("Bedrock Paperdoll"))
-                    .description(OptionDescription.of(Text.of("Displays the player model on the screen like in Bedrock Edition")))
-                    .binding(true, () -> paperdoll, newVal -> paperdoll = newVal)
-                    .controller(TickBoxControllerBuilder::create)
+                    .collapsed(true)
+                    .option(Option.<Boolean>createBuilder()
+                        .name(Text.of("Bedrock Paperdoll"))
+                        .description(OptionDescription.of(Text.of("Displays the player model on the screen like in Bedrock Edition")))
+                        .binding(true, () -> paperdoll, newVal -> paperdoll = newVal)
+                        .controller(TickBoxControllerBuilder::create)
+                        .build())
+                    .option(Option.<Boolean>createBuilder()
+                        .name(Text.of("Bedrock Paperdoll Location"))
+                        .description(OptionDescription.of(Text.of("The side of the screen to display the player model on")))
+                        .binding(true, () -> paperdollSide, newVal -> paperdollSide = newVal)
+                        .controller(ImprovedInventoryConfig::leftRightControllerBuilder)
+                        .build())
+                    .option(Option.<Integer>createBuilder()
+                        .name(Text.of("Bedrock Paperdoll X Offset"))
+                        .description(OptionDescription.of(Text.of("Adjusts the x position of the paperdoll")))
+                        .binding(0, () -> paperdollOffsetX, newVal -> paperdollOffsetX = newVal)
+                        .controller(IntegerFieldControllerBuilderImpl::new)
+                        .build())
+                    .option(Option.<Integer>createBuilder()
+                        .name(Text.of("Bedrock Paperdoll Y Offset"))
+                        .description(OptionDescription.of(Text.of("Adjusts the y position of the paperdoll")))
+                        .binding(0, () -> paperdollOffsetY, newVal -> paperdollOffsetY = newVal)
+                        .controller(IntegerFieldControllerBuilderImpl::new)
+                        .build())
                     .build())
-                .option(Option.<Boolean>createBuilder()
-                    .name(Text.of("Bedrock Paperdoll Location"))
-                    .description(OptionDescription.of(Text.of("The side of the screen to display the player model on")))
-                    .binding(true, () -> paperdollSide, newVal -> paperdollSide = newVal)
-                    .controller(ImprovedInventoryConfig::leftRightControllerBuilder)
-                    .build())
-                .option(Option.<Boolean>createBuilder()
+
+                .group(OptionGroup.createBuilder()
                     .name(Text.of("Held Items Visible In Boats"))
-                    .description(OptionDescription.of(Text.of("Stops held items being hidden when riding a boat")))
-                    .binding(true, () -> heldItemsVisibleInBoat, newVal -> heldItemsVisibleInBoat = newVal)
-                    .controller(TickBoxControllerBuilder::create)
+                    .collapsed(true)
+                    .option(Option.<Boolean>createBuilder()
+                        .name(Text.of("Held Items Visible In Boats"))
+                        .description(OptionDescription.of(Text.of("Stops held items being hidden while rowing a boat")))
+                        .binding(true, () -> heldItemsVisibleInBoat, newVal -> heldItemsVisibleInBoat = newVal)
+                        .controller(TickBoxControllerBuilder::create)
+                        .build())
                     .build())
-                .option(Option.<Boolean>createBuilder()
+
+                .group(OptionGroup.createBuilder()
                     .name(Text.of("Colored Armor Bar"))
-                    .description(OptionDescription.of(Text.of("Colors the armor bar icons to match the materials of the equipped armor")))
-                    .binding(true, () -> armorBarColors, newVal -> armorBarColors = newVal)
-                    .controller(TickBoxControllerBuilder::create)
+                    .collapsed(true)
+                    .option(Option.<Boolean>createBuilder()
+                        .name(Text.of("Colored Armor Bar"))
+                        .description(OptionDescription.of(Text.of("Colors the armor bar icons to match the materials of the equipped armor")))
+                        .binding(true, () -> armorBarColors, newVal -> armorBarColors = newVal)
+                        .controller(TickBoxControllerBuilder::create)
+                        .build())
                     .build())
                 .build())
 
             .category(ConfigCategory.createBuilder()
                 .name(Text.of("Tooltips"))
                 .tooltip(Text.of("Options that add additional information to item tooltips"))
-                .option(Option.<Boolean>createBuilder()
+
+                .group(OptionGroup.createBuilder()
                     .name(Text.of("Shulker Box Preview"))
-                    .description(OptionDescription.of(Text.of("Displays a shulker box's inventory in its tooltip")))
-                    .binding(true, () -> shulkerBoxTooltip, newVal -> shulkerBoxTooltip = newVal)
-                    .controller(TickBoxControllerBuilder::create)
+                    .collapsed(true)
+                    .option(Option.<Boolean>createBuilder()
+                        .name(Text.of("Shulker Box Preview"))
+                        .description(OptionDescription.of(Text.of("Displays a shulker box's inventory in its tooltip")))
+                        .binding(true, () -> shulkerBoxTooltip, newVal -> shulkerBoxTooltip = newVal)
+                        .controller(TickBoxControllerBuilder::create)
+                        .build())
                     .build())
-                .option(Option.<Boolean>createBuilder()
+
+                .group(OptionGroup.createBuilder()
                     .name(Text.of("Map Preview"))
-                    .description(OptionDescription.of(Text.of("Display's a map's contents in its tooltip")))
-                    .binding(true, () -> mapTooltip, newVal -> mapTooltip = newVal)
-                    .controller(TickBoxControllerBuilder::create)
+                    .collapsed(true)
+                    .option(Option.<Boolean>createBuilder()
+                        .name(Text.of("Map Preview"))
+                        .description(OptionDescription.of(Text.of("Displays a map's contents in its tooltip")))
+                        .binding(true, () -> mapTooltip, newVal -> mapTooltip = newVal)
+                        .controller(TickBoxControllerBuilder::create)
+                        .build())
                     .build())
                 .build())
         
             .category(ConfigCategory.createBuilder()
                 .name(Text.of("Screen Effects"))
                 .tooltip(Text.of("Options that modify the entire screen"))
-                .option(Option.<Integer>createBuilder()
-                    .name(Text.of("Target Zoom FOV"))
-                    .description(OptionDescription.of(Text.of("The FOV (field of view) used when the zoom key is held")))
-                    .binding(30, () -> zoomFOV, newVal -> zoomFOV = newVal)
-                    .controller(option -> integerSliderController(option, 30, 110, 1))
+
+                .group(OptionGroup.createBuilder()
+                    .name(Text.of("Zoom"))
+                    .collapsed(true)
+                    .option(Option.<Integer>createBuilder()
+                        .name(Text.of("Target Zoom FOV"))
+                        .description(OptionDescription.of(Text.of("The field of view used when the zoom key is held")))
+                        .binding(30, () -> zoomFOV, newVal -> zoomFOV = newVal)
+                        .controller(option -> integerSliderController(option, 30, 110, 1))
+                        .build())
+                    .option(Option.<Boolean>createBuilder()
+                        .name(Text.of("Scrolling to Adjust Zoom Requires Control"))
+                        .description(OptionDescription.of(Text.of("Requires the CTRL key to be pressed in order for the scroll wheel to adjust zoom")))
+                        .binding(true, () -> zoomScrollRequiresControl, newVal -> zoomScrollRequiresControl = newVal)
+                        .controller(TickBoxControllerBuilder::create)
+                        .build())
+                    .option(Option.<Boolean>createBuilder()
+                        .name(Text.of("Play Spyglass Sound on Zoom"))
+                        .description(OptionDescription.of(Text.of("Plays the spyglass sound when the zoom key is pressed")))
+                        .binding(true, () -> zoomSound, newVal -> zoomSound = newVal)
+                        .controller(TickBoxControllerBuilder::create)
+                        .build())
                     .build())
-                .option(Option.<Integer>createBuilder()
-                    .name(Text.of("Gamma Level"))
-                    .description(OptionDescription.of(Text.of("The gamma (brightness) used when increased gamma is toggled on")))
-                    .binding(500, () -> gamma, newVal -> gamma = newVal)
-                    .controller(option -> integerSliderController(option, 0, 2000, 100))
+
+                .group(OptionGroup.createBuilder()
+                    .name(Text.of("Gamma"))
+                    .collapsed(true)
+                    .option(Option.<Integer>createBuilder()
+                        .name(Text.of("Gamma Level"))
+                        .description(OptionDescription.of(Text.of("The gamma (brightness) used when increased gamma is toggled on")))
+                        .binding(500, () -> gamma, newVal -> gamma = newVal)
+                        .controller(option -> integerSliderController(option, 0, 2000, 100))
+                        .build())
                     .build())
                 .build())
             
@@ -185,12 +320,22 @@ public class ImprovedInventoryConfig {
             JsonObject json = new JsonObject();
             json.addProperty("duraDisplay", duraDisplay);
             json.addProperty("duraDisplaySide", duraDisplaySide ? "LEFT" : "RIGHT");
+            json.addProperty("duraDisplayOffsetX", duraDisplayOffsetX);
+            json.addProperty("duraDisplayOffsetY", duraDisplayOffsetY);
             json.addProperty("slotCycle", slotCycle);
+            json.addProperty("slotCycleOffsetX", slotCycleOffsetX);
+            json.addProperty("slotCycleOffsetY", slotCycleOffsetY);
             json.addProperty("stackRefill", stackRefill);
+            json.addProperty("stackRefillPreview", stackRefillPreview);
+            json.addProperty("stackRefillPreviewColor", stackRefillPreviewColor.getRGB());
             json.addProperty("toolSelect", toolSelect);
             json.addProperty("paperdoll", paperdoll);
             json.addProperty("paperdollSide", paperdollSide ? "LEFT" : "RIGHT");
+            json.addProperty("paperdollOffsetX", paperdollOffsetX);
+            json.addProperty("paperdollOffsetY", paperdollOffsetY);
             json.addProperty("zoomFOV", zoomFOV);
+            json.addProperty("zoomScrollRequiresControl", zoomScrollRequiresControl);
+            json.addProperty("zoomSound", zoomSound);
             json.addProperty("gamma", gamma);
             json.addProperty("maxInteractions", maxInteractions);
             json.addProperty("containerTab", containerTab);
@@ -215,11 +360,29 @@ public class ImprovedInventoryConfig {
             if (json.has("duraDisplaySide")) {
                 duraDisplaySide = json.getAsJsonPrimitive("duraDisplaySide").getAsString().equalsIgnoreCase("LEFT");
             }
+            if (json.has("duraDisplayOffsetX")) {
+                duraDisplayOffsetX = json.getAsJsonPrimitive("duraDisplayOffsetX").getAsInt();
+            }
+            if (json.has("duraDisplayOffsetY")) {
+                duraDisplayOffsetY = json.getAsJsonPrimitive("duraDisplayOffsetY").getAsInt();
+            }
             if (json.has("slotCycle")) {
                 slotCycle = json.getAsJsonPrimitive("slotCycle").getAsBoolean();
             }
+            if (json.has("slotCycleOffsetX")) {
+                slotCycleOffsetX = json.getAsJsonPrimitive("slotCycleOffsetX").getAsInt();
+            }
+            if (json.has("slotCycleOffsetY")) {
+                slotCycleOffsetY = json.getAsJsonPrimitive("slotCycleOffsetY").getAsInt();
+            }
             if (json.has("stackRefill")) {
                 stackRefill = json.getAsJsonPrimitive("stackRefill").getAsBoolean();
+            }
+            if (json.has("stackRefillPreview")) {
+                stackRefillPreview = json.getAsJsonPrimitive("stackRefillPreview").getAsBoolean();
+            }
+            if (json.has("stackRefillPreviewColor")) {
+                stackRefillPreviewColor = new Color(json.getAsJsonPrimitive("stackRefillPreviewColor").getAsInt());
             }
             if (json.has("toolSelect")) {
                 toolSelect = json.getAsJsonPrimitive("toolSelect").getAsBoolean();
@@ -230,8 +393,20 @@ public class ImprovedInventoryConfig {
             if (json.has("paperdollSide")) {
                 paperdollSide = json.getAsJsonPrimitive("paperdollSide").getAsString().equalsIgnoreCase("LEFT");
             }
+            if (json.has("paperdollOffsetX")) {
+                paperdollOffsetX = json.getAsJsonPrimitive("paperdollOffsetX").getAsInt();
+            }
+            if (json.has("paperdollOffsetY")) {
+                paperdollOffsetY = json.getAsJsonPrimitive("paperdollOffsetY").getAsInt();
+            }
             if (json.has("zoomFOV")) {
                 zoomFOV = json.getAsJsonPrimitive("zoomFOV").getAsInt();
+            }
+            if (json.has("zoomScrollRequiresControl")) {
+                zoomScrollRequiresControl = json.getAsJsonPrimitive("zoomScrollRequiresControl").getAsBoolean();
+            }
+            if (json.has("zoomSound")) {
+                zoomSound = json.getAsJsonPrimitive("zoomSound").getAsBoolean();
             }
             if (json.has("gamma")) {
                 gamma = json.getAsJsonPrimitive("gamma").getAsInt();

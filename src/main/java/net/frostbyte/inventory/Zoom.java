@@ -12,10 +12,12 @@ import net.minecraft.sound.SoundEvents;
 
 @Environment(EnvType.CLIENT)
 public class Zoom implements ClientTickEvents.EndTick {
-    int standardFOV = 90;
+    public static int standardFOV = 90;
+    public static int scrollAmount = 0;
     public static KeyBinding zoomKey;
+
     public void setKeyBindings() {
-        KeyBindingHelper.registerKeyBinding(zoomKey = new KeyBinding("Zoom", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_C, "Improved Inventory"));
+        KeyBindingHelper.registerKeyBinding(zoomKey = new KeyBinding("Zoom (CTRL+Scroll to Adjust)", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_C, "Improved Inventory"));
     }
     @Override
     public void onEndTick(MinecraftClient client) {
@@ -25,28 +27,39 @@ public class Zoom implements ClientTickEvents.EndTick {
 
         if (client.currentScreen == null) {
             if (zoomKey.isPressed()) {
-                if (client.options.getFov().getValue() == standardFOV) {
-                    client.player.playSound(SoundEvents.ITEM_SPYGLASS_USE, 1.0F, 1.0F);
-                    client.options.getFov().setValue(ImprovedInventoryConfig.zoomFOV);
+                if (client.options.getFov().getValue() != ImprovedInventoryConfig.zoomFOV - scrollAmount) {
+                    if (ImprovedInventoryConfig.zoomSound) {
+                        client.player.playSound(SoundEvents.ITEM_SPYGLASS_USE, 1.0F, 1.0F);
+                    }
+                    client.options.getFov().setValue(ImprovedInventoryConfig.zoomFOV - scrollAmount);
                 }
             } else {
-                if (client.options.getFov().getValue() == ImprovedInventoryConfig.zoomFOV) {
-                    client.player.playSound(SoundEvents.ITEM_SPYGLASS_STOP_USING, 1.0F, 1.0F);
+                if (client.options.getFov().getValue() != standardFOV) {
+                    if (ImprovedInventoryConfig.zoomSound) {
+                        client.player.playSound(SoundEvents.ITEM_SPYGLASS_STOP_USING, 1.0F, 1.0F);
+                    }
                     client.options.getFov().setValue(standardFOV);
+                    scrollAmount = 0;
                 }
             }
         } else {
             if (client.currentScreen.shouldPause()) {
-                if (client.options.getFov().getValue() == ImprovedInventoryConfig.zoomFOV) {
-                    client.player.playSound(SoundEvents.ITEM_SPYGLASS_STOP_USING, 1.0F, 1.0F);
+                if (client.options.getFov().getValue() == ImprovedInventoryConfig.zoomFOV - scrollAmount) {
+                    if (ImprovedInventoryConfig.zoomSound) {
+                        client.player.playSound(SoundEvents.ITEM_SPYGLASS_STOP_USING, 1.0F, 1.0F);
+                    }
                     client.options.getFov().setValue(standardFOV);
+                    scrollAmount = 0;
                 } else if (client.options.getFov().getValue() != standardFOV) {
                     standardFOV = client.options.getFov().getValue();
                 }
             } else {
-                if (client.options.getFov().getValue() == ImprovedInventoryConfig.zoomFOV) {
-                    client.player.playSound(SoundEvents.ITEM_SPYGLASS_STOP_USING, 1.0F, 1.0F);
+                if (client.options.getFov().getValue() != standardFOV) {
+                    if (ImprovedInventoryConfig.zoomSound) {
+                        client.player.playSound(SoundEvents.ITEM_SPYGLASS_STOP_USING, 1.0F, 1.0F);
+                    }
                     client.options.getFov().setValue(standardFOV);
+                    scrollAmount = 0;
                 }
             }
         }

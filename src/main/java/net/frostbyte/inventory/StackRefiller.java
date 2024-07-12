@@ -3,27 +3,31 @@ package net.frostbyte.inventory;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.InputUtil;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.screen.slot.SlotActionType;
+import net.minecraft.text.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 @Environment(EnvType.CLIENT)
-public class StackRefiller implements ClientTickEvents.EndTick {
+public class StackRefiller implements ClientTickEvents.EndTick, HudRenderCallback {
     MinecraftClient mc;
     Item item = Items.AIR;
     int slot = -1;
+    public static int numItems = 0;
     public static final ArrayList<Item> FOOD_REFILL_BLACKLIST = new ArrayList<>(Arrays.asList(
-            Items.GOLDEN_APPLE,
-            Items.ENCHANTED_GOLDEN_APPLE,
-            Items.SUSPICIOUS_STEW,
-            Items.CHORUS_FRUIT
+        Items.GOLDEN_APPLE,
+        Items.ENCHANTED_GOLDEN_APPLE,
+        Items.SUSPICIOUS_STEW,
+        Items.CHORUS_FRUIT
     ));
 
     @Override
@@ -71,9 +75,29 @@ public class StackRefiller implements ClientTickEvents.EndTick {
             }
             item = mc.player.getInventory().getMainHandStack().getItem();
             slot = mc.player.getInventory().selectedSlot;
+            numItems = 0;
+            for (int i = 35; i > 8; i--) {
+                if (item == mc.player.getInventory().getStack(i).getItem()) {
+                    numItems += mc.player.getInventory().getStack(i).getCount();
+                }
+            }
         } else {
             item = Items.AIR;
             slot = -1;
+        }
+    }
+
+    @Override
+    public void onHudRender(DrawContext drawContext, RenderTickCounter tickCounter) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (ImprovedInventoryConfig.stackRefillPreview) {
+            if (numItems > 0) {
+                drawContext.getMatrices().push();
+                drawContext.getMatrices().scale(0.5F, 0.5F, 1.0F);
+                drawContext.getMatrices().translate(0.0, 0.0, 600.0);
+                drawContext.drawText(client.textRenderer, Text.of("+ " + numItems), 2 * (drawContext.getScaledWindowWidth() / 2 - 90 + slot * 20 + 2), 2 * (drawContext.getScaledWindowHeight() - 20), ImprovedInventoryConfig.stackRefillPreviewColor.getRGB(), true);
+                drawContext.getMatrices().pop();
+            }
         }
     }
 }
