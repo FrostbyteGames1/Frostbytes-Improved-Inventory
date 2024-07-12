@@ -171,6 +171,11 @@ public class InventorySorter implements ClientTickEvents.EndTick {
             }
         }
         stacks.sort(this::compareStacks);
+        if (mc.currentScreen instanceof InventoryScreen) {
+            for (int i = 9; i > 0; i--) {
+                stacks.addFirst(screenHandler.getSlot(i - 1).getStack());
+            }
+        }
         return stacks;
     }
 
@@ -179,11 +184,6 @@ public class InventorySorter implements ClientTickEvents.EndTick {
         screenHandler.enableSyncing();
         combineStacks(screenHandler);
         ArrayList<ItemStack> sortedStacks = getSortedStackArray(screenHandler);
-        if (mc.currentScreen instanceof InventoryScreen) {
-            for (int i = 0; i < 9; i++) {
-                sortedStacks.addFirst(ItemStack.EMPTY);
-            }
-        }
         for (int i = 0; i < sortedStacks.size(); i++) {
             if (!screenHandler.getSlot(i).getStack().equals(sortedStacks.get(i))) {
                 int slot = screenHandler.getStacks().indexOf(sortedStacks.get(i));
