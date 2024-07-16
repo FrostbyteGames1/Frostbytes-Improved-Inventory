@@ -42,6 +42,7 @@ public class ImprovedInventoryConfig {
     public static boolean zoomSound = true;
     public static int gamma = 500;
     public static int maxInteractions = 0;
+    public static boolean containerSearch = true;
     public static boolean containerTab = true;
     public static boolean containerTabFreeCursor = true;
     public static boolean shulkerBoxTooltip = true;
@@ -100,6 +101,17 @@ public class ImprovedInventoryConfig {
                         .description(OptionDescription.of(Text.of("Limits the number of interactions created each tick when sorting a container (If set to 0, this setting is ignored)")))
                         .binding(0, () -> maxInteractions, newVal -> maxInteractions = newVal)
                         .controller(option -> integerSliderController(option, 0, 100, 1))
+                        .build())
+                    .build())
+
+                .group(OptionGroup.createBuilder()
+                    .name(Text.of("Inventory Search Bar"))
+                    .collapsed(true)
+                    .option(Option.<Boolean>createBuilder()
+                        .name(Text.of("Inventory Search Bar"))
+                        .description(OptionDescription.of(Text.of("Adds a search bar to chests, barrels, and shulker boxes")))
+                        .binding(true, () -> containerSearch, newVal -> containerSearch = newVal)
+                        .controller(TickBoxControllerBuilder::create)
                         .build())
                     .build())
 
@@ -338,6 +350,7 @@ public class ImprovedInventoryConfig {
             json.addProperty("zoomSound", zoomSound);
             json.addProperty("gamma", gamma);
             json.addProperty("maxInteractions", maxInteractions);
+            json.addProperty("containerSearch", containerSearch);
             json.addProperty("containerTab", containerTab);
             json.addProperty("containerTabFreeCursor", containerTabFreeCursor);
             json.addProperty("shulkerBoxTooltip", shulkerBoxTooltip);
@@ -413,6 +426,9 @@ public class ImprovedInventoryConfig {
             }
             if (json.has("maxInteractions")) {
                 maxInteractions = json.getAsJsonPrimitive("maxInteractions").getAsInt();
+            }
+            if (json.has("containerSearch")) {
+                containerSearch = json.getAsJsonPrimitive("containerSearch").getAsBoolean();
             }
             if (json.has("containerTab")) {
                 containerTab = json.getAsJsonPrimitive("containerTab").getAsBoolean();

@@ -12,7 +12,7 @@ import net.minecraft.sound.SoundEvents;
 
 @Environment(EnvType.CLIENT)
 public class Zoom implements ClientTickEvents.EndTick {
-    public static int standardFOV = 90;
+    public static int standardFOV = 0;
     public static int scrollAmount = 0;
     public static KeyBinding zoomKey;
 
@@ -23,6 +23,10 @@ public class Zoom implements ClientTickEvents.EndTick {
     public void onEndTick(MinecraftClient client) {
         if (client.player == null) {
             return;
+        }
+
+        if (!zoomKey.isPressed() && standardFOV == 0) {
+            standardFOV = client.options.getFov().getValue();
         }
 
         if (client.currentScreen == null) {
