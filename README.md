@@ -89,3 +89,5 @@ This mod adds new behaviors to Minecraft's inventory, HUD, and screens. All beha
 Modrinth - https://modrinth.com/mod/frostbytes-improved-inventory
 
 Curseforge - https://www.curseforge.com/minecraft/mc-mods/frostbytes-improved-inventory
+
+[![BisectHosting](https://www.bisecthosting.com/partners/custom-banners/92987bf2-5957-4acb-8dd9-0fadd0fdd7e4.webp)](https://www.bisecthosting.com/frostbyte)
