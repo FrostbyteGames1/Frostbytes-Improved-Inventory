@@ -44,5 +44,9 @@ public class Gamma implements ClientTickEvents.EndTick {
                 client.inGameHud.setOverlayMessage(Text.of("Gamma set to " + ((int) (standardBrightness * 100)) + "%").getWithStyle(Style.EMPTY.withFormatting(Formatting.RED)).getFirst(), false);
             }
         }
+
+        if (client.world == null) {
+            mc.options.getGamma().setValue(standardBrightness);
+        }
     }
 }
