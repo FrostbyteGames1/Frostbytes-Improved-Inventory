@@ -25,8 +25,12 @@ public class Zoom implements ClientTickEvents.EndTick {
             return;
         }
 
-        if (!zoomKey.isPressed() && standardFOV == 0) {
+        if (standardFOV == 0) {
             standardFOV = client.options.getFov().getValue();
+        }
+        if (client.options.getFov().getValue() <= 0) {
+            standardFOV = 70;
+            client.options.getFov().setValue(70);
         }
 
         if (client.currentScreen == null) {

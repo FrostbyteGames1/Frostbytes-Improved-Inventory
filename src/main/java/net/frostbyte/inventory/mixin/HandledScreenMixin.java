@@ -31,6 +31,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.awt.*;
+import java.util.List;
 
 @Mixin(HandledScreen.class)
 public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen {
@@ -64,8 +65,9 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         if (handler.getCursorStack().isEmpty() && focusedSlot != null ) {
             if (ImprovedInventoryConfig.shulkerBoxTooltip && focusedSlot.getStack().getTranslationKey().contains("shulker_box")) {
                 DefaultedList<ItemStack> items = DefaultedList.of();
-                for (ItemStack itemStack : focusedSlot.getStack().getOrDefault(DataComponentTypes.CONTAINER, ContainerComponent.DEFAULT).iterateNonEmpty()) {
-                    items.add(itemStack);
+                List<ItemStack> inventory = focusedSlot.getStack().getOrDefault(DataComponentTypes.CONTAINER, ContainerComponent.DEFAULT).stream().toList();
+                for (int i = 0; i < inventory.size(); i++) {
+                    items.add(i, inventory.get(i));
                 }
                 if (!items.isEmpty()) {
                     context.getMatrices().push();

@@ -7,6 +7,7 @@
     "HandledScreenMixin",
     "HeldItemRendererMixin",
     "InGameHudMixin",
+    "KeyBindingMixin",
     "MouseMixin",
     "ScreenMixin",
     "ShulkerBoxBlockMixin",
