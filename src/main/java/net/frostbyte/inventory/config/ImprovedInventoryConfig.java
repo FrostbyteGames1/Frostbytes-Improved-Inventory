@@ -6,16 +6,22 @@ import com.google.gson.JsonObject;
 import dev.isxander.yacl3.api.*;
 import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
+import dev.isxander.yacl3.api.controller.ItemControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import dev.isxander.yacl3.impl.controller.ColorControllerBuilderImpl;
 import dev.isxander.yacl3.impl.controller.IntegerFieldControllerBuilderImpl;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.item.Item;
+import net.minecraft.item.Items;
+import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 import java.awt.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 
 public class ImprovedInventoryConfig {
 
@@ -32,7 +38,9 @@ public class ImprovedInventoryConfig {
     public static boolean stackRefill = true;
     public static boolean stackRefillPreview = true;
     public static Color stackRefillPreviewColor = Color.WHITE;
+    public static ArrayList<Item> stackRefillBlacklist = new ArrayList<>();
     public static boolean toolSelect = true;
+    public static ArrayList<Item> toolSelectBlacklist = new ArrayList<>();
     public static boolean paperdoll = true;
     public static boolean paperdollSide = true;
     public static int paperdollOffsetX = 0;
@@ -81,6 +89,14 @@ public class ImprovedInventoryConfig {
                         .controller(ColorControllerBuilderImpl::new)
                         .build())
                     .build())
+                .group(ListOption.<Item>createBuilder()
+                    .name(Text.of("Hotbar Stack Refilling Blacklist"))
+                    .collapsed(true)
+                    .description(OptionDescription.of(Text.of("Defines a list of items that will not be refilled")))
+                    .binding(new ArrayList<>(), () -> stackRefillBlacklist, newVal -> stackRefillBlacklist = new ArrayList<>(newVal))
+                    .controller(ItemControllerBuilder::create)
+                    .initial(Items.AIR)
+                .build())
 
                 .group(OptionGroup.createBuilder()
                     .name(Text.of("Automatic Tool Selection"))
@@ -91,6 +107,14 @@ public class ImprovedInventoryConfig {
                         .binding(true, () -> toolSelect, newVal -> toolSelect = newVal)
                         .controller(TickBoxControllerBuilder::create)
                         .build())
+                    .build())
+                .group(ListOption.<Item>createBuilder()
+                    .name(Text.of("Automatic Tool Selection Blacklist"))
+                    .collapsed(true)
+                    .description(OptionDescription.of(Text.of("Defines a list of items that will not be swapped away from")))
+                    .binding(new ArrayList<>(), () -> toolSelectBlacklist, newVal -> toolSelectBlacklist = new ArrayList<>(newVal))
+                    .controller(ItemControllerBuilder::create)
+                    .initial(Items.AIR)
                     .build())
 
                 .group(OptionGroup.createBuilder()
@@ -323,6 +347,16 @@ public class ImprovedInventoryConfig {
             .formatValue(value -> value ? Text.of("LEFT") : Text.of("RIGHT"));
    }
 
+   private static ArrayList<Item> stringArrayToItemArrayList(String[] stringArray) {
+        ArrayList<Item> itemArrayList = new ArrayList<>();
+        for (String string : stringArray) {
+            try {
+                itemArrayList.add(Registries.ITEM.get(Identifier.of(string)));
+            } catch (Exception ignored) {}
+        }
+        return itemArrayList;
+   }
+
     public static void write() {
         try {
             if (Files.notExists(configDir)) {
@@ -340,7 +374,9 @@ public class ImprovedInventoryConfig {
             json.addProperty("stackRefill", stackRefill);
             json.addProperty("stackRefillPreview", stackRefillPreview);
             json.addProperty("stackRefillPreviewColor", stackRefillPreviewColor.getRGB());
+            json.addProperty("stackRefillBlacklist", String.valueOf(stackRefillBlacklist));
             json.addProperty("toolSelect", toolSelect);
+            json.addProperty("toolSelectBlacklist", String.valueOf(toolSelectBlacklist));
             json.addProperty("paperdoll", paperdoll);
             json.addProperty("paperdollSide", paperdollSide ? "LEFT" : "RIGHT");
             json.addProperty("paperdollOffsetX", paperdollOffsetX);
@@ -397,8 +433,14 @@ public class ImprovedInventoryConfig {
             if (json.has("stackRefillPreviewColor")) {
                 stackRefillPreviewColor = new Color(json.getAsJsonPrimitive("stackRefillPreviewColor").getAsInt());
             }
+            if (json.has("stackRefillBlacklist")) {
+                stackRefillBlacklist = stringArrayToItemArrayList(json.getAsJsonPrimitive("stackRefillBlacklist").getAsString().replace("[", "").replace("]", "").split(", "));
+            }
             if (json.has("toolSelect")) {
                 toolSelect = json.getAsJsonPrimitive("toolSelect").getAsBoolean();
+            }
+            if (json.has("toolSelectBlacklist")) {
+                toolSelectBlacklist = stringArrayToItemArrayList(json.getAsJsonPrimitive("toolSelectBlacklist").getAsString().replace("[", "").replace("]", "").split(", "));
             }
             if (json.has("paperdoll")) {
                 paperdoll = json.getAsJsonPrimitive("paperdoll").getAsBoolean();

@@ -189,7 +189,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         if (search.isEmpty() || search.isBlank() || stack.isEmpty()) {
             return false;
         }
-        return stack.getName().getString().toLowerCase().replaceAll(" ", "").contains(search.toLowerCase().replaceAll(" ", "")) || stack.getItem().getDefaultStack().getName().getString().toLowerCase().replaceAll(" ", "").contains(search.toLowerCase().replaceAll(" ", ""));
+        return stack.getName().getString().toLowerCase().contains(search.toLowerCase()) || stack.getItem().getDefaultStack().getName().getString().toLowerCase().contains(search.toLowerCase());
     }
 
 }

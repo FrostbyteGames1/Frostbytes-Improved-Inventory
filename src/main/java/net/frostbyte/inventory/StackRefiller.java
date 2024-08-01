@@ -46,7 +46,7 @@ public class StackRefiller implements ClientTickEvents.EndTick, HudRenderCallbac
     void tryRefillStack() {
         assert mc.player != null;
         if (mc.player.currentScreenHandler.getStacks().size() == 46 && mc.currentScreen == null) {
-            if (mc.player.getInventory().getMainHandStack().isEmpty() && item != Items.AIR && slot == mc.player.getInventory().selectedSlot) {
+            if (mc.player.getInventory().getMainHandStack().isEmpty() && item != Items.AIR && !ImprovedInventoryConfig.stackRefillBlacklist.contains(item) && slot == mc.player.getInventory().selectedSlot) {
                 for (int i = 35; i > 8; i--) {
                     if (item == mc.player.getInventory().getStack(i).getItem()) {
                         assert mc.interactionManager != null;
