@@ -33,6 +33,7 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
@@ -238,7 +239,7 @@ public class NearbyContainerViewer implements ClientTickEvents.EndTick {
                 }
             }
         }
-        containers.sort((a, b) -> a.compareTo(b) == 0 ? 0 : a.getSquaredDistance(client.player.getPos()) > b.getSquaredDistance(client.player.getPos()) ? 1 : -1);
+        containers.sort(Comparator.comparingDouble(a -> a.getSquaredDistance(client.player.getX(), client.player.getY(), client.player.getZ())));
     }
 
     public static void openContainer(int container) {

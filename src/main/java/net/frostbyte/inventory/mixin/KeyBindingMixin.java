@@ -14,7 +14,7 @@ public abstract class KeyBindingMixin {
     @Inject(method = "onKeyPressed", at = @At("HEAD"), cancellable = true)
     private static void onKeyPressed(InputUtil.Key key, CallbackInfo ci) {
         for (KeyBinding binding : MinecraftClient.getInstance().options.allKeys) {
-            if (binding.matchesKey(key.getCode(), -1) || binding.matchesMouse(key.getCode())) {
+            if (binding.matchesKey(key.getCode(), -1) || (key.getCode() >= 0 && key.getCode() <= 7 && binding.matchesMouse(key.getCode()))) {
                 ++binding.timesPressed;
             }
         }
@@ -24,7 +24,7 @@ public abstract class KeyBindingMixin {
     @Inject(method = "setKeyPressed", at = @At("HEAD"), cancellable = true)
     private static void setKeyPressed(InputUtil.Key key, boolean pressed, CallbackInfo ci) {
         for (KeyBinding binding : MinecraftClient.getInstance().options.allKeys) {
-            if (binding.matchesKey(key.getCode(), -1) || binding.matchesMouse(key.getCode())) {
+            if (binding.matchesKey(key.getCode(), -1) || (key.getCode() >= 0 && key.getCode() <= 7 && binding.matchesMouse(key.getCode()))) {
                binding.setPressed(pressed);
             }
         }
