@@ -46,9 +46,9 @@ public abstract class ScreenMixin {
     @Unique
     private static final Identifier TEXTURES_RIGHT_SELECTED = new Identifier("textures/gui/container/creative_inventory/tabs.png");
     @Unique
-    private static final Identifier TEXTURES_FORWARD = new Identifier(ImprovedInventory.MOD_ID, "textures/gui/sprites/transferable_list/select.png");
+    private static final Identifier TEXTURES_FORWARD = new Identifier("textures/gui/server_selection.png");
     @Unique
-    private static final Identifier TEXTURES_BACK = new Identifier(ImprovedInventory.MOD_ID, "textures/gui/sprites/transferable_list/unselect.png");
+    private static final Identifier TEXTURES_BACK = new Identifier("textures/gui/server_selection.png");
     @Unique
     int screenWidth = 176;
     @Unique
@@ -115,7 +115,7 @@ public abstract class ScreenMixin {
             }
 
             if (containers.size() > 6) {
-                TexturedButtonWidget backButton = new TexturedButtonWidget(width / 2 + screenWidth / 2 - 2, height / 2 - screenHeight / 2 - 24, 24, 24, 0, 0, TEXTURES_FORWARD, button -> {
+                TexturedButtonWidget backButton = new TexturedButtonWidget(width / 2 + screenWidth / 2 + 3, height / 2 - screenHeight / 2 - 24, 16, 32, 16, 5, TEXTURES_FORWARD, button -> {
                     Vec3i temp = containers.get(current);
                     containers.add(containers.remove(0));
                     current = containers.indexOf(temp);
@@ -123,7 +123,7 @@ public abstract class ScreenMixin {
                     this.init(client, width, height, ci);
                     this.init();
                 });
-                TexturedButtonWidget forwardButton = new TexturedButtonWidget(width / 2 - screenWidth / 2 - 17, height / 2 - screenHeight / 2 - 24, 24, 24, 0, 0, TEXTURES_BACK, button -> {
+                TexturedButtonWidget forwardButton = new TexturedButtonWidget(width / 2 - screenWidth / 2 - 17, height / 2 - screenHeight / 2 - 24, 16, 32, 34, 5, TEXTURES_BACK, button -> {
                     Vec3i temp = containers.get(current);
                     containers.add(0, containers.remove(containers.size() - 1));
                     current = containers.indexOf(temp);
