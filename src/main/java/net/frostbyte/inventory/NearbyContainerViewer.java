@@ -17,7 +17,6 @@ import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
-import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.NamedScreenHandlerFactory;
@@ -134,7 +133,7 @@ public class NearbyContainerViewer implements ClientTickEvents.EndTick {
         // Get name of item in item frame
         List<ItemFrameEntity> itemFrames = client.world.getNonSpectatingEntities(ItemFrameEntity.class, new Box(new BlockPos(blockPos).toCenterPos(), new BlockPos(blockPos).toCenterPos()).expand(0.55, 0.55, 0.55));
         if (!itemFrames.isEmpty() && itemFrames.get(0).getHeldItemStack() != null) {
-            if (itemFrames.get(0).getHeldItemStack().getComponents().contains(DataComponentTypes.CUSTOM_NAME)) {
+            if (itemFrames.get(0).getHeldItemStack().getItem().getName() != itemFrames.get(0).getHeldItemStack().getItem().getDefaultStack().getName()) {
                 name = itemFrames.get(0).getHeldItemStack().getName();
             }
         }
@@ -167,7 +166,7 @@ public class NearbyContainerViewer implements ClientTickEvents.EndTick {
         MinecraftClient client = MinecraftClient.getInstance();
         containers.clear();
         assert client.player != null;
-        double reach = client.player.getBlockInteractionRange();
+        double reach = 5.0;
         List<Vec3d> blockOffsetVectors = List.of(
             new Vec3d(0.5D, 0.5D, 0.5D),
             new Vec3d(0.2D, 0.2D, 0.2D),

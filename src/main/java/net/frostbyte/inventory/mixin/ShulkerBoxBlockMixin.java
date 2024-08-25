@@ -2,13 +2,14 @@ package net.frostbyte.inventory.mixin;
 
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
 import net.minecraft.block.ShulkerBoxBlock;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.ContainerComponent;
-import net.minecraft.item.Item;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.world.BlockView;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -18,12 +19,21 @@ import java.util.List;
 
 @Mixin(ShulkerBoxBlock.class)
 public abstract class ShulkerBoxBlockMixin {
-    @Inject(method = "appendTooltip", at = @At("INVOKE"), cancellable = true)
-    public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options, CallbackInfo ci) {
+    @Inject(method = "appendTooltip", at = @At("HEAD"), cancellable = true)
+    public void appendTooltip(ItemStack stack, BlockView world, List<Text> tooltip, TooltipContext options, CallbackInfo ci) {
         if (ImprovedInventoryConfig.shulkerBoxTooltip) {
             DefaultedList<ItemStack> items = DefaultedList.of();
-            for (ItemStack itemStack : stack.getOrDefault(DataComponentTypes.CONTAINER, ContainerComponent.DEFAULT).iterateNonEmpty()) {
-                items.add(itemStack);
+            NbtCompound nbt = stack.getNbt();
+            if (nbt != null) {
+                if (nbt.contains("BlockEntityTag")) {
+                    NbtCompound blockEntityTag = nbt.getCompound("BlockEntityTag");
+                    if (blockEntityTag.contains("Items")) {
+                        NbtList nbtList = blockEntityTag.getList("Items", 10);
+                        for (NbtElement item : nbtList) {
+                            items.add(ItemStack.fromNbt((NbtCompound) item));
+                        }
+                    }
+                }
             }
             if (!items.isEmpty()) {
                 ci.cancel();

@@ -18,8 +18,8 @@ import static net.frostbyte.inventory.NearbyContainerViewer.shouldCenterCursor;
 @Mixin(Mouse.class)
 public abstract class MouseMixin {
     @Shadow @Final private MinecraftClient client;
-    @Shadow public double x;
-    @Shadow public double y;
+    @Shadow private double x;
+    @Shadow private double y;
     @Shadow private boolean hasResolutionChanged;
     @Shadow private boolean cursorLocked;
 
@@ -58,11 +58,19 @@ public abstract class MouseMixin {
         if (Zoom.zoomKey.isPressed()) {
             if (ImprovedInventoryConfig.zoomScrollRequiresControl) {
                 if (InputUtil.isKeyPressed(window, InputUtil.GLFW_KEY_LEFT_CONTROL) || InputUtil.isKeyPressed(window, InputUtil.GLFW_KEY_RIGHT_CONTROL)) {
-                    Zoom.scrollAmount = (int) Math.clamp(Zoom.scrollAmount + Math.signum(vertical), 0, ImprovedInventoryConfig.zoomFOV - 2);
+                    if (Zoom.scrollAmount + Math.signum(vertical) < 0) {
+                        Zoom.scrollAmount = 0;
+                    } else if (Zoom.scrollAmount + Math.signum(vertical) > ImprovedInventoryConfig.zoomFOV - 2) {
+                        Zoom.scrollAmount = ImprovedInventoryConfig.zoomFOV - 2;
+                    }
                     ci.cancel();
                 }
             } else {
-                Zoom.scrollAmount = (int) Math.clamp(Zoom.scrollAmount + Math.signum(vertical), 0, ImprovedInventoryConfig.zoomFOV - 2);
+                if (Zoom.scrollAmount + Math.signum(vertical) < 0) {
+                    Zoom.scrollAmount = 0;
+                } else if (Zoom.scrollAmount + Math.signum(vertical) > ImprovedInventoryConfig.zoomFOV - 2) {
+                    Zoom.scrollAmount = ImprovedInventoryConfig.zoomFOV - 2;
+                }
                 ci.cancel();
             }
         }

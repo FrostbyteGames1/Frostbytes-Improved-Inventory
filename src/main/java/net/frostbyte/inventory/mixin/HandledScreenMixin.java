@@ -4,15 +4,15 @@ import net.frostbyte.inventory.ImprovedInventory;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.ContainerComponent;
 import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ShulkerBoxScreenHandler;
@@ -31,7 +31,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.awt.*;
-import java.util.List;
 
 @Mixin(HandledScreen.class)
 public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen {
@@ -51,11 +50,9 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     @Unique
     private static TexturedButtonWidget searchButton;
     @Unique
-    private static final ButtonTextures SEARCH_BUTTON_TEXTURES = new ButtonTextures(
-        Identifier.of("icon/search"),
-        Identifier.of("icon/search")
-    );
-
+    private static final Identifier SEARCH_BUTTON_TEXTURES = new Identifier(ImprovedInventory.MOD_ID, "textures/gui/sprites/icon/search.png");
+    @Unique
+    private static final Identifier BUTTON_TEXTURE = new Identifier(ImprovedInventory.MOD_ID, "textures/gui/sprites/widget/button.png");
     protected HandledScreenMixin(Text title) {
         super(title);
     }
@@ -65,17 +62,25 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         if (handler.getCursorStack().isEmpty() && focusedSlot != null ) {
             if (ImprovedInventoryConfig.shulkerBoxTooltip && focusedSlot.getStack().getTranslationKey().contains("shulker_box")) {
                 DefaultedList<ItemStack> items = DefaultedList.of();
-                List<ItemStack> inventory = focusedSlot.getStack().getOrDefault(DataComponentTypes.CONTAINER, ContainerComponent.DEFAULT).stream().toList();
-                for (int i = 0; i < inventory.size(); i++) {
-                    items.add(i, inventory.get(i));
+                NbtCompound nbt = focusedSlot.getStack().getNbt();
+                if (nbt != null) {
+                    if (nbt.contains("BlockEntityTag")) {
+                        NbtCompound blockEntityTag = nbt.getCompound("BlockEntityTag");
+                        if (blockEntityTag.contains("Items")) {
+                            NbtList nbtList = blockEntityTag.getList("Items", 10);
+                            for (NbtElement item : nbtList) {
+                                items.add(ItemStack.fromNbt((NbtCompound) item));
+                            }
+                        }
+                    }
                 }
                 if (!items.isEmpty()) {
                     context.getMatrices().push();
                     context.getMatrices().translate(0.0F, 0.0F, 600.0F);
                     int startX = x + 8;
                     int startY = y - 16;
-                    context.drawTexture(Identifier.of("textures/gui/container/generic_54.png"), startX, startY, 0, 0, this.backgroundWidth, 3 * 18 + 17);
-                    context.drawTexture(Identifier.of("textures/gui/container/generic_54.png"), startX, startY + 3 * 18 + 17, 0, 215, this.backgroundWidth, 7);
+                    context.drawTexture(new Identifier("textures/gui/container/generic_54.png"), startX, startY, 0, 0, this.backgroundWidth, 3 * 18 + 17);
+                    context.drawTexture(new Identifier("textures/gui/container/generic_54.png"), startX, startY + 3 * 18 + 17, 0, 215, this.backgroundWidth, 7);
                     int nameColor = new Color(63, 63, 63).getRGB();
                     if (focusedSlot.getStack().getItem().getName().getStyle().getColor() != null) {
                         nameColor = focusedSlot.getStack().getItem().getName().getStyle().getColor().getRgb();
@@ -97,13 +102,13 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 }
             }
             if (ImprovedInventoryConfig.mapTooltip && focusedSlot.getStack().getItem() instanceof FilledMapItem) {
-                if (MinecraftClient.getInstance().world != null && MinecraftClient.getInstance().world.getMapState(focusedSlot.getStack().get(DataComponentTypes.MAP_ID)) != null) {
+                if (MinecraftClient.getInstance().world != null && FilledMapItem.getMapId(focusedSlot.getStack()) != null && FilledMapItem.getMapState(focusedSlot.getStack(), MinecraftClient.getInstance().world) != null) {
                     context.getMatrices().push();
                     int startX = x - 78;
                     int startY = y - 16;
                     context.getMatrices().translate(0.0F, 0.0F, 599.0F);
                     context.drawTexture(
-                        Identifier.of("textures/map/map_background_checkerboard.png"),
+                        new Identifier("textures/map/map_background_checkerboard.png"),
                         startX, startY,
                         0, 0,
                         70, 70,
@@ -114,8 +119,8 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                     MinecraftClient.getInstance().gameRenderer.getMapRenderer().draw(
                         context.getMatrices(),
                         context.getVertexConsumers(),
-                        focusedSlot.getStack().get(DataComponentTypes.MAP_ID),
-                        MinecraftClient.getInstance().world.getMapState(focusedSlot.getStack().get(DataComponentTypes.MAP_ID)),
+                        FilledMapItem.getMapId(focusedSlot.getStack()),
+                        FilledMapItem.getMapState(focusedSlot.getStack(), MinecraftClient.getInstance().world),
                         true,
                         15728880
                     );
@@ -133,7 +138,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             this.addSelectableChild(searchField);
             searchField.setVisible(false);
             searchField.setText("");
-            searchButton = new TexturedButtonWidget(this.x + this.backgroundWidth - 17, this.y + 6, 8, 8, SEARCH_BUTTON_TEXTURES, button -> searchField.setVisible(true));
+            searchButton = new TexturedButtonWidget(this.x + this.backgroundWidth - 17, this.y + 6, 8, 8, 0, 0, SEARCH_BUTTON_TEXTURES, button -> searchField.setVisible(true));
             this.addSelectableChild(searchButton);
         }
     }
@@ -141,7 +146,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     @Inject(method = "render", at = @At("RETURN"))
     private void render(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (ImprovedInventoryConfig.containerSearch && (this.handler instanceof GenericContainerScreenHandler || this.handler instanceof ShulkerBoxScreenHandler)) {
-            context.drawTexture(Identifier.of(ImprovedInventory.MOD_ID, "textures/gui/sprites/widget/button.png"), this.x + this.backgroundWidth - 19, this.y + 4, 0, 0, 12, 12, 12, 12);
+            context.drawTexture(BUTTON_TEXTURE, this.x + this.backgroundWidth - 19, this.y + 4, 0, 0, 12, 12, 12, 12);
             searchButton.render(context, mouseX, mouseY, delta);
             searchField.render(context, mouseX, mouseY, delta);
         }

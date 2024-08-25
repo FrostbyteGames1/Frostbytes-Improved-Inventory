@@ -8,7 +8,6 @@ import net.frostbyte.inventory.config.ImprovedInventoryConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
@@ -16,7 +15,7 @@ public class DurabilityDisplayer implements HudRenderCallback {
     MinecraftClient mc = MinecraftClient.getInstance();
     Identifier duraSlot = Identifier.of(ImprovedInventory.MOD_ID, "textures/dura_slot.png");
     @Override
-    public void onHudRender(DrawContext drawContext, RenderTickCounter tickCounter) {
+    public void onHudRender(DrawContext drawContext, float tickCounter) {
         assert mc.player != null;
         if (!mc.player.isSpectator() && ImprovedInventoryConfig.duraDisplay && !mc.options.hudHidden) {
             int x = mc.getWindow().getScaledWidth() - ImprovedInventoryConfig.duraDisplayOffsetX;

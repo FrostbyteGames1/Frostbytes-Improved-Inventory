@@ -95,7 +95,7 @@ public class InventorySorter implements ClientTickEvents.EndTick {
                 stack = screenHandler.getSlot(i).getStack();
                 if (!stack.isEmpty() && stack.getMaxCount() > stack.getCount()) {
                     for (int j = i + 1; j < 36; j++) {
-                        if (screenHandler.getSlot(j).getStack().getItem().equals(stack.getItem()) && screenHandler.getSlot(j).getStack().getComponents().equals(stack.getComponents())) {
+                        if (ItemStack.areItemsEqual(screenHandler.getSlot(j).getStack(), stack)) {
                             interactionManager.clickSlot(screenHandler.syncId, j, 0, SlotActionType.PICKUP, mc.player);
                             interactionManager.clickSlot(screenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player);
                             interactions += 2;
@@ -118,7 +118,7 @@ public class InventorySorter implements ClientTickEvents.EndTick {
                 stack = screenHandler.getSlot(i).getStack();
                 if (!stack.isEmpty() && stack.getMaxCount() > stack.getCount()) {
                     for (int j = i + 1; j < getNumSlots(screenHandler); j++) {
-                        if (screenHandler.getSlot(j).getStack().getItem().equals(stack.getItem()) && screenHandler.getSlot(j).getStack().getComponents().equals(stack.getComponents())) {
+                        if (ItemStack.areItemsEqual(screenHandler.getSlot(j).getStack(), stack)) {
                             interactionManager.clickSlot(screenHandler.syncId, j, 0, SlotActionType.PICKUP, mc.player);
                             interactionManager.clickSlot(screenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player);
                             interactions += 2;
@@ -173,7 +173,7 @@ public class InventorySorter implements ClientTickEvents.EndTick {
         stacks.sort(this::compareStacks);
         if (mc.currentScreen instanceof InventoryScreen) {
             for (int i = 9; i > 0; i--) {
-                stacks.addFirst(screenHandler.getSlot(i - 1).getStack());
+                stacks.add(0, screenHandler.getSlot(i - 1).getStack());
             }
         }
         return stacks;

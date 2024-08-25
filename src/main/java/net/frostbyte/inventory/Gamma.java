@@ -38,10 +38,10 @@ public class Gamma implements ClientTickEvents.EndTick {
             if (enabled) {
                 standardBrightness = mc.options.getGamma().getValue();
                 mc.options.getGamma().setValue((double) ImprovedInventoryConfig.gamma);
-                client.inGameHud.setOverlayMessage(Text.of("Gamma set to " + ImprovedInventoryConfig.gamma + "%").getWithStyle(Style.EMPTY.withFormatting(Formatting.GREEN)).getFirst(), false);
+                client.inGameHud.setOverlayMessage(Text.of("Gamma set to " + ImprovedInventoryConfig.gamma + "%").getWithStyle(Style.EMPTY.withFormatting(Formatting.GREEN)).get(0), false);
             } else {
                 mc.options.getGamma().setValue(standardBrightness);
-                client.inGameHud.setOverlayMessage(Text.of("Gamma set to " + ((int) (standardBrightness * 100)) + "%").getWithStyle(Style.EMPTY.withFormatting(Formatting.RED)).getFirst(), false);
+                client.inGameHud.setOverlayMessage(Text.of("Gamma set to " + ((int) (standardBrightness * 100)) + "%").getWithStyle(Style.EMPTY.withFormatting(Formatting.RED)).get(0), false);
             }
         }
 

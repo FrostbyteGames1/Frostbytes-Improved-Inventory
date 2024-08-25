@@ -7,8 +7,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.screen.slot.SlotActionType;
@@ -58,7 +56,7 @@ public class StackRefiller implements ClientTickEvents.EndTick, HudRenderCallbac
                     }
                 }
                 for (int i = 35; i > 8; i--) {
-                    if (item.getComponents().contains(DataComponentTypes.FOOD) && mc.player.getInventory().getStack(i).getItem().getComponents().contains(DataComponentTypes.FOOD)) {
+                    if (item.isFood() && mc.player.getInventory().getStack(i).getItem().isFood()) {
                         for (Item unwanted : FOOD_REFILL_BLACKLIST) {
                             if (unwanted == mc.player.getInventory().getStack(i).getItem()) {
                                 return;
@@ -88,7 +86,7 @@ public class StackRefiller implements ClientTickEvents.EndTick, HudRenderCallbac
     }
 
     @Override
-    public void onHudRender(DrawContext drawContext, RenderTickCounter tickCounter) {
+    public void onHudRender(DrawContext drawContext, float tickCounter) {
         MinecraftClient client = MinecraftClient.getInstance();
         if (ImprovedInventoryConfig.stackRefillPreview) {
             if (numItems > 0) {

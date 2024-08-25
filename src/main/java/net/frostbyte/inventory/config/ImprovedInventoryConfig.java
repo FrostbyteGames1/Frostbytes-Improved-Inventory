@@ -351,7 +351,7 @@ public class ImprovedInventoryConfig {
         ArrayList<Item> itemArrayList = new ArrayList<>();
         for (String string : stringArray) {
             try {
-                itemArrayList.add(Registries.ITEM.get(Identifier.of(string)));
+                itemArrayList.add(Registries.ITEM.get(new Identifier(string)));
             } catch (Exception ignored) {}
         }
         return itemArrayList;
