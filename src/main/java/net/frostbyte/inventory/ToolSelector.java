@@ -11,11 +11,14 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.AttributeModifiersComponent;
+import net.minecraft.component.type.ToolComponent;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.decoration.ItemFrameEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,69 +29,69 @@ public class ToolSelector implements ClientTickEvents.EndTick{
     int ticksSinceMiningStarted = 0;
     Block currentlyMiningBlock = Blocks.AIR;
 
-    public static final ArrayList<Block> SHEARS_MINEABLE = new ArrayList<>(Arrays.asList(
-            Blocks.COBWEB,
-            Blocks.DEAD_BUSH,
-            Blocks.FERN,
-            Blocks.GLOW_LICHEN,
-            Blocks.HANGING_ROOTS,
-            Blocks.LARGE_FERN,
-            Blocks.ACACIA_LEAVES,
-            Blocks.BIRCH_LEAVES,
-            Blocks.CHERRY_LEAVES,
-            Blocks.AZALEA_LEAVES,
-            Blocks.JUNGLE_LEAVES,
-            Blocks.DARK_OAK_LEAVES,
-            Blocks.FLOWERING_AZALEA_LEAVES,
-            Blocks.MANGROVE_LEAVES,
-            Blocks.OAK_LEAVES,
-            Blocks.SPRUCE_LEAVES,
-            Blocks.NETHER_SPROUTS,
-            Blocks.SEAGRASS,
-            Blocks.SHORT_GRASS,
-            Blocks.TALL_GRASS,
-            Blocks.TALL_SEAGRASS,
-            Blocks.TRIPWIRE,
-            Blocks.TWISTING_VINES,
-            Blocks.TWISTING_VINES_PLANT,
-            Blocks.VINE,
-            Blocks.WEEPING_VINES,
-            Blocks.WEEPING_VINES_PLANT,
-            Blocks.RED_WOOL,
-            Blocks.ORANGE_WOOL,
-            Blocks.YELLOW_WOOL,
-            Blocks.LIME_WOOL,
-            Blocks.GREEN_WOOL,
-            Blocks.CYAN_WOOL,
-            Blocks.LIGHT_BLUE_WOOL,
-            Blocks.BLUE_WOOL,
-            Blocks.PURPLE_WOOL,
-            Blocks.MAGENTA_WOOL,
-            Blocks.PINK_WOOL,
-            Blocks.BROWN_WOOL,
-            Blocks.BLACK_WOOL,
-            Blocks.GRAY_WOOL,
-            Blocks.LIGHT_GRAY_WOOL,
-            Blocks.WHITE_WOOL,
-            Blocks.RED_CARPET,
-            Blocks.ORANGE_CARPET,
-            Blocks.YELLOW_CARPET,
-            Blocks.LIME_CARPET,
-            Blocks.GREEN_CARPET,
-            Blocks.CYAN_CARPET,
-            Blocks.LIGHT_BLUE_CARPET,
-            Blocks.BLUE_CARPET,
-            Blocks.PURPLE_CARPET,
-            Blocks.MAGENTA_CARPET,
-            Blocks.PINK_CARPET,
-            Blocks.BROWN_CARPET,
-            Blocks.BLACK_CARPET,
-            Blocks.GRAY_CARPET,
-            Blocks.LIGHT_GRAY_CARPET,
-            Blocks.WHITE_CARPET
+    static final ArrayList<Block> SHEARS_MINEABLE = new ArrayList<>(Arrays.asList(
+        Blocks.COBWEB,
+        Blocks.DEAD_BUSH,
+        Blocks.FERN,
+        Blocks.GLOW_LICHEN,
+        Blocks.HANGING_ROOTS,
+        Blocks.LARGE_FERN,
+        Blocks.ACACIA_LEAVES,
+        Blocks.BIRCH_LEAVES,
+        Blocks.CHERRY_LEAVES,
+        Blocks.AZALEA_LEAVES,
+        Blocks.JUNGLE_LEAVES,
+        Blocks.DARK_OAK_LEAVES,
+        Blocks.FLOWERING_AZALEA_LEAVES,
+        Blocks.MANGROVE_LEAVES,
+        Blocks.OAK_LEAVES,
+        Blocks.SPRUCE_LEAVES,
+        Blocks.NETHER_SPROUTS,
+        Blocks.SEAGRASS,
+        Blocks.SHORT_GRASS,
+        Blocks.TALL_GRASS,
+        Blocks.TALL_SEAGRASS,
+        Blocks.TRIPWIRE,
+        Blocks.TWISTING_VINES,
+        Blocks.TWISTING_VINES_PLANT,
+        Blocks.VINE,
+        Blocks.WEEPING_VINES,
+        Blocks.WEEPING_VINES_PLANT,
+        Blocks.RED_WOOL,
+        Blocks.ORANGE_WOOL,
+        Blocks.YELLOW_WOOL,
+        Blocks.LIME_WOOL,
+        Blocks.GREEN_WOOL,
+        Blocks.CYAN_WOOL,
+        Blocks.LIGHT_BLUE_WOOL,
+        Blocks.BLUE_WOOL,
+        Blocks.PURPLE_WOOL,
+        Blocks.MAGENTA_WOOL,
+        Blocks.PINK_WOOL,
+        Blocks.BROWN_WOOL,
+        Blocks.BLACK_WOOL,
+        Blocks.GRAY_WOOL,
+        Blocks.LIGHT_GRAY_WOOL,
+        Blocks.WHITE_WOOL,
+        Blocks.RED_CARPET,
+        Blocks.ORANGE_CARPET,
+        Blocks.YELLOW_CARPET,
+        Blocks.LIME_CARPET,
+        Blocks.GREEN_CARPET,
+        Blocks.CYAN_CARPET,
+        Blocks.LIGHT_BLUE_CARPET,
+        Blocks.BLUE_CARPET,
+        Blocks.PURPLE_CARPET,
+        Blocks.MAGENTA_CARPET,
+        Blocks.PINK_CARPET,
+        Blocks.BROWN_CARPET,
+        Blocks.BLACK_CARPET,
+        Blocks.GRAY_CARPET,
+        Blocks.LIGHT_GRAY_CARPET,
+        Blocks.WHITE_CARPET
     ));
 
-    public double getAttackDamageOfItemInSlot(int itemSlot) {
+    double getAttackDamageOfItemInSlot(int itemSlot) {
         assert mc.player != null;
         AttributeModifiersComponent component = mc.player.getInventory().getStack(itemSlot).getComponents().get(DataComponentTypes.ATTRIBUTE_MODIFIERS);
         double modifier = 0.0F;
@@ -103,7 +106,7 @@ public class ToolSelector implements ClientTickEvents.EndTick{
         return mc.player.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_DAMAGE) + modifier;
     }
 
-    public double getAttackSpeedOfItemInSlot(int itemSlot) {
+    double getAttackSpeedOfItemInSlot(int itemSlot) {
         assert mc.player != null;
         AttributeModifiersComponent component = mc.player.getInventory().getStack(itemSlot).getComponents().get(DataComponentTypes.ATTRIBUTE_MODIFIERS);
         double modifier = 0.0F;
@@ -118,20 +121,30 @@ public class ToolSelector implements ClientTickEvents.EndTick{
         return mc.player.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_SPEED) + modifier;
     }
 
+    boolean isCorrectForDrops(ItemStack stack, BlockState state) {
+        ToolComponent toolComponent = stack.get(DataComponentTypes.TOOL);
+        return toolComponent != null && toolComponent.isCorrectForDrops(state);
+    }
+
     @Override
     public void onEndTick(MinecraftClient client) {
         ClientPlayerEntity player;
         mc = client;
         player = client.player;
+        assert mc.world != null;
+        assert mc.player != null;
 
         if (player == null) {
             return;
         }
 
-        if (mc.options.attackKey.isPressed() && !ImprovedInventoryConfig.toolSelectBlacklist.contains(player.getMainHandStack().getItem().getDefaultStack().getItem()) && player.getMainHandStack().getItem().getDefaultStack().getItem() != Items.MACE && !player.isSpectator() && !player.isCreative() && ImprovedInventoryConfig.toolSelect) {
+        if (mc.options.attackKey.isPressed() && !ImprovedInventoryConfig.toolSelectBlacklist.contains(player.getMainHandStack().getItem().getDefaultStack().getItem()) && !player.isSpectator() && !player.isCreative() && ImprovedInventoryConfig.toolSelect) {
             HitResult target = mc.crosshairTarget;
             assert target != null;
             if (target.getType() == HitResult.Type.ENTITY) {
+                if (!mc.world.getEntitiesByClass(ItemFrameEntity.class, Box.of(target.getPos(), 0.25, 0.25, 0.25), itemFrameEntity -> true).isEmpty()) {
+                    return;
+                }
                 double maxDPS = getAttackDamageOfItemInSlot(player.getInventory().selectedSlot) * getAttackSpeedOfItemInSlot(player.getInventory().selectedSlot);
                 int maxDamageSlot = player.getInventory().selectedSlot;
                 for (int i = 0; i < 9; i++) {
@@ -145,46 +158,29 @@ public class ToolSelector implements ClientTickEvents.EndTick{
                 if (ticksSinceMiningStarted < 2) {
                     ticksSinceMiningStarted++;
                 } else {
-                    BlockPos blockPos = ((BlockHitResult) target).getBlockPos();
-                    assert mc.world != null;
                     BlockState blockState = mc.world.getBlockState(((BlockHitResult) target).getBlockPos());
                     if (!currentlyMiningBlock.equals(blockState.getBlock())) {
                         currentlyMiningBlock = blockState.getBlock();
                         ticksSinceMiningStarted = 0;
                     } else {
                         for (Block block : SHEARS_MINEABLE) {
-                            if (blockState.getBlock().getDefaultState().equals(block.getDefaultState())) {
+                            if (blockState.isOf(block)) {
                                 for (int i = 0; i < 9; i++) {
                                     if (player.getInventory().getStack(i).isOf(Items.SHEARS)) {
-                                        assert mc.player != null;
                                         mc.player.getInventory().selectedSlot = i;
                                         return;
                                     }
                                 }
                             }
                         }
-                        int slot = player.getInventory().selectedSlot;
-                        float fastestBreak = player.getInventory().getStack(slot).getItem().getMiningSpeed(player.getInventory().getStack(slot), blockState);
+                        float fastestBreak = player.getInventory().getStack(player.getInventory().selectedSlot).getItem().getMiningSpeed(player.getInventory().getStack(player.getInventory().selectedSlot), blockState);
                         int fastestBreakSlot = player.getInventory().selectedSlot;
                         for (int i = 0; i < 9; i++) {
-                            assert mc.player != null;
-                            if (player.getInventory().getStack(i).getItem().canMine(blockState, mc.world, blockPos, player) && player.getInventory().getStack(i).getItem().getMiningSpeed(player.getInventory().getStack(i), blockState) > fastestBreak) {
+                            if (isCorrectForDrops(player.getInventory().getStack(i), blockState) && player.getInventory().getStack(i).getItem().getMiningSpeed(player.getInventory().getStack(i), blockState) > fastestBreak) {
                                 fastestBreak = player.getInventory().getStack(i).getItem().getMiningSpeed(player.getInventory().getStack(i), blockState);
                                 fastestBreakSlot = i;
                             }
                         }
-                        if (!player.getInventory().getStack(fastestBreakSlot).getItem().canMine(blockState, mc.world, blockPos, player) && player.getInventory().getStack(fastestBreakSlot).getItem().getComponents().contains(DataComponentTypes.MAX_DAMAGE)) {
-                            if (player.getInventory().getMainHandStack().getItem().getComponents().get(DataComponentTypes.MAX_DAMAGE) != null) {
-                                fastestBreakSlot = player.getInventory().selectedSlot;
-                            } else {
-                                for (int i = 0; i < 9; i++) {
-                                    if (!player.getInventory().getStack(fastestBreakSlot).getItem().getComponents().contains(DataComponentTypes.MAX_DAMAGE)) {
-                                        fastestBreakSlot = i;
-                                    }
-                                }
-                            }
-                        }
-                        assert mc.player != null;
                         mc.player.getInventory().selectedSlot = fastestBreakSlot;
                     }
                 }

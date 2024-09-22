@@ -59,8 +59,8 @@ public class StackRefiller implements ClientTickEvents.EndTick, HudRenderCallbac
                 }
                 for (int i = 35; i > 8; i--) {
                     if (item.getComponents().contains(DataComponentTypes.FOOD) && mc.player.getInventory().getStack(i).getItem().getComponents().contains(DataComponentTypes.FOOD)) {
-                        for (Item unwanted : FOOD_REFILL_BLACKLIST) {
-                            if (unwanted == mc.player.getInventory().getStack(i).getItem()) {
+                        for (Item blacklist : FOOD_REFILL_BLACKLIST) {
+                            if (mc.player.getInventory().getStack(i).isOf(blacklist)) {
                                 return;
                             }
                         }
