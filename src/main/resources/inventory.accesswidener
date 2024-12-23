@@ -3,4 +3,8 @@ accessWidener v2 named
 accessible class net/minecraft/client/option/SimpleOption$Callbacks
 accessible method net/minecraft/client/option/SimpleOption$Callbacks validate (Ljava/lang/Object;)Ljava/util/Optional;
 accessible field net/minecraft/client/gui/screen/ingame/HandledScreen focusedSlot Lnet/minecraft/screen/slot/Slot;
+accessible field net/minecraft/client/gui/screen/ingame/HandledScreen SLOT_HIGHLIGHT_BACK_TEXTURE Lnet/minecraft/util/Identifier;
+accessible field net/minecraft/client/gui/screen/ingame/HandledScreen SLOT_HIGHLIGHT_FRONT_TEXTURE Lnet/minecraft/util/Identifier;
 accessible field net/minecraft/client/option/KeyBinding timesPressed I
+accessible field net/minecraft/client/gui/DrawContext vertexConsumers Lnet/minecraft/client/render/VertexConsumerProvider$Immediate;
+accessible field net/minecraft/client/render/MapRenderer textureManager Lnet/minecraft/client/texture/MapTextureManager;

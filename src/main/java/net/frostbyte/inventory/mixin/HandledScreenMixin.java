@@ -9,6 +9,8 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
+import net.minecraft.client.render.MapRenderState;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ContainerComponent;
 import net.minecraft.item.FilledMapItem;
@@ -32,6 +34,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Objects;
 
 @Mixin(HandledScreen.class)
 public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen {
@@ -63,7 +66,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     @Inject(method = "drawMouseoverTooltip", at = @At("TAIL"))
     protected void drawMouseoverTooltip(DrawContext context, int x, int y, CallbackInfo ci) {
         if (handler.getCursorStack().isEmpty() && focusedSlot != null ) {
-            if (ImprovedInventoryConfig.shulkerBoxTooltip && focusedSlot.getStack().getTranslationKey().contains("shulker_box")) {
+            if (ImprovedInventoryConfig.shulkerBoxTooltip && focusedSlot.getStack().getComponents().contains(DataComponentTypes.CONTAINER)) {
                 DefaultedList<ItemStack> items = DefaultedList.of();
                 List<ItemStack> inventory = focusedSlot.getStack().getOrDefault(DataComponentTypes.CONTAINER, ContainerComponent.DEFAULT).stream().toList();
                 for (int i = 0; i < inventory.size(); i++) {
@@ -74,8 +77,22 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                     context.getMatrices().translate(0.0F, 0.0F, 600.0F);
                     int startX = x + 8;
                     int startY = y - 16;
-                    context.drawTexture(Identifier.of("textures/gui/container/generic_54.png"), startX, startY, 0, 0, this.backgroundWidth, 3 * 18 + 17);
-                    context.drawTexture(Identifier.of("textures/gui/container/generic_54.png"), startX, startY + 3 * 18 + 17, 0, 215, this.backgroundWidth, 7);
+                    context.drawTexture(
+                        RenderLayer::getGuiTextured,
+                        Identifier.of("textures/gui/container/generic_54.png"),
+                        startX, startY,
+                        0, 0,
+                        this.backgroundWidth, 3 * 18 + 17,
+                        256, 256
+                    );
+                    context.drawTexture(
+                        RenderLayer::getGuiTextured,
+                        Identifier.of("textures/gui/container/generic_54.png"),
+                        startX, startY + 3 * 18 + 17,
+                        0, 215,
+                        this.backgroundWidth, 7,
+                        256, 256
+                    );
                     int nameColor = new Color(63, 63, 63).getRGB();
                     if (focusedSlot.getStack().getItem().getName().getStyle().getColor() != null) {
                         nameColor = focusedSlot.getStack().getItem().getName().getStyle().getColor().getRgb();
@@ -84,13 +101,13 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                     for (int i = 0; i < items.size(); i++) {
                         if (i < 9) {
                             context.drawItem(items.get(i), startX + 8 + i * 18, startY + 18, 0);
-                            context.drawItemInSlot(MinecraftClient.getInstance().textRenderer, items.get(i), startX + 8 + i * 18, startY + 18);
+                            context.drawStackOverlay(MinecraftClient.getInstance().textRenderer, items.get(i), startX + 8 + i * 18, startY + 18);
                         } else if (i < 18) {
                             context.drawItem(items.get(i), startX + 8 + (i - 9) * 18, startY + 18 + 18, 0);
-                            context.drawItemInSlot(MinecraftClient.getInstance().textRenderer, items.get(i), startX + 8 + (i - 9) * 18, startY + 18 + 18);
+                            context.drawStackOverlay(MinecraftClient.getInstance().textRenderer, items.get(i), startX + 8 + (i - 9) * 18, startY + 18 + 18);
                         } else {
                             context.drawItem(items.get(i), startX + 8 + (i - 18) * 18, startY + 18 + 36, 0);
-                            context.drawItemInSlot(MinecraftClient.getInstance().textRenderer, items.get(i), startX + 8 + (i - 18) * 18, startY + 18 + 36);
+                            context.drawStackOverlay(MinecraftClient.getInstance().textRenderer, items.get(i), startX + 8 + (i - 18) * 18, startY + 18 + 36);
                         }
                     }
                     context.getMatrices().pop();
@@ -103,6 +120,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                     int startY = y - 16;
                     context.getMatrices().translate(0.0F, 0.0F, 599.0F);
                     context.drawTexture(
+                        RenderLayer::getGuiTextured,
                         Identifier.of("textures/map/map_background_checkerboard.png"),
                         startX, startY,
                         0, 0,
@@ -111,11 +129,13 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                     );
                     context.getMatrices().translate(startX + 3.0F, startY + 3.0F, 1.0F);
                     context.getMatrices().scale(0.5F, 0.5F, 1.0F);
-                    MinecraftClient.getInstance().gameRenderer.getMapRenderer().draw(
+                    assert Objects.requireNonNull(client).player != null;
+                    MapRenderState mapRenderState = new MapRenderState();
+                    mapRenderState.texture = MinecraftClient.getInstance().getMapRenderer().textureManager.getTextureId(focusedSlot.getStack().get(DataComponentTypes.MAP_ID), FilledMapItem.getMapState(focusedSlot.getStack(), client.world));
+                    MinecraftClient.getInstance().getMapRenderer().draw(
+                        mapRenderState,
                         context.getMatrices(),
-                        context.getVertexConsumers(),
-                        focusedSlot.getStack().get(DataComponentTypes.MAP_ID),
-                        MinecraftClient.getInstance().world.getMapState(focusedSlot.getStack().get(DataComponentTypes.MAP_ID)),
+                        context.vertexConsumers,
                         true,
                         15728880
                     );
@@ -141,7 +161,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     @Inject(method = "render", at = @At("RETURN"))
     private void render(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (ImprovedInventoryConfig.containerSearch && (this.handler instanceof GenericContainerScreenHandler || this.handler instanceof ShulkerBoxScreenHandler)) {
-            context.drawTexture(Identifier.of(ImprovedInventory.MOD_ID, "textures/gui/sprites/widget/button.png"), this.x + this.backgroundWidth - 19, this.y + 4, 0, 0, 12, 12, 12, 12);
+            context.drawTexture(RenderLayer::getGuiTextured, Identifier.of(ImprovedInventory.MOD_ID, "textures/gui/sprites/widget/button.png"), this.x + this.backgroundWidth - 19, this.y + 4, 0, 0, 12, 12, 12, 12);
             searchButton.render(context, mouseX, mouseY, delta);
             searchField.render(context, mouseX, mouseY, delta);
         }
@@ -179,7 +199,8 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     protected void drawSlot(DrawContext context, Slot slot, CallbackInfo ci) {
         if (ImprovedInventoryConfig.containerSearch && (this.handler instanceof GenericContainerScreenHandler || this.handler instanceof ShulkerBoxScreenHandler)) {
             if (doesStackContainString(searchField.getText(), slot.getStack())) {
-                HandledScreen.drawSlotHighlight(context, slot.x, slot.y, 600);
+                context.drawGuiTexture(RenderLayer::getGuiTextured, HandledScreen.SLOT_HIGHLIGHT_BACK_TEXTURE, slot.x - 4, slot.y - 4, 24, 24);
+                context.drawGuiTexture(RenderLayer::getGuiTexturedOverlay, HandledScreen.SLOT_HIGHLIGHT_FRONT_TEXTURE, slot.x - 4, slot.y - 4, 24, 24);
             }
         }
     }

@@ -3,6 +3,7 @@ package net.frostbyte.inventory.gui.widget;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
@@ -16,7 +17,7 @@ public class TexturedButtonWithItemStackWidget extends TexturedButtonWidget {
     @Override
     public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
         Identifier identifier = this.textures.get(this.isNarratable(), this.isSelected());
-        context.drawGuiTexture(identifier, this.getX(), this.getY(), this.width, this.height);
+        context.drawGuiTexture(RenderLayer::getGuiTextured, identifier, this.getX(), this.getY(), this.width, this.height);
         context.drawItem(itemStack, this.getX() + 5, this.getY() + 8);
     }
 }

@@ -114,7 +114,7 @@ public class ImprovedInventoryConfig {
                     .description(OptionDescription.of(Text.of("Defines a list of items that will not be swapped away from")))
                     .binding(new ArrayList<>(), () -> toolSelectBlacklist, newVal -> toolSelectBlacklist = new ArrayList<>(newVal))
                     .controller(ItemControllerBuilder::create)
-                    .initial(Items.MACE)
+                    .initial(Items.AIR)
                     .build())
 
                 .group(OptionGroup.createBuilder()

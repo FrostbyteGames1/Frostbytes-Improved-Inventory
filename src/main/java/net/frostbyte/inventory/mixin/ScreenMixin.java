@@ -96,7 +96,7 @@ public abstract class ScreenMixin {
             ItemStack playerHead = new ItemStack(Items.PLAYER_HEAD);
             playerHead.set(DataComponentTypes.PROFILE, new ProfileComponent(client.player.getGameProfile()));
             TexturedButtonWithItemStackWidget tab;
-            if (client.currentScreen instanceof AbstractInventoryScreen<?>) {
+            if (client.currentScreen instanceof InventoryScreen) {
                 tab = new TexturedButtonWithItemStackWidget(width / 2 - screenWidth / 2, height / 2 - screenHeight / 2 - 28, 26, 32, TEXTURES_LEFT_SELECTED, playerHead, button -> {
                     if (client.interactionManager.hasRidingInventory()) {
                         client.player.openRidingInventory();
@@ -122,13 +122,13 @@ public abstract class ScreenMixin {
                 Text displayName = getDisplayName(containers.get(container));
                 ItemStack displayStack = getDisplayStack(containers.get(container));
                 if (i == 5) {
-                    if (!(client.currentScreen instanceof AbstractInventoryScreen<?>) && current == container) {
+                    if (!(client.currentScreen instanceof InventoryScreen) && current == container) {
                         tab = new TexturedButtonWithItemStackWidget(width / 2 + screenWidth / 2 - 26, height / 2 - screenHeight / 2 - 28, 26, 32, TEXTURES_RIGHT_SELECTED, displayStack, button -> openContainer(container));
                     } else {
                         tab = new TexturedButtonWithItemStackWidget(width / 2 + screenWidth / 2 - 26, height / 2 - screenHeight / 2 - 28, 26, 28, TEXTURES_RIGHT, displayStack, button -> openContainer(container));
                     }
                 } else {
-                    if (!(client.currentScreen instanceof AbstractInventoryScreen<?>) && current == container) {
+                    if (!(client.currentScreen instanceof InventoryScreen) && current == container) {
                         tab = new TexturedButtonWithItemStackWidget(width / 2 - screenWidth / 2 + (i + 1) * 25, height / 2 - screenHeight / 2 - 28, 26, 32, TEXTURES_MID_SELECTED, displayStack, button -> openContainer(container));
                     } else {
                         tab = new TexturedButtonWithItemStackWidget(width / 2 - screenWidth / 2 + (i + 1) * 25, height / 2 - screenHeight / 2 - 28, 26, 28, TEXTURES_MID, displayStack, button -> openContainer(container));

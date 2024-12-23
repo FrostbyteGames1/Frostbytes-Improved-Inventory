@@ -17,8 +17,8 @@ import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Box;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -88,7 +88,9 @@ public class ToolSelector implements ClientTickEvents.EndTick{
         Blocks.BLACK_CARPET,
         Blocks.GRAY_CARPET,
         Blocks.LIGHT_GRAY_CARPET,
-        Blocks.WHITE_CARPET
+        Blocks.WHITE_CARPET,
+        Blocks.PALE_HANGING_MOSS,
+        Blocks.PALE_OAK_LEAVES
     ));
 
     double getAttackDamageOfItemInSlot(int itemSlot) {
@@ -97,13 +99,13 @@ public class ToolSelector implements ClientTickEvents.EndTick{
         double modifier = 0.0F;
         if (component != null && component.modifiers() != null && !component.modifiers().isEmpty()) {
             for (AttributeModifiersComponent.Entry entry : component.modifiers()) {
-                if (entry.attribute().value().getTranslationKey().equals("attribute.name.generic.attack_damage")) {
+                if (entry.attribute().getKey().get().getValue().toString().equals("minecraft:attack_damage")) {
                     modifier = entry.modifier().value();
                     break;
                 }
             }
         }
-        return mc.player.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_DAMAGE) + modifier;
+        return mc.player.getAttributeBaseValue(EntityAttributes.ATTACK_DAMAGE) + modifier;
     }
 
     double getAttackSpeedOfItemInSlot(int itemSlot) {
@@ -112,13 +114,13 @@ public class ToolSelector implements ClientTickEvents.EndTick{
         double modifier = 0.0F;
         if (component != null && component.modifiers() != null && !component.modifiers().isEmpty()) {
             for (AttributeModifiersComponent.Entry entry : component.modifiers()) {
-                if (entry.attribute().value().getTranslationKey().equals("attribute.name.generic.attack_speed")) {
+                if (entry.attribute().getKey().get().getValue().toString().equals("minecraft:attack_speed")) {
                     modifier = entry.modifier().value();
                     break;
                 }
             }
         }
-        return mc.player.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_SPEED) + modifier;
+        return mc.player.getAttributeBaseValue(EntityAttributes.ATTACK_SPEED) + modifier;
     }
 
     boolean isCorrectForDrops(ItemStack stack, BlockState state) {
@@ -142,7 +144,10 @@ public class ToolSelector implements ClientTickEvents.EndTick{
             HitResult target = mc.crosshairTarget;
             assert target != null;
             if (target.getType() == HitResult.Type.ENTITY) {
-                if (!mc.world.getEntitiesByClass(ItemFrameEntity.class, Box.of(target.getPos(), 0.25, 0.25, 0.25), itemFrameEntity -> true).isEmpty()) {
+                if (((EntityHitResult) target).getEntity() instanceof ItemFrameEntity) {
+                    return;
+                }
+                if (player.getMainHandStack().isOf(Items.MACE) && !player.isOnGround()) {
                     return;
                 }
                 double maxDPS = getAttackDamageOfItemInSlot(player.getInventory().selectedSlot) * getAttackSpeedOfItemInSlot(player.getInventory().selectedSlot);
@@ -152,6 +157,7 @@ public class ToolSelector implements ClientTickEvents.EndTick{
                         maxDPS = getAttackDamageOfItemInSlot(i) * getAttackSpeedOfItemInSlot(i);
                         maxDamageSlot = i;
                     }
+                    //player.sendMessage(Text.of(player.getInventory().getStack(i).getItem().getTranslationKey() + ": " + (getAttackDamageOfItemInSlot(i) * getAttackSpeedOfItemInSlot(i)) + " DPS"), false);
                 }
                 player.getInventory().selectedSlot = maxDamageSlot;
             } else if (target.getType() == HitResult.Type.BLOCK) {
