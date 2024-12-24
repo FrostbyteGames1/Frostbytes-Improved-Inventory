@@ -144,10 +144,7 @@ public class ToolSelector implements ClientTickEvents.EndTick{
             HitResult target = mc.crosshairTarget;
             assert target != null;
             if (target.getType() == HitResult.Type.ENTITY) {
-                if (((EntityHitResult) target).getEntity() instanceof ItemFrameEntity) {
-                    return;
-                }
-                if (player.getMainHandStack().isOf(Items.MACE) && !player.isOnGround()) {
+                if (((EntityHitResult) target).getEntity() instanceof ItemFrameEntity || player.getMainHandStack().isOf(Items.MACE)) {
                     return;
                 }
                 double maxDPS = getAttackDamageOfItemInSlot(player.getInventory().selectedSlot) * getAttackSpeedOfItemInSlot(player.getInventory().selectedSlot);

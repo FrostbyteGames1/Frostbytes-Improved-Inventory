@@ -1,0 +1,9 @@
+eclipse.preferences.version=1
+org.eclipse.jdt.apt.aptEnabled=true
+org.eclipse.jdt.apt.genSrcDir=bin/generated-sources/annotations
+org.eclipse.jdt.apt.genTestSrcDir=bin/generated-test-sources/annotations
+org.eclipse.jdt.apt.processorOptions/defaultObfuscationEnv=named\:intermediary
+org.eclipse.jdt.apt.processorOptions/inMapFileNamedIntermediary=C\:\\Users\\surap\\.gradle\\caches\\fabric-loom\\1.21.4\\net.fabricmc.yarn.1_21_4.1.21.4+build.2-v2\\mappings.tiny
+org.eclipse.jdt.apt.processorOptions/outMapFileNamedIntermediary=C\:\\Users\\surap\\IdeaProjects\\Frostbytes-Improved-Inventory\\build\\loom-cache\\mixin-map-net.fabricmc.yarn.1_21_4.1.21.4+build.2-v2.main.tiny
+org.eclipse.jdt.apt.processorOptions/outRefMapFile=C\:\\Users\\surap\\IdeaProjects\\Frostbytes-Improved-Inventory\\build\\classes\\java\\main\\inventory-refmap.json
+org.eclipse.jdt.apt.processorOptions/quiet=true

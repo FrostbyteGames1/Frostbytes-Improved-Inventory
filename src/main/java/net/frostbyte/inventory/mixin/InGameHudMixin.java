@@ -9,7 +9,7 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ArmorItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.equipment.ArmorMaterial;
 import net.minecraft.item.equipment.ArmorMaterials;
 import net.minecraft.util.Identifier;
@@ -44,6 +44,7 @@ public abstract class InGameHudMixin {
     @Unique private static final Identifier NETHERITE_ARMOR_FULL_TEXTURE = Identifier.of(ImprovedInventory.MOD_ID, "hud/netherite_armor_full");
     @Unique private static final Identifier NETHERITE_ARMOR_HALF_1_TEXTURE = Identifier.of(ImprovedInventory.MOD_ID, "hud/netherite_armor_half_1");
     @Unique private static final Identifier NETHERITE_ARMOR_HALF_2_TEXTURE = Identifier.of(ImprovedInventory.MOD_ID, "hud/netherite_armor_half_2");
+
     @Inject(method = "renderArmor", at = @At("HEAD"), cancellable = true)
     private static void renderArmor(DrawContext context, PlayerEntity player, int i, int j, int k, int x, CallbackInfo ci) {
         if (ImprovedInventoryConfig.armorBarColors) {
@@ -51,7 +52,8 @@ public abstract class InGameHudMixin {
 
             int footArmor = 0;
             ArmorMaterial footMaterial = ArmorMaterials.IRON;
-            if (!player.getInventory().getArmorStack(0).isEmpty() && player.getInventory().getArmorStack(0).getItem() instanceof ArmorItem armorItem) {
+            if (!player.getInventory().getArmorStack(0).isEmpty()) {
+                Item armorItem = player.getInventory().getArmorStack(0).getItem();
                 for (AttributeModifiersComponent.Entry entry : armorItem.getComponents().getOrDefault(DataComponentTypes.ATTRIBUTE_MODIFIERS, AttributeModifiersComponent.DEFAULT).modifiers()) {
                     if (entry.attribute() == EntityAttributes.ARMOR) {
                         footArmor = (int) entry.modifier().value();
@@ -70,7 +72,8 @@ public abstract class InGameHudMixin {
 
             int legArmor = 0;
             ArmorMaterial legMaterial = ArmorMaterials.IRON;
-            if (!player.getInventory().getArmorStack(1).isEmpty() && player.getInventory().getArmorStack(1).getItem() instanceof ArmorItem armorItem) {
+            if (!player.getInventory().getArmorStack(1).isEmpty()) {
+                Item armorItem = player.getInventory().getArmorStack(1).getItem();
                 for (AttributeModifiersComponent.Entry entry : armorItem.getComponents().getOrDefault(DataComponentTypes.ATTRIBUTE_MODIFIERS, AttributeModifiersComponent.DEFAULT).modifiers()) {
                     if (entry.attribute() == EntityAttributes.ARMOR) {
                         legArmor = (int) entry.modifier().value();
@@ -89,7 +92,8 @@ public abstract class InGameHudMixin {
 
             int chestArmor = 0;
             ArmorMaterial chestMaterial = ArmorMaterials.IRON;
-            if (!player.getInventory().getArmorStack(2).isEmpty() && player.getInventory().getArmorStack(2).getItem() instanceof ArmorItem armorItem) {
+            if (!player.getInventory().getArmorStack(2).isEmpty()) {
+                Item armorItem = player.getInventory().getArmorStack(2).getItem();
                 for (AttributeModifiersComponent.Entry entry : armorItem.getComponents().getOrDefault(DataComponentTypes.ATTRIBUTE_MODIFIERS, AttributeModifiersComponent.DEFAULT).modifiers()) {
                     if (entry.attribute() == EntityAttributes.ARMOR) {
                         chestArmor = (int) entry.modifier().value();
@@ -108,7 +112,8 @@ public abstract class InGameHudMixin {
 
             int headArmor = 0;
             ArmorMaterial headMaterial = ArmorMaterials.IRON;
-            if (!player.getInventory().getArmorStack(3).isEmpty() && player.getInventory().getArmorStack(3).getItem() instanceof ArmorItem armorItem) {
+            if (!player.getInventory().getArmorStack(3).isEmpty()) {
+                Item armorItem = player.getInventory().getArmorStack(3).getItem();
                 for (AttributeModifiersComponent.Entry entry : armorItem.getComponents().getOrDefault(DataComponentTypes.ATTRIBUTE_MODIFIERS, AttributeModifiersComponent.DEFAULT).modifiers()) {
                     if (entry.attribute() == EntityAttributes.ARMOR) {
                         headArmor = (int) entry.modifier().value();
@@ -234,7 +239,7 @@ public abstract class InGameHudMixin {
                 return NETHERITE_ARMOR_FULL_TEXTURE;
             }
         }
-        // iron & modded materials
+        // iron & non-vanilla armor materials
         if (shape.equals("half1")) {
             return IRON_ARMOR_HALF_1_TEXTURE;
         } else if (shape.equals("half2")) {
