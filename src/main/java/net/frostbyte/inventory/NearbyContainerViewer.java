@@ -192,7 +192,14 @@ public class NearbyContainerViewer implements ClientTickEvents.EndTick {
         );
         for (BlockPos blockPos : BlockPos.iterate((int) (client.player.getX() - reach), (int) (client.player.getY() - reach), (int) (client.player.getZ() - reach), (int) (client.player.getX() + reach), (int) (client.player.getY() + reach), (int) (client.player.getZ() + reach))) {
             assert client.world != null;
-            if (client.world.getBlockEntity(blockPos) instanceof LockableContainerBlockEntity lockableContainerBlockEntity && lockableContainerBlockEntity.canPlayerUse(client.player) && !containers.contains(blockPos)) {
+            boolean blacklisted = false;
+            for (String mod : ImprovedInventoryConfig.containerTabModBlacklist) {
+                if (client.world.getBlockState(blockPos).getBlock().getTranslationKey().contains("." + mod + ".")) {
+                    blacklisted = true;
+                    break;
+                }
+            }
+            if (!blacklisted && client.world.getBlockEntity(blockPos) instanceof LockableContainerBlockEntity lockableContainerBlockEntity && lockableContainerBlockEntity.canPlayerUse(client.player) && !containers.contains(blockPos)) {
                 for (Vec3d blockOffsetVector : blockOffsetVectors) {
                     BlockHitResult hitResult = client.player.getWorld().raycast(new RaycastContext(client.player.getEyePos(), Vec3d.of(blockPos).add(blockOffsetVector), RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, client.player));
                     if (hitResult.getBlockPos().equals(blockPos) && !containers.contains(blockPos)) {
@@ -215,7 +222,7 @@ public class NearbyContainerViewer implements ClientTickEvents.EndTick {
                     }
                 }
             }
-            if (blocksWithGUIs.contains(client.world.getBlockState(blockPos).getBlock())) {
+            if (!blacklisted && blocksWithGUIs.contains(client.world.getBlockState(blockPos).getBlock())) {
                 for (Vec3d blockOffsetVector : blockOffsetVectors) {
                     BlockHitResult hitResult = client.player.getWorld().raycast(new RaycastContext(client.player.getEyePos(), Vec3d.of(blockPos).add(blockOffsetVector), RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, client.player));
                     if (hitResult.getBlockPos().equals(blockPos) && !containers.contains(blockPos)) {

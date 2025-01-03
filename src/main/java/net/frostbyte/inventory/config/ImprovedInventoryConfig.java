@@ -8,9 +8,10 @@ import dev.isxander.yacl3.api.controller.*;
 import dev.isxander.yacl3.impl.controller.ColorControllerBuilderImpl;
 import dev.isxander.yacl3.impl.controller.IntegerFieldControllerBuilderImpl;
 import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.Item;
-import net.minecraft.item.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -62,6 +63,7 @@ public class ImprovedInventoryConfig {
     public static boolean containerSearch = true;
     public static boolean containerTab = true;
     public static boolean containerTabFreeCursor = true;
+    public static ArrayList<String> containerTabModBlacklist = new ArrayList<>();
     public static boolean shulkerBoxTooltip = true;
     public static boolean mapTooltip = true;
     public static boolean heldItemsVisibleInBoat = true;
@@ -109,7 +111,7 @@ public class ImprovedInventoryConfig {
                     .description(OptionDescription.of(Text.of("Defines a list of items that will not be refilled")))
                     .binding(new ArrayList<>(), () -> stackRefillBlacklist, newVal -> stackRefillBlacklist = new ArrayList<>(newVal))
                     .controller(ItemControllerBuilder::create)
-                    .initial(Items.AIR)
+                    .initial(ItemStack.EMPTY.getItem())
                 .build())
 
                 .group(OptionGroup.createBuilder()
@@ -128,7 +130,7 @@ public class ImprovedInventoryConfig {
                     .description(OptionDescription.of(Text.of("Defines a list of items that will not be swapped away from")))
                     .binding(new ArrayList<>(), () -> toolSelectBlacklist, newVal -> toolSelectBlacklist = new ArrayList<>(newVal))
                     .controller(ItemControllerBuilder::create)
-                    .initial(Items.AIR)
+                    .initial(ItemStack.EMPTY.getItem())
                     .build())
 
                 .group(OptionGroup.createBuilder()
@@ -168,6 +170,14 @@ public class ImprovedInventoryConfig {
                         .binding(true, () -> containerTabFreeCursor, newVal -> containerTabFreeCursor = newVal)
                         .controller(TickBoxControllerBuilder::create)
                         .build())
+                    .build())
+                .group(ListOption.<String>createBuilder()
+                    .name(Text.of("Tab To Nearby Containers Mod Blacklist"))
+                    .collapsed(true)
+                    .description(OptionDescription.of(Text.of("Defines a list of mods whose containers will be ignored")))
+                    .binding(new ArrayList<>(), () -> containerTabModBlacklist, newVal -> containerTabModBlacklist = new ArrayList<>(newVal))
+                    .controller(ImprovedInventoryConfig::loadedModsDropdownStringController)
+                    .initial("")
                     .build())
                 .build())
         
@@ -530,9 +540,17 @@ public class ImprovedInventoryConfig {
             );
    }
 
+   private static DropdownStringControllerBuilder loadedModsDropdownStringController(Option<String> option) {
+        ArrayList<String> loadedMods = new ArrayList<>();
+        for (ModContainer mod : FabricLoader.getInstance().getAllMods()) {
+            loadedMods.add(mod.getMetadata().getId());
+        }
+        return DropdownStringControllerBuilder.create(option).values(loadedMods);
+   }
+
    private static ArrayList<Item> stringArrayToItemArrayList(String[] stringArray) {
         ArrayList<Item> itemArrayList = new ArrayList<>();
-        for (String string : stringArray) {
+       for (String string : stringArray) {
             try {
                 itemArrayList.add(Registries.ITEM.get(Identifier.of(string)));
             } catch (Exception ignored) {}
@@ -594,6 +612,7 @@ public class ImprovedInventoryConfig {
             json.addProperty("containerSearch", containerSearch);
             json.addProperty("containerTab", containerTab);
             json.addProperty("containerTabFreeCursor", containerTabFreeCursor);
+            json.addProperty("containerTabModBlacklist", String.valueOf(containerTabModBlacklist));
             json.addProperty("compassTooltip", compassTooltip);
             json.addProperty("clockTooltip", clockTooltip);
             json.addProperty("foodTooltip", foodTooltip);
@@ -723,6 +742,9 @@ public class ImprovedInventoryConfig {
             }
             if (json.has("containerTabFreeCursor")) {
                 containerTabFreeCursor = json.getAsJsonPrimitive("containerTabFreeCursor").getAsBoolean();
+            }
+            if (json.has("containerTabModBlacklist")) {
+                containerTabModBlacklist = stringArrayToStringArrayList(json.getAsJsonPrimitive("containerTabModBlacklist").getAsString().replace("[", "").replace("]", "").split(", "));
             }
             if (json.has("compassTooltip")) {
                 compassTooltip = json.getAsJsonPrimitive("compassTooltip").getAsBoolean();
