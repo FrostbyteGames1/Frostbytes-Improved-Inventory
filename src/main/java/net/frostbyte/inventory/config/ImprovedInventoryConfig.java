@@ -10,7 +10,7 @@ import dev.isxander.yacl3.impl.controller.IntegerFieldControllerBuilderImpl;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.Item;
-import net.minecraft.item.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -109,7 +109,7 @@ public class ImprovedInventoryConfig {
                     .description(OptionDescription.of(Text.of("Defines a list of items that will not be refilled")))
                     .binding(new ArrayList<>(), () -> stackRefillBlacklist, newVal -> stackRefillBlacklist = new ArrayList<>(newVal))
                     .controller(ItemControllerBuilder::create)
-                    .initial(Items.AIR)
+                    .initial(ItemStack.EMPTY.getItem())
                 .build())
 
                 .group(OptionGroup.createBuilder()
@@ -128,7 +128,7 @@ public class ImprovedInventoryConfig {
                     .description(OptionDescription.of(Text.of("Defines a list of items that will not be swapped away from")))
                     .binding(new ArrayList<>(), () -> toolSelectBlacklist, newVal -> toolSelectBlacklist = new ArrayList<>(newVal))
                     .controller(ItemControllerBuilder::create)
-                    .initial(Items.AIR)
+                    .initial(ItemStack.EMPTY.getItem())
                     .build())
 
                 .group(OptionGroup.createBuilder()
@@ -532,7 +532,7 @@ public class ImprovedInventoryConfig {
 
    private static ArrayList<Item> stringArrayToItemArrayList(String[] stringArray) {
         ArrayList<Item> itemArrayList = new ArrayList<>();
-        for (String string : stringArray) {
+       for (String string : stringArray) {
             try {
                 itemArrayList.add(Registries.ITEM.get(Identifier.of(string)));
             } catch (Exception ignored) {}
