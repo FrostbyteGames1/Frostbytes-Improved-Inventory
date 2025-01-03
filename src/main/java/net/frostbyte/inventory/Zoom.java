@@ -17,7 +17,7 @@ public class Zoom implements ClientTickEvents.EndTick {
     public static KeyBinding zoomKey;
 
     public void setKeyBindings() {
-        KeyBindingHelper.registerKeyBinding(zoomKey = new KeyBinding("Zoom (CTRL+Scroll to Adjust)", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_C, "Improved Inventory"));
+        KeyBindingHelper.registerKeyBinding(zoomKey = new KeyBinding("Zoom (Scroll to Adjust)", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_C, "Improved Inventory"));
     }
     @Override
     public void onEndTick(MinecraftClient client) {

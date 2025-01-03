@@ -123,7 +123,7 @@ public class ToolSelector implements ClientTickEvents.EndTick{
         return mc.player.getAttributeBaseValue(EntityAttributes.ATTACK_SPEED) + modifier;
     }
 
-    boolean isCorrectForDrops(ItemStack stack, BlockState state) {
+    public static boolean isCorrectForDrops(ItemStack stack, BlockState state) {
         ToolComponent toolComponent = stack.get(DataComponentTypes.TOOL);
         return toolComponent != null && toolComponent.isCorrectForDrops(state);
     }

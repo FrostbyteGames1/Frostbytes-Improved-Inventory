@@ -46,6 +46,12 @@ public class ImprovedInventory implements ModInitializer {
 		NearbyContainerViewer nearbyContainerViewer = new NearbyContainerViewer();
 		ClientTickEvents.END_CLIENT_TICK.register(nearbyContainerViewer);
 		nearbyContainerViewer.setKeybindings();
+
+		TextDisplayer textDisplayer = new TextDisplayer();
+		HudRenderCallback.EVENT.register(textDisplayer);
+
+		WAILA waila = new WAILA();
+		HudRenderCallback.EVENT.register(waila);
 	}
 
 }

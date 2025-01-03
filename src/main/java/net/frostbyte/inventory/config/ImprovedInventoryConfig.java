@@ -4,10 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import dev.isxander.yacl3.api.*;
-import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
-import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
-import dev.isxander.yacl3.api.controller.ItemControllerBuilder;
-import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
+import dev.isxander.yacl3.api.controller.*;
 import dev.isxander.yacl3.impl.controller.ColorControllerBuilderImpl;
 import dev.isxander.yacl3.impl.controller.IntegerFieldControllerBuilderImpl;
 import net.fabricmc.loader.api.FabricLoader;
@@ -29,7 +26,8 @@ public class ImprovedInventoryConfig {
     public static final Path configFile = FabricLoader.getInstance().getConfigDir().resolve("frostbyte/improved-inventory.json");
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     public static boolean duraDisplay = true;
-    public static boolean duraDisplaySide = true;
+    public static boolean duraDisplayHorizontalAnchor = false;
+    public static boolean duraDisplayVerticalAnchor = false;
     public static int duraDisplayOffsetX = 0;
     public static int duraDisplayOffsetY = 0;
     public static boolean slotCycle = true;
@@ -42,9 +40,20 @@ public class ImprovedInventoryConfig {
     public static boolean toolSelect = true;
     public static ArrayList<Item> toolSelectBlacklist = new ArrayList<>();
     public static boolean paperdoll = true;
-    public static boolean paperdollSide = true;
+    public static boolean paperdollHorizontalAnchor = true;
+    public static boolean paperdollVerticalAnchor = true;
     public static int paperdollOffsetX = 0;
     public static int paperdollOffsetY = 0;
+    public static boolean textDisplay = true;
+    public static ArrayList<String> textDisplayLeft = new ArrayList<>();
+    public static ArrayList<String> textDisplayRight = new ArrayList<>();
+    public static int textDisplayOffsetX = 0;
+    public static int textDisplayOffsetY = 0;
+    public static boolean waila = true;
+    public static boolean wailaHorizontalAnchor = true;
+    public static boolean wailaVerticalAnchor = false;
+    public static int wailaOffsetX = 0;
+    public static int wailaOffsetY = 0;
     public static int zoomFOV = 30;
     public static boolean zoomScrollRequiresControl = true;
     public static boolean zoomSound = true;
@@ -57,6 +66,11 @@ public class ImprovedInventoryConfig {
     public static boolean mapTooltip = true;
     public static boolean heldItemsVisibleInBoat = true;
     public static boolean armorBarColors = true;
+    public static boolean expandedBundleTooltip = true;
+    public static boolean bundleProgressBarFraction = true;
+    public static boolean compassTooltip = true;
+    public static boolean clockTooltip = true;
+    public static boolean foodTooltip = true;
 
     public static Screen createScreen(Screen parent) {
         read();
@@ -171,10 +185,16 @@ public class ImprovedInventoryConfig {
                         .controller(TickBoxControllerBuilder::create)
                         .build())
                     .option(Option.<Boolean>createBuilder()
-                        .name(Text.of("Durability Display Location"))
+                        .name(Text.of("Durability Display Horizontal Anchor"))
                         .description(OptionDescription.of(Text.of("The side of the screen to display the armor durability on")))
-                        .binding(false, () -> duraDisplaySide, newVal -> duraDisplaySide = newVal)
-                        .controller(ImprovedInventoryConfig::leftRightControllerBuilder)
+                        .binding(false, () -> duraDisplayHorizontalAnchor, newVal -> duraDisplayHorizontalAnchor = newVal)
+                        .controller(ImprovedInventoryConfig::leftRightController)
+                        .build())
+                    .option(Option.<Boolean>createBuilder()
+                        .name(Text.of("Durability Display Vertical Anchor"))
+                        .description(OptionDescription.of(Text.of("The side of the screen to display the armor durability on")))
+                        .binding(false, () -> duraDisplayVerticalAnchor, newVal -> duraDisplayVerticalAnchor = newVal)
+                        .controller(ImprovedInventoryConfig::topBottomController)
                         .build())
                     .option(Option.<Integer>createBuilder()
                         .name(Text.of("Durability Display X Offset"))
@@ -223,10 +243,16 @@ public class ImprovedInventoryConfig {
                         .controller(TickBoxControllerBuilder::create)
                         .build())
                     .option(Option.<Boolean>createBuilder()
-                        .name(Text.of("Bedrock Paperdoll Location"))
+                        .name(Text.of("Bedrock Paperdoll Horizontal Anchor"))
                         .description(OptionDescription.of(Text.of("The side of the screen to display the player model on")))
-                        .binding(true, () -> paperdollSide, newVal -> paperdollSide = newVal)
-                        .controller(ImprovedInventoryConfig::leftRightControllerBuilder)
+                        .binding(true, () -> paperdollHorizontalAnchor, newVal -> paperdollHorizontalAnchor = newVal)
+                        .controller(ImprovedInventoryConfig::leftRightController)
+                        .build())
+                    .option(Option.<Boolean>createBuilder()
+                        .name(Text.of("Bedrock Paperdoll Vertical Anchor"))
+                        .description(OptionDescription.of(Text.of("The side of the screen to display the player model on")))
+                        .binding(true, () -> paperdollVerticalAnchor, newVal -> paperdollVerticalAnchor = newVal)
+                        .controller(ImprovedInventoryConfig::topBottomController)
                         .build())
                     .option(Option.<Integer>createBuilder()
                         .name(Text.of("Bedrock Paperdoll X Offset"))
@@ -238,6 +264,80 @@ public class ImprovedInventoryConfig {
                         .name(Text.of("Bedrock Paperdoll Y Offset"))
                         .description(OptionDescription.of(Text.of("Adjusts the y position of the paperdoll")))
                         .binding(0, () -> paperdollOffsetY, newVal -> paperdollOffsetY = newVal)
+                        .controller(IntegerFieldControllerBuilderImpl::new)
+                        .build())
+                    .build())
+
+                .group(OptionGroup.createBuilder()
+                    .name(Text.of("Text Display"))
+                    .collapsed(true)
+                    .option(Option.<Boolean>createBuilder()
+                        .name(Text.of("Text Display"))
+                        .description(OptionDescription.of(Text.of("Displays a list of informational text strings")))
+                        .binding(true, () -> textDisplay, newVal -> textDisplay = newVal)
+                        .controller(TickBoxControllerBuilder::create)
+                        .build())
+                    .option(Option.<Integer>createBuilder()
+                        .name(Text.of("text Display X Offset"))
+                        .description(OptionDescription.of(Text.of("Adjusts the x position of the text display")))
+                        .binding(0, () -> textDisplayOffsetX, newVal -> textDisplayOffsetX = newVal)
+                        .controller(IntegerFieldControllerBuilderImpl::new)
+                        .build())
+                    .option(Option.<Integer>createBuilder()
+                        .name(Text.of("Text Display Y Offset"))
+                        .description(OptionDescription.of(Text.of("Adjusts the y position of the text display")))
+                        .binding(0, () -> textDisplayOffsetY, newVal -> textDisplayOffsetY = newVal)
+                        .controller(IntegerFieldControllerBuilderImpl::new)
+                        .build())
+                    .build())
+                .group(ListOption.<String>createBuilder()
+                    .name(Text.of("Text Display Strings (Left)"))
+                    .collapsed(true)
+                    .description(OptionDescription.of(Text.of("Defines the list of text strings that will be displayed on the left side of the screen")))
+                    .binding(new ArrayList<>(), () -> textDisplayLeft, newVal -> textDisplayLeft = new ArrayList<>(newVal))
+                    .controller(ImprovedInventoryConfig::textDisplayDropdownStringController)
+                    .initial("")
+                    .build())
+                .group(ListOption.<String>createBuilder()
+                    .name(Text.of("Text Display Strings (Right)"))
+                    .collapsed(true)
+                    .description(OptionDescription.of(Text.of("Defines the list of text strings that will be displayed on the right side of the screen")))
+                    .binding(new ArrayList<>(), () -> textDisplayRight, newVal -> textDisplayRight = new ArrayList<>(newVal))
+                    .controller(ImprovedInventoryConfig::textDisplayDropdownStringController)
+                    .initial("")
+                    .build())
+
+                .group(OptionGroup.createBuilder()
+                    .name(Text.of("WAILA (What Am I Looking At?)"))
+                    .collapsed(true)
+                    .option(Option.<Boolean>createBuilder()
+                        .name(Text.of("WAILA (What Am I Looking At?)"))
+                        .description(OptionDescription.of(Text.of("Displays the targeted block or entity")))
+                        .binding(true, () -> waila, newVal -> waila = newVal)
+                        .controller(TickBoxControllerBuilder::create)
+                        .build())
+                    .option(Option.<Boolean>createBuilder()
+                        .name(Text.of("WAILA Horizontal Anchor"))
+                        .description(OptionDescription.of(Text.of("The side of the screen to display WAILA on")))
+                        .binding(true, () -> wailaHorizontalAnchor, newVal -> wailaHorizontalAnchor = newVal)
+                        .controller(ImprovedInventoryConfig::leftRightController)
+                        .build())
+                    .option(Option.<Boolean>createBuilder()
+                        .name(Text.of("WAILA Vertical Anchor"))
+                        .description(OptionDescription.of(Text.of("The side of the screen to display WAILA on")))
+                        .binding(true, () -> wailaVerticalAnchor, newVal -> wailaVerticalAnchor = newVal)
+                        .controller(ImprovedInventoryConfig::topBottomController)
+                        .build())
+                    .option(Option.<Integer>createBuilder()
+                        .name(Text.of("WAILA X Offset"))
+                        .description(OptionDescription.of(Text.of("Adjusts the x position of WAILA")))
+                        .binding(0, () -> wailaOffsetX, newVal -> wailaOffsetX = newVal)
+                        .controller(IntegerFieldControllerBuilderImpl::new)
+                        .build())
+                    .option(Option.<Integer>createBuilder()
+                        .name(Text.of("WAILA Y Offset"))
+                        .description(OptionDescription.of(Text.of("Adjusts the y position of WAILA")))
+                        .binding(0, () -> wailaOffsetY, newVal -> wailaOffsetY = newVal)
                         .controller(IntegerFieldControllerBuilderImpl::new)
                         .build())
                     .build())
@@ -270,6 +370,39 @@ public class ImprovedInventoryConfig {
                 .tooltip(Text.of("Options that add additional information to item tooltips"))
 
                 .group(OptionGroup.createBuilder()
+                    .name(Text.of("Compass Target Tooltip"))
+                    .collapsed(true)
+                    .option(Option.<Boolean>createBuilder()
+                        .name(Text.of("Compass Target Tooltip"))
+                        .description(OptionDescription.of(Text.of("Adds a compass's target position to its tooltip")))
+                        .binding(true, () -> compassTooltip, newVal -> compassTooltip = newVal)
+                        .controller(TickBoxControllerBuilder::create)
+                        .build())
+                    .build())
+
+                .group(OptionGroup.createBuilder()
+                    .name(Text.of("Clock Daytime Tooltip"))
+                    .collapsed(true)
+                    .option(Option.<Boolean>createBuilder()
+                        .name(Text.of("Clock Daytime Tooltip"))
+                        .description(OptionDescription.of(Text.of("Adds the time of day to the clock's tooltip")))
+                        .binding(true, () -> clockTooltip, newVal -> clockTooltip = newVal)
+                        .controller(TickBoxControllerBuilder::create)
+                        .build())
+                    .build())
+
+                .group(OptionGroup.createBuilder()
+                    .name(Text.of("Food Nutrition Tooltip"))
+                    .collapsed(true)
+                    .option(Option.<Boolean>createBuilder()
+                        .name(Text.of("Food Nutrition Tooltip"))
+                        .description(OptionDescription.of(Text.of("Adds the nutrition and saturation of a food item to its tooltip")))
+                        .binding(true, () -> foodTooltip, newVal -> foodTooltip = newVal)
+                        .controller(TickBoxControllerBuilder::create)
+                        .build())
+                    .build())
+
+                .group(OptionGroup.createBuilder()
                     .name(Text.of("Shulker Box Preview"))
                     .collapsed(true)
                     .option(Option.<Boolean>createBuilder()
@@ -287,6 +420,28 @@ public class ImprovedInventoryConfig {
                         .name(Text.of("Map Preview"))
                         .description(OptionDescription.of(Text.of("Displays a map's contents in its tooltip")))
                         .binding(true, () -> mapTooltip, newVal -> mapTooltip = newVal)
+                        .controller(TickBoxControllerBuilder::create)
+                        .build())
+                    .build())
+
+                .group(OptionGroup.createBuilder()
+                    .name(Text.of("Expanded Bundle Tooltip"))
+                    .collapsed(true)
+                    .option(Option.<Boolean>createBuilder()
+                        .name(Text.of("Expanded Bundle Tooltip"))
+                        .description(OptionDescription.of(Text.of("Displays the entire contents of a bundle in its tooltip")))
+                        .binding(true, () -> expandedBundleTooltip, newVal -> expandedBundleTooltip = newVal)
+                        .controller(TickBoxControllerBuilder::create)
+                        .build())
+                    .build())
+
+                .group(OptionGroup.createBuilder()
+                    .name(Text.of("Bundle Progress Bar Fraction"))
+                    .collapsed(true)
+                    .option(Option.<Boolean>createBuilder()
+                        .name(Text.of("Bundle Progress Bar Fraction"))
+                        .description(OptionDescription.of(Text.of("Displays a bundle's fullness as a fraction of 64 on top of its progress bar")))
+                        .binding(true, () -> bundleProgressBarFraction, newVal -> bundleProgressBarFraction = newVal)
                         .controller(TickBoxControllerBuilder::create)
                         .build())
                     .build())
@@ -342,9 +497,37 @@ public class ImprovedInventoryConfig {
             .step(step);
     }
 
-   private static BooleanControllerBuilder leftRightControllerBuilder(Option<Boolean> option) {
+   private static BooleanControllerBuilder leftRightController(Option<Boolean> option) {
         return BooleanControllerBuilder.create(option)
             .formatValue(value -> value ? Text.of("LEFT") : Text.of("RIGHT"));
+   }
+
+    private static BooleanControllerBuilder topBottomController(Option<Boolean> option) {
+        return BooleanControllerBuilder.create(option)
+            .formatValue(value -> value ? Text.of("TOP") : Text.of("BOTTOM"));
+    }
+
+   private static DropdownStringControllerBuilder textDisplayDropdownStringController(Option<String> option) {
+        return DropdownStringControllerBuilder.create(option)
+            .values(
+                "Biome",
+                "Blank Line",
+                "Block Light",
+                "Coordinates",
+                "Day",
+                "Dimension",
+                "Entity Count",
+                "Facing Direction",
+                "FPS",
+                "Local Difficulty",
+                "Memory Usage",
+                "Slime Chunk",
+                "Speed",
+                "Sprint Indicator",
+                "Targeted Block/Entity",
+                "Time (Game)",
+                "Time (Real)"
+            );
    }
 
    private static ArrayList<Item> stringArrayToItemArrayList(String[] stringArray) {
@@ -357,6 +540,16 @@ public class ImprovedInventoryConfig {
         return itemArrayList;
    }
 
+    private static ArrayList<String> stringArrayToStringArrayList(String[] stringArray) {
+        ArrayList<String> stringArrayList = new ArrayList<>();
+        for (String string : stringArray) {
+            try {
+                stringArrayList.add(string);
+            } catch (Exception ignored) {}
+        }
+        return stringArrayList;
+    }
+
     public static void write() {
         try {
             if (Files.notExists(configDir)) {
@@ -365,7 +558,8 @@ public class ImprovedInventoryConfig {
             Files.deleteIfExists(configFile);
             JsonObject json = new JsonObject();
             json.addProperty("duraDisplay", duraDisplay);
-            json.addProperty("duraDisplaySide", duraDisplaySide ? "LEFT" : "RIGHT");
+            json.addProperty("duraDisplayHorizontalAnchor", duraDisplayHorizontalAnchor ? "LEFT" : "RIGHT");
+            json.addProperty("duraDisplayVerticalAnchor", duraDisplayVerticalAnchor ? "TOP" : "BOTTOM");
             json.addProperty("duraDisplayOffsetX", duraDisplayOffsetX);
             json.addProperty("duraDisplayOffsetY", duraDisplayOffsetY);
             json.addProperty("slotCycle", slotCycle);
@@ -378,9 +572,20 @@ public class ImprovedInventoryConfig {
             json.addProperty("toolSelect", toolSelect);
             json.addProperty("toolSelectBlacklist", String.valueOf(toolSelectBlacklist));
             json.addProperty("paperdoll", paperdoll);
-            json.addProperty("paperdollSide", paperdollSide ? "LEFT" : "RIGHT");
+            json.addProperty("paperdollHorizontalAnchor", paperdollHorizontalAnchor ? "LEFT" : "RIGHT");
+            json.addProperty("paperdollVerticalAnchor", paperdollVerticalAnchor ? "TOP" : "BOTTOM");
             json.addProperty("paperdollOffsetX", paperdollOffsetX);
             json.addProperty("paperdollOffsetY", paperdollOffsetY);
+            json.addProperty("textDisplayLeft", String.valueOf(textDisplayLeft));
+            json.addProperty("textDisplayRight", String.valueOf(textDisplayRight));
+            json.addProperty("textDisplay", textDisplay);
+            json.addProperty("textDisplayOffsetX", textDisplayOffsetX);
+            json.addProperty("textDisplayOffsetY", textDisplayOffsetY);
+            json.addProperty("waila", waila);
+            json.addProperty("wailaHorizontalAnchor", wailaHorizontalAnchor ? "LEFT" : "RIGHT");
+            json.addProperty("wailaVerticalAnchor", wailaVerticalAnchor ? "TOP" : "BOTTOM");
+            json.addProperty("wailaOffsetX", wailaOffsetX);
+            json.addProperty("wailaOffsetY", wailaOffsetY);
             json.addProperty("zoomFOV", zoomFOV);
             json.addProperty("zoomScrollRequiresControl", zoomScrollRequiresControl);
             json.addProperty("zoomSound", zoomSound);
@@ -389,8 +594,13 @@ public class ImprovedInventoryConfig {
             json.addProperty("containerSearch", containerSearch);
             json.addProperty("containerTab", containerTab);
             json.addProperty("containerTabFreeCursor", containerTabFreeCursor);
+            json.addProperty("compassTooltip", compassTooltip);
+            json.addProperty("clockTooltip", clockTooltip);
+            json.addProperty("foodTooltip", foodTooltip);
             json.addProperty("shulkerBoxTooltip", shulkerBoxTooltip);
             json.addProperty("mapTooltip", mapTooltip);
+            json.addProperty("expandedBundleTooltip", expandedBundleTooltip);
+            json.addProperty("bundleProgressBarFraction", bundleProgressBarFraction);
             json.addProperty("heldItemsVisibleInBoat", heldItemsVisibleInBoat);
             json.addProperty("armorBarColors", armorBarColors);
             Files.writeString(configFile, gson.toJson(json));
@@ -406,8 +616,11 @@ public class ImprovedInventoryConfig {
             if (json.has("duraDisplay")) {
                 duraDisplay = json.getAsJsonPrimitive("duraDisplay").getAsBoolean();
             }
-            if (json.has("duraDisplaySide")) {
-                duraDisplaySide = json.getAsJsonPrimitive("duraDisplaySide").getAsString().equalsIgnoreCase("LEFT");
+            if (json.has("duraDisplayHorizontalAnchor")) {
+                duraDisplayHorizontalAnchor = json.getAsJsonPrimitive("duraDisplayHorizontalAnchor").getAsString().equalsIgnoreCase("LEFT");
+            }
+            if (json.has("duraDisplayVerticalAnchor")) {
+                duraDisplayVerticalAnchor = json.getAsJsonPrimitive("duraDisplayVerticalAnchor").getAsString().equalsIgnoreCase("TOP");
             }
             if (json.has("duraDisplayOffsetX")) {
                 duraDisplayOffsetX = json.getAsJsonPrimitive("duraDisplayOffsetX").getAsInt();
@@ -445,14 +658,47 @@ public class ImprovedInventoryConfig {
             if (json.has("paperdoll")) {
                 paperdoll = json.getAsJsonPrimitive("paperdoll").getAsBoolean();
             }
-            if (json.has("paperdollSide")) {
-                paperdollSide = json.getAsJsonPrimitive("paperdollSide").getAsString().equalsIgnoreCase("LEFT");
+            if (json.has("paperdollHorizontalAnchor")) {
+                paperdollHorizontalAnchor = json.getAsJsonPrimitive("paperdollHorizontalAnchor").getAsString().equalsIgnoreCase("LEFT");
+            }
+            if (json.has("paperdollVerticalAnchor")) {
+                paperdollVerticalAnchor = json.getAsJsonPrimitive("paperdollVerticalAnchor").getAsString().equalsIgnoreCase("TOP");
             }
             if (json.has("paperdollOffsetX")) {
                 paperdollOffsetX = json.getAsJsonPrimitive("paperdollOffsetX").getAsInt();
             }
             if (json.has("paperdollOffsetY")) {
                 paperdollOffsetY = json.getAsJsonPrimitive("paperdollOffsetY").getAsInt();
+            }
+            if (json.has("textDisplayLeft")) {
+                textDisplayLeft = stringArrayToStringArrayList(json.getAsJsonPrimitive("textDisplayLeft").getAsString().replace("[", "").replace("]", "").split(", "));
+            }
+            if (json.has("textDisplayRight")) {
+                textDisplayRight = stringArrayToStringArrayList(json.getAsJsonPrimitive("textDisplayRight").getAsString().replace("[", "").replace("]", "").split(", "));
+            }
+            if (json.has("textDisplay")) {
+                textDisplay = json.getAsJsonPrimitive("textDisplay").getAsBoolean();
+            }
+            if (json.has("textDisplayOffsetX")) {
+                textDisplayOffsetX = json.getAsJsonPrimitive("textDisplayOffsetX").getAsInt();
+            }
+            if (json.has("textDisplayOffsetY")) {
+                textDisplayOffsetY = json.getAsJsonPrimitive("textDisplayOffsetY").getAsInt();
+            }
+            if (json.has("waila")) {
+                waila = json.getAsJsonPrimitive("waila").getAsBoolean();
+            }
+            if (json.has("wailaHorizontalAnchor")) {
+                wailaHorizontalAnchor = json.getAsJsonPrimitive("wailaHorizontalAnchor").getAsString().equalsIgnoreCase("LEFT");
+            }
+            if (json.has("wailaVerticalAnchor")) {
+                wailaVerticalAnchor = json.getAsJsonPrimitive("wailaVerticalAnchor").getAsString().equalsIgnoreCase("TOP");
+            }
+            if (json.has("wailaOffsetX")) {
+                wailaOffsetX = json.getAsJsonPrimitive("wailaOffsetX").getAsInt();
+            }
+            if (json.has("wailaOffsetY")) {
+                wailaOffsetY = json.getAsJsonPrimitive("wailaOffsetY").getAsInt();
             }
             if (json.has("zoomFOV")) {
                 zoomFOV = json.getAsJsonPrimitive("zoomFOV").getAsInt();
@@ -478,11 +724,26 @@ public class ImprovedInventoryConfig {
             if (json.has("containerTabFreeCursor")) {
                 containerTabFreeCursor = json.getAsJsonPrimitive("containerTabFreeCursor").getAsBoolean();
             }
+            if (json.has("compassTooltip")) {
+                compassTooltip = json.getAsJsonPrimitive("compassTooltip").getAsBoolean();
+            }
+            if (json.has("clockTooltip")) {
+                clockTooltip = json.getAsJsonPrimitive("clockTooltip").getAsBoolean();
+            }
+            if (json.has("foodTooltip")) {
+                foodTooltip = json.getAsJsonPrimitive("foodTooltip").getAsBoolean();
+            }
             if (json.has("shulkerBoxTooltip")) {
                 shulkerBoxTooltip = json.getAsJsonPrimitive("shulkerBoxTooltip").getAsBoolean();
             }
             if (json.has("mapTooltip")) {
                 mapTooltip = json.getAsJsonPrimitive("mapTooltip").getAsBoolean();
+            }
+            if (json.has("expandedBundleTooltip")) {
+                expandedBundleTooltip = json.getAsJsonPrimitive("expandedBundleTooltip").getAsBoolean();
+            }
+            if (json.has("bundleProgressBarFraction")) {
+                bundleProgressBarFraction = json.getAsJsonPrimitive("bundleProgressBarFraction").getAsBoolean();
             }
             if (json.has("heldItemsVisibleInBoat")) {
                 heldItemsVisibleInBoat = json.getAsJsonPrimitive("heldItemsVisibleInBoat").getAsBoolean();

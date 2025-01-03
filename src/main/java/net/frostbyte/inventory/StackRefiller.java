@@ -90,7 +90,7 @@ public class StackRefiller implements ClientTickEvents.EndTick, HudRenderCallbac
     @Override
     public void onHudRender(DrawContext drawContext, RenderTickCounter tickCounter) {
         MinecraftClient client = MinecraftClient.getInstance();
-        if (ImprovedInventoryConfig.stackRefillPreview) {
+        if (ImprovedInventoryConfig.stackRefillPreview && !mc.player.isSpectator()) {
             if (numItems > 0) {
                 drawContext.getMatrices().push();
                 drawContext.getMatrices().scale(0.5F, 0.5F, 1.0F);

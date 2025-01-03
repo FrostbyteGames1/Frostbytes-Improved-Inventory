@@ -20,35 +20,61 @@ public class DurabilityDisplayer implements HudRenderCallback {
         assert mc.player != null;
         if (!mc.player.isSpectator() && ImprovedInventoryConfig.duraDisplay && !mc.options.hudHidden) {
             int x = mc.getWindow().getScaledWidth() - ImprovedInventoryConfig.duraDisplayOffsetX;
-            int y = mc.getWindow().getScaledHeight() - ImprovedInventoryConfig.duraDisplayOffsetY;
-            if (ImprovedInventoryConfig.duraDisplaySide) {
+            if (ImprovedInventoryConfig.duraDisplayHorizontalAnchor) {
                 x = 22 + ImprovedInventoryConfig.duraDisplayOffsetX;
             }
-            //RenderSystem.setShader(GameRenderer::getPositionTexProgram);
+            int y = mc.getWindow().getScaledHeight() - ImprovedInventoryConfig.duraDisplayOffsetY;
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             RenderSystem.setShaderTexture(0, duraSlot);
-            if (!mc.player.getInventory().getStack(36).isEmpty()) {
-                drawContext.drawTexture(RenderLayer::getGuiTextured, Identifier.of(ImprovedInventory.MOD_ID, "textures/dura_slot.png"),x - 22,y - 22,0,0,22,22, 22,22);
-                drawContext.drawItem(mc.player.getInventory().getStack(36), x - 19, y - 19);
-                drawContext.drawStackOverlay(mc.textRenderer, mc.player.getInventory().getStack(36), x - 20, y - 19);
-                y -= 23;
-            }
-            if (!mc.player.getInventory().getStack(37).isEmpty()) {
-                drawContext.drawTexture(RenderLayer::getGuiTextured, Identifier.of(ImprovedInventory.MOD_ID, "textures/dura_slot.png"),x - 22,y - 22,0,0,22,22, 22,22);
-                drawContext.drawItem(mc.player.getInventory().getStack(37), x - 19, y - 19);
-                drawContext.drawStackOverlay(mc.textRenderer, mc.player.getInventory().getStack(37), x - 20, y - 19);
-                y -= 23;
-            }
-            if (!mc.player.getInventory().getStack(38).isEmpty()) {
-                drawContext.drawTexture(RenderLayer::getGuiTextured, Identifier.of(ImprovedInventory.MOD_ID, "textures/dura_slot.png"),x - 22,y - 22,0,0,22,22, 22,22);
-                drawContext.drawItem(mc.player.getInventory().getStack(38), x - 19, y - 19);
-                drawContext.drawStackOverlay(mc.textRenderer, mc.player.getInventory().getStack(38), x - 20, y - 19);
-                y -= 23;
-            }
-            if (!mc.player.getInventory().getStack(39).isEmpty()) {
-                drawContext.drawTexture(RenderLayer::getGuiTextured, Identifier.of(ImprovedInventory.MOD_ID, "textures/dura_slot.png"),x - 22,y - 22,0,0,22,22, 22,22);
-                drawContext.drawItem(mc.player.getInventory().getStack(39), x - 19, y - 19);
-                drawContext.drawStackOverlay(mc.textRenderer, mc.player.getInventory().getStack(39), x - 20, y - 19);
+            if (ImprovedInventoryConfig.duraDisplayVerticalAnchor) {
+                y = 22 - ImprovedInventoryConfig.duraDisplayOffsetY;
+                if (!mc.player.getInventory().getStack(39).isEmpty()) {
+                    drawContext.drawTexture(RenderLayer::getGuiTextured, duraSlot, x - 22, y - 22, 0, 0, 22, 22, 22, 22);
+                    drawContext.drawItem(mc.player.getInventory().getStack(39), x - 19, y - 19);
+                    drawContext.drawStackOverlay(mc.textRenderer, mc.player.getInventory().getStack(36), x - 20, y - 19);
+                    y += 23;
+                }
+                if (!mc.player.getInventory().getStack(38).isEmpty()) {
+                    drawContext.drawTexture(RenderLayer::getGuiTextured, duraSlot, x - 22, y - 22, 0, 0, 22, 22, 22, 22);
+                    drawContext.drawItem(mc.player.getInventory().getStack(38), x - 19, y - 19);
+                    drawContext.drawStackOverlay(mc.textRenderer, mc.player.getInventory().getStack(37), x - 20, y - 19);
+                    y += 23;
+                }
+                if (!mc.player.getInventory().getStack(37).isEmpty()) {
+                    drawContext.drawTexture(RenderLayer::getGuiTextured, duraSlot, x - 22, y - 22, 0, 0, 22, 22, 22, 22);
+                    drawContext.drawItem(mc.player.getInventory().getStack(37), x - 19, y - 19);
+                    drawContext.drawStackOverlay(mc.textRenderer, mc.player.getInventory().getStack(38), x - 20, y - 19);
+                    y += 23;
+                }
+                if (!mc.player.getInventory().getStack(36).isEmpty()) {
+                    drawContext.drawTexture(RenderLayer::getGuiTextured, duraSlot, x - 22, y - 22, 0, 0, 22, 22, 22, 22);
+                    drawContext.drawItem(mc.player.getInventory().getStack(36), x - 19, y - 19);
+                    drawContext.drawStackOverlay(mc.textRenderer, mc.player.getInventory().getStack(39), x - 20, y - 19);
+                }
+            } else {
+                if (!mc.player.getInventory().getStack(36).isEmpty()) {
+                    drawContext.drawTexture(RenderLayer::getGuiTextured, duraSlot, x - 22, y - 22, 0, 0, 22, 22, 22, 22);
+                    drawContext.drawItem(mc.player.getInventory().getStack(36), x - 19, y - 19);
+                    drawContext.drawStackOverlay(mc.textRenderer, mc.player.getInventory().getStack(36), x - 20, y - 19);
+                    y -= 23;
+                }
+                if (!mc.player.getInventory().getStack(37).isEmpty()) {
+                    drawContext.drawTexture(RenderLayer::getGuiTextured, duraSlot, x - 22, y - 22, 0, 0, 22, 22, 22, 22);
+                    drawContext.drawItem(mc.player.getInventory().getStack(37), x - 19, y - 19);
+                    drawContext.drawStackOverlay(mc.textRenderer, mc.player.getInventory().getStack(37), x - 20, y - 19);
+                    y -= 23;
+                }
+                if (!mc.player.getInventory().getStack(38).isEmpty()) {
+                    drawContext.drawTexture(RenderLayer::getGuiTextured, duraSlot, x - 22, y - 22, 0, 0, 22, 22, 22, 22);
+                    drawContext.drawItem(mc.player.getInventory().getStack(38), x - 19, y - 19);
+                    drawContext.drawStackOverlay(mc.textRenderer, mc.player.getInventory().getStack(38), x - 20, y - 19);
+                    y -= 23;
+                }
+                if (!mc.player.getInventory().getStack(39).isEmpty()) {
+                    drawContext.drawTexture(RenderLayer::getGuiTextured, duraSlot, x - 22, y - 22, 0, 0, 22, 22, 22, 22);
+                    drawContext.drawItem(mc.player.getInventory().getStack(39), x - 19, y - 19);
+                    drawContext.drawStackOverlay(mc.textRenderer, mc.player.getInventory().getStack(39), x - 20, y - 19);
+                }
             }
         }
     }

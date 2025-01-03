@@ -17,30 +17,58 @@ public class Paperdoll implements HudRenderCallback {
         MinecraftClient mc = MinecraftClient.getInstance();
         assert mc.player != null;
         if (!mc.player.isSpectator() && ImprovedInventoryConfig.paperdoll && !mc.options.hudHidden && mc.currentScreen == null && !mc.inGameHud.getDebugHud().shouldShowDebugHud()) {
-            if (ImprovedInventoryConfig.paperdollSide) {
-                drawEntity(
-                    drawContext,
-                    -16 + ImprovedInventoryConfig.paperdollOffsetX,
-                    ImprovedInventoryConfig.paperdollOffsetY,
-                    48 + ImprovedInventoryConfig.paperdollOffsetX,
-                    64 + ImprovedInventoryConfig.paperdollOffsetY,
-                    20,
-                    0.0625F,
-                    64 + ImprovedInventoryConfig.paperdollOffsetX,
-                    20 + ImprovedInventoryConfig.paperdollOffsetY,
-                    mc.player);
+            if (ImprovedInventoryConfig.paperdollVerticalAnchor) {
+                if (ImprovedInventoryConfig.paperdollHorizontalAnchor) {
+                    drawEntity(
+                        drawContext,
+                        -16 + ImprovedInventoryConfig.paperdollOffsetX,
+                        ImprovedInventoryConfig.paperdollOffsetY,
+                        48 + ImprovedInventoryConfig.paperdollOffsetX,
+                        64 + ImprovedInventoryConfig.paperdollOffsetY,
+                        20,
+                        0.0625F,
+                        64 + ImprovedInventoryConfig.paperdollOffsetX,
+                        20 + ImprovedInventoryConfig.paperdollOffsetY,
+                        mc.player);
+                } else {
+                    drawEntity(
+                        drawContext,
+                        mc.getWindow().getScaledWidth() - 48 - ImprovedInventoryConfig.paperdollOffsetX,
+                        ImprovedInventoryConfig.paperdollOffsetY,
+                        mc.getWindow().getScaledWidth() + 16 - ImprovedInventoryConfig.paperdollOffsetX,
+                        64 + ImprovedInventoryConfig.paperdollOffsetY,
+                        20,
+                        0.0625F,
+                        mc.getWindow().getScaledWidth() - 64 - ImprovedInventoryConfig.paperdollOffsetX,
+                        20 + ImprovedInventoryConfig.paperdollOffsetY,
+                        mc.player);
+                }
             } else {
-                drawEntity(
-                    drawContext,
-                    mc.getWindow().getScaledWidth() - 48 - ImprovedInventoryConfig.paperdollOffsetX,
-                    ImprovedInventoryConfig.paperdollOffsetY,
-                    mc.getWindow().getScaledWidth() + 16 - ImprovedInventoryConfig.paperdollOffsetX,
-                    64 + ImprovedInventoryConfig.paperdollOffsetY,
-                    20,
-                    0.0625F,
-                    mc.getWindow().getScaledWidth() - 64 - ImprovedInventoryConfig.paperdollOffsetX,
-                    20 + ImprovedInventoryConfig.paperdollOffsetY,
-                    mc.player);
+                if (ImprovedInventoryConfig.paperdollHorizontalAnchor) {
+                    drawEntity(
+                        drawContext,
+                        -16 + ImprovedInventoryConfig.paperdollOffsetX,
+                        mc.getWindow().getScaledHeight() - 64 - ImprovedInventoryConfig.paperdollOffsetY,
+                        48 + ImprovedInventoryConfig.paperdollOffsetX,
+                        mc.getWindow().getScaledHeight() - ImprovedInventoryConfig.paperdollOffsetY,
+                        20,
+                        0.0625F,
+                        64 + ImprovedInventoryConfig.paperdollOffsetX,
+                        mc.getWindow().getScaledHeight() - 44 + ImprovedInventoryConfig.paperdollOffsetY,
+                        mc.player);
+                } else {
+                    drawEntity(
+                        drawContext,
+                        mc.getWindow().getScaledWidth() - 48 - ImprovedInventoryConfig.paperdollOffsetX,
+                        mc.getWindow().getScaledHeight() - 64 - ImprovedInventoryConfig.paperdollOffsetY,
+                        mc.getWindow().getScaledWidth() + 16 - ImprovedInventoryConfig.paperdollOffsetX,
+                        mc.getWindow().getScaledHeight() - ImprovedInventoryConfig.paperdollOffsetY,
+                        20,
+                        0.0625F,
+                        mc.getWindow().getScaledWidth() - 64 - ImprovedInventoryConfig.paperdollOffsetX,
+                        mc.getWindow().getScaledHeight() - 44 + ImprovedInventoryConfig.paperdollOffsetY,
+                        mc.player);
+                }
             }
         }
     }
