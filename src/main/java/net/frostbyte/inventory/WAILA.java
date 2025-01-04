@@ -15,6 +15,10 @@ import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.passive.AbstractHorseEntity;
+import net.minecraft.entity.passive.LlamaEntity;
+import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -33,8 +37,11 @@ import static net.minecraft.client.gui.screen.ingame.InventoryScreen.drawEntity;
 public class WAILA implements HudRenderCallback {
     int x, y;
     Identifier BOX = Identifier.ofVanilla("textures/gui/sprites/toast/advancement.png");
-    Identifier HEART = Identifier.ofVanilla("textures/gui/sprites/hud/heart/full.png");
-    Identifier ARMOR = Identifier.ofVanilla("textures/gui/sprites/hud/armor_full.png");
+    Identifier HEART = Identifier.ofVanilla("textures/mob_effect/regeneration.png");
+    Identifier ARMOR = Identifier.ofVanilla("textures/mob_effect/resistance.png");
+    Identifier LLAMA_STRENGTH = Identifier.of(ImprovedInventory.MOD_ID, "textures/chest_icon.png");
+    Identifier HORSE_SPEED = Identifier.ofVanilla("textures/mob_effect/speed.png");
+    Identifier HORSE_JUMP = Identifier.ofVanilla("textures/mob_effect/jump_boost.png");
     ArrayList<Item> AXES = new ArrayList<>(List.of(
         Items.WOODEN_AXE,
         Items.STONE_AXE,
@@ -112,16 +119,40 @@ public class WAILA implements HudRenderCallback {
                     String name = entity.getType().getName().getString();
                     int textWidth = mc.textRenderer.getWidth(name);
                     if (entity instanceof LivingEntity livingEntity) {
-                        textWidth = Math.max(textWidth, mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", (float) livingEntity.getArmor() / 2)) + 9);
+                        if (entity instanceof TameableEntity tameableEntity && tameableEntity.isTamed()) {
+                            if (tameableEntity.getOwner() == null) {
+                                name = "{NULL}'s " + name;
+                            } else {
+                                name = tameableEntity.getOwner().getName().getString() + "'s " + name;
+                            }
+                            textWidth = mc.textRenderer.getWidth(name);
+                        }
+                        if (entity instanceof LlamaEntity llamaEntity) {
+                            textWidth = Math.max(textWidth, mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", (float) livingEntity.getArmor() / 2)) + 16 + mc.textRenderer.getWidth(String.valueOf(3 * llamaEntity.getStrength())) + 9);
+                        } else if (entity instanceof AbstractHorseEntity horseEntity) {
+                            textWidth = Math.max(textWidth, mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", (float) livingEntity.getArmor() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", 42.16 * horseEntity.getAttributeValue(EntityAttributes.MOVEMENT_SPEED))) + 16 + mc.textRenderer.getWidth(String.format("%.1f", 7.375 * horseEntity.getAttributeValue(EntityAttributes.JUMP_STRENGTH) - 2.125)) + 9);
+                        } else {
+                            textWidth = Math.max(textWidth, mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", (float) livingEntity.getArmor() / 2)) + 9);
+                        }
                     }
                     drawBox(drawContext, textWidth);
                     if (entity instanceof LivingEntity livingEntity) {
                         drawEntity(drawContext, x, y, x + 32, y + 32, getScaleFromHeight(livingEntity.getHeight()), 0.0625F, x + 64, y + 16, livingEntity);
-                        drawContext.drawTextWithShadow(mc.textRenderer, entity.getType().getName().getString(), x + 30, y + 8, Colors.WHITE);
+                        drawContext.drawTextWithShadow(mc.textRenderer, name, x + 30, y + 8, Colors.WHITE);
                         drawContext.drawTextWithShadow(mc.textRenderer, String.format("%.1f", livingEntity.getHealth() / 2), x + 30, y + 18, Colors.WHITE);
                         drawContext.drawTexture(RenderLayer::getGuiTextured, HEART, x + 30 + mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)), y + 17, 0, 0, 9, 9, 9, 9);
                         drawContext.drawTextWithShadow(mc.textRenderer, String.format("%.1f", (float) livingEntity.getArmor() / 2), x + 30 + mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16, y + 18, Colors.WHITE);
                         drawContext.drawTexture(RenderLayer::getGuiTextured, ARMOR, x + 30 + mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", (float) livingEntity.getArmor() / 2)), y + 17, 0, 0, 9, 9, 9, 9);
+                        if (livingEntity instanceof LlamaEntity llamaEntity) {
+                            drawContext.drawTextWithShadow(mc.textRenderer, String.valueOf(3 * llamaEntity.getStrength()), x + 30 + mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", (float) livingEntity.getArmor() / 2)) + 16, y + 18, Colors.WHITE);
+                            drawContext.drawTexture(RenderLayer::getGuiTextured, LLAMA_STRENGTH, x + 30 + mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", (float) livingEntity.getArmor() / 2)) + 16 + mc.textRenderer.getWidth(String.valueOf(3 * llamaEntity.getStrength())), y + 17, 0, 0, 9, 9, 9, 9);
+                        } else if (livingEntity instanceof AbstractHorseEntity horseEntity) {
+                            drawContext.drawTextWithShadow(mc.textRenderer, String.format("%.1f", 42.16 * horseEntity.getAttributeValue(EntityAttributes.MOVEMENT_SPEED)), x + 30 + mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", (float) livingEntity.getArmor() / 2)) + 16, y + 18, Colors.WHITE);
+                            drawContext.drawTexture(RenderLayer::getGuiTextured, HORSE_SPEED, x + 30 + mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", (float) livingEntity.getArmor() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", 42.16 * horseEntity.getAttributeValue(EntityAttributes.MOVEMENT_SPEED))), y + 17, 0, 0, 9, 9, 9, 9);
+                            drawContext.drawTextWithShadow(mc.textRenderer, String.format("%.1f", 7.375 * horseEntity.getAttributeValue(EntityAttributes.JUMP_STRENGTH) - 2.125), x + 30 + mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", (float) livingEntity.getArmor() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", 42.16 * horseEntity.getAttributeValue(EntityAttributes.MOVEMENT_SPEED))) + 16, y + 18, Colors.WHITE);
+                            drawContext.drawTexture(RenderLayer::getGuiTextured, HORSE_JUMP, x + 30 + mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", (float) livingEntity.getArmor() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", 42.16 * horseEntity.getAttributeValue(EntityAttributes.MOVEMENT_SPEED))) + 16 + mc.textRenderer.getWidth(String.format("%.1f", 7.375 * horseEntity.getAttributeValue(EntityAttributes.JUMP_STRENGTH) - 2.125)), y + 17, 0, 0, 9, 9, 9, 9);
+                        }
+
                     } else {
                         drawContext.drawItem(entity.getPickBlockStack(), x + 8, y + 8);
                         drawContext.drawTextWithShadow(mc.textRenderer, name, x + 30, y + 8, Colors.WHITE);
