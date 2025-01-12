@@ -14,6 +14,7 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.passive.AbstractHorseEntity;
@@ -134,6 +135,9 @@ public class WAILA implements HudRenderCallback {
                         } else {
                             textWidth = Math.max(textWidth, mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", (float) livingEntity.getArmor() / 2)) + 9);
                         }
+                    } else if (entity instanceof FallingBlockEntity fallingBlockEntity) {
+                        name = "Falling " + fallingBlockEntity.getBlockState().getBlock().getName().getString();
+                        textWidth = mc.textRenderer.getWidth(name);
                     }
                     drawBox(drawContext, textWidth);
                     if (entity instanceof LivingEntity livingEntity) {
@@ -153,6 +157,9 @@ public class WAILA implements HudRenderCallback {
                             drawContext.drawTexture(RenderLayer::getGuiTextured, HORSE_JUMP, x + 30 + mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", (float) livingEntity.getArmor() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", 42.16 * horseEntity.getAttributeValue(EntityAttributes.MOVEMENT_SPEED))) + 16 + mc.textRenderer.getWidth(String.format("%.1f", 7.375 * horseEntity.getAttributeValue(EntityAttributes.JUMP_STRENGTH) - 2.125)), y + 17, 0, 0, 9, 9, 9, 9);
                         }
 
+                    } else if (entity instanceof FallingBlockEntity fallingBlockEntity) {
+                        drawContext.drawItem(fallingBlockEntity.getBlockState().getBlock().asItem().getDefaultStack(), x + 8, y + 8);
+                        drawContext.drawTextWithShadow(mc.textRenderer, name, x + 30, y + 8, Colors.WHITE);
                     } else {
                         drawContext.drawItem(entity.getPickBlockStack(), x + 8, y + 8);
                         drawContext.drawTextWithShadow(mc.textRenderer, name, x + 30, y + 8, Colors.WHITE);
