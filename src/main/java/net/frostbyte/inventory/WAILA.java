@@ -34,6 +34,7 @@ import java.util.List;
 
 import static net.minecraft.client.gui.screen.ingame.InventoryScreen.drawEntity;
 
+@SuppressWarnings("DataFlowIssue")
 @Environment(EnvType.CLIENT)
 public class WAILA implements HudRenderCallback {
     int x, y;
@@ -111,7 +112,7 @@ public class WAILA implements HudRenderCallback {
                         ItemStack stack = Items.BARRIER.getDefaultStack();
                         stack.set(DataComponentTypes.ITEM_MODEL, Identifier.of(ImprovedInventory.MOD_ID, "nether_portal"));
                         drawContext.drawItem(stack, x + 8, y + 8);
-                    } else {
+                    } else if (block.asItem() != null) {
                         drawContext.drawItem(new ItemStack(block.asItem()), x + 8, y + 8);
                     }
                     drawContext.drawTextWithShadow(mc.textRenderer, name, x + 30, y + 8, Colors.WHITE);
@@ -121,9 +122,7 @@ public class WAILA implements HudRenderCallback {
                     int textWidth = mc.textRenderer.getWidth(name);
                     if (entity instanceof LivingEntity livingEntity) {
                         if (entity instanceof TameableEntity tameableEntity && tameableEntity.isTamed()) {
-                            if (tameableEntity.getOwner() == null) {
-                                name = "{NULL}'s " + name;
-                            } else {
+                            if (tameableEntity.getOwner() != null) {
                                 name = tameableEntity.getOwner().getName().getString() + "'s " + name;
                             }
                             textWidth = mc.textRenderer.getWidth(name);
@@ -161,7 +160,9 @@ public class WAILA implements HudRenderCallback {
                         drawContext.drawItem(fallingBlockEntity.getBlockState().getBlock().asItem().getDefaultStack(), x + 8, y + 8);
                         drawContext.drawTextWithShadow(mc.textRenderer, name, x + 30, y + 8, Colors.WHITE);
                     } else {
-                        drawContext.drawItem(entity.getPickBlockStack(), x + 8, y + 8);
+                        if (entity.getPickBlockStack() != null) {
+                            drawContext.drawItem(entity.getPickBlockStack(), x + 8, y + 8);
+                        }
                         drawContext.drawTextWithShadow(mc.textRenderer, name, x + 30, y + 8, Colors.WHITE);
                     }
                 }

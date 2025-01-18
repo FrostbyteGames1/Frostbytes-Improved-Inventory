@@ -42,11 +42,11 @@ public class InventorySorter implements ClientTickEvents.EndTick {
             if (shouldSort()) {
                 long windowCode = MinecraftClient.getInstance().getWindow().getHandle();
                 int keyCode = InputUtil.fromTranslationKey(sortKey.getBoundKeyTranslationKey()).getCode();
-                if (keyCode > 31 && GLFW.glfwGetKey(windowCode, keyCode) == 1) {
+                if (keyCode >= 32 && keyCode <= 348 && GLFW.glfwGetKey(windowCode, keyCode) == 1) {
                     interactions = 0;
                     sortStacks(((HandledScreen<?>) mc.currentScreen).getScreenHandler());
                 }
-                if (keyCode < 8 && GLFW.glfwGetMouseButton(windowCode, keyCode) == 1) {
+                if (keyCode >= 0 && keyCode <= 7 && GLFW.glfwGetMouseButton(windowCode, keyCode) == 1) {
                     interactions = 0;
                     sortStacks(((HandledScreen<?>) mc.currentScreen).getScreenHandler());
                 }
