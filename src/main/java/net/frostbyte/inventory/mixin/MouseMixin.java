@@ -1,5 +1,6 @@
 package net.frostbyte.inventory.mixin;
 
+import net.frostbyte.inventory.SlotCycler;
 import net.frostbyte.inventory.Zoom;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
 import net.minecraft.client.MinecraftClient;
@@ -64,6 +65,19 @@ public abstract class MouseMixin {
             } else {
                 Zoom.scrollAmount = (int) Math.clamp(Zoom.scrollAmount + Math.signum(vertical), 0, ImprovedInventoryConfig.zoomFOV - 2);
                 ci.cancel();
+            }
+        }
+        if (ImprovedInventoryConfig.slotCycle) {
+            if (InputUtil.isKeyPressed(window, InputUtil.GLFW_KEY_LEFT_ALT) || InputUtil.isKeyPressed(window, InputUtil.GLFW_KEY_RIGHT_ALT)) {
+                if (Math.signum(vertical) > 0) {
+                    assert client.player != null;
+                    SlotCycler.cycleUp(client, client.player);
+                    ci.cancel();
+                } else if (Math.signum(vertical) < 0) {
+                    assert client.player != null;
+                    SlotCycler.cycleDown(client, client.player);
+                    ci.cancel();
+                }
             }
         }
     }

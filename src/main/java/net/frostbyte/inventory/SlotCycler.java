@@ -40,16 +40,16 @@ public class SlotCycler implements ClientTickEvents.EndTick, HudRenderCallback {
             return;
 
         if (cycleUpKey.wasPressed()){
-            cycleUp(player);
+            cycleUp(mc, player);
         }
         if (cycleDownKey.wasPressed()){
-            cycleDown(player);
+            cycleDown(mc, player);
         }
 
         player.getInventory().markDirty();
     }
 
-    void cycleDown(ClientPlayerEntity player) {
+    public static void cycleDown(MinecraftClient client, ClientPlayerEntity player) {
         int current = player.getInventory().selectedSlot;
         int target = current;
         int top = 9 + current;
@@ -62,27 +62,27 @@ public class SlotCycler implements ClientTickEvents.EndTick, HudRenderCallback {
             }
         }
         if (target == top) {
-            assert mc.interactionManager != null;
-            assert mc.player != null;
-            mc.interactionManager.clickSlot(mc.player.playerScreenHandler.syncId, top, current, SlotActionType.SWAP, mc.player);
-            mc.interactionManager.clickSlot(mc.player.playerScreenHandler.syncId, middle, current, SlotActionType.SWAP, mc.player);
-            mc.interactionManager.clickSlot(mc.player.playerScreenHandler.syncId, bottom, current, SlotActionType.SWAP, mc.player);
-            mc.player.getInventory().markDirty();
+            assert client.interactionManager != null;
+            assert client.player != null;
+            client.interactionManager.clickSlot(client.player.playerScreenHandler.syncId, top, current, SlotActionType.SWAP, client.player);
+            client.interactionManager.clickSlot(client.player.playerScreenHandler.syncId, middle, current, SlotActionType.SWAP, client.player);
+            client.interactionManager.clickSlot(client.player.playerScreenHandler.syncId, bottom, current, SlotActionType.SWAP, client.player);
+            client.player.getInventory().markDirty();
         } else if (target == middle) {
-            assert mc.interactionManager != null;
-            assert mc.player != null;
-            mc.interactionManager.clickSlot(mc.player.playerScreenHandler.syncId, middle, current, SlotActionType.SWAP, mc.player);
-            mc.interactionManager.clickSlot(mc.player.playerScreenHandler.syncId, bottom, current, SlotActionType.SWAP, mc.player);
-            mc.player.getInventory().markDirty();
+            assert client.interactionManager != null;
+            assert client.player != null;
+            client.interactionManager.clickSlot(client.player.playerScreenHandler.syncId, middle, current, SlotActionType.SWAP, client.player);
+            client.interactionManager.clickSlot(client.player.playerScreenHandler.syncId, bottom, current, SlotActionType.SWAP, client.player);
+            client.player.getInventory().markDirty();
         } else if (target == bottom) {
-            assert mc.interactionManager != null;
-            assert mc.player != null;
-            mc.interactionManager.clickSlot(mc.player.playerScreenHandler.syncId, bottom, current, SlotActionType.SWAP, mc.player);
-            mc.player.getInventory().markDirty();
+            assert client.interactionManager != null;
+            assert client.player != null;
+            client.interactionManager.clickSlot(client.player.playerScreenHandler.syncId, bottom, current, SlotActionType.SWAP, client.player);
+            client.player.getInventory().markDirty();
         }
     }
 
-    void cycleUp(ClientPlayerEntity player) {
+    public static void cycleUp(MinecraftClient client, ClientPlayerEntity player) {
         int current = player.getInventory().selectedSlot;
         int target = current;
         int top = 9 + current;
@@ -95,23 +95,23 @@ public class SlotCycler implements ClientTickEvents.EndTick, HudRenderCallback {
             }
         }
         if (target == top) {
-            assert mc.interactionManager != null;
-            assert mc.player != null;
-            mc.interactionManager.clickSlot(mc.player.playerScreenHandler.syncId, bottom, current, SlotActionType.SWAP, mc.player);
-            mc.interactionManager.clickSlot(mc.player.playerScreenHandler.syncId, middle, current, SlotActionType.SWAP, mc.player);
-            mc.interactionManager.clickSlot(mc.player.playerScreenHandler.syncId, top, current, SlotActionType.SWAP, mc.player);
-            mc.player.getInventory().markDirty();
+            assert client.interactionManager != null;
+            assert client.player != null;
+            client.interactionManager.clickSlot(client.player.playerScreenHandler.syncId, bottom, current, SlotActionType.SWAP, client.player);
+            client.interactionManager.clickSlot(client.player.playerScreenHandler.syncId, middle, current, SlotActionType.SWAP, client.player);
+            client.interactionManager.clickSlot(client.player.playerScreenHandler.syncId, top, current, SlotActionType.SWAP, client.player);
+            client.player.getInventory().markDirty();
         } else if (target == middle) {
-            assert mc.interactionManager != null;
-            assert mc.player != null;
-            mc.interactionManager.clickSlot(mc.player.playerScreenHandler.syncId, bottom, current, SlotActionType.SWAP, mc.player);
-            mc.interactionManager.clickSlot(mc.player.playerScreenHandler.syncId, middle, current, SlotActionType.SWAP, mc.player);
-            mc.player.getInventory().markDirty();
+            assert client.interactionManager != null;
+            assert client.player != null;
+            client.interactionManager.clickSlot(client.player.playerScreenHandler.syncId, bottom, current, SlotActionType.SWAP, client.player);
+            client.interactionManager.clickSlot(client.player.playerScreenHandler.syncId, middle, current, SlotActionType.SWAP, client.player);
+            client.player.getInventory().markDirty();
         } else if (target == bottom) {
-            assert mc.interactionManager != null;
-            assert mc.player != null;
-            mc.interactionManager.clickSlot(mc.player.playerScreenHandler.syncId, bottom, current, SlotActionType.SWAP, mc.player);
-            mc.player.getInventory().markDirty();
+            assert client.interactionManager != null;
+            assert client.player != null;
+            client.interactionManager.clickSlot(client.player.playerScreenHandler.syncId, bottom, current, SlotActionType.SWAP, client.player);
+            client.player.getInventory().markDirty();
         }
     }
 

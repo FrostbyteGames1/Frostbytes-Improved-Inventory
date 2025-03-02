@@ -79,8 +79,7 @@ public abstract class ScreenMixin {
 
     @Inject(method = "init", at = @At("HEAD"))
     public void init(MinecraftClient client, int width, int height, CallbackInfo ci) {
-        if (ImprovedInventoryConfig.containerTab && !containers.isEmpty() && client.world != null && client.player != null && client.interactionManager != null && client.currentScreen instanceof HandledScreen<?> screen && !(client.currentScreen instanceof CreativeInventoryScreen) && !(client.currentScreen instanceof MerchantScreen)) {
-
+        if (ImprovedInventoryConfig.containerTab && !ImprovedInventoryConfig.containerTabKeybindOnly && !containers.isEmpty() && client.world != null && client.player != null && client.interactionManager != null && client.currentScreen instanceof HandledScreen<?> screen && !(client.currentScreen instanceof CreativeInventoryScreen) && !(client.currentScreen instanceof MerchantScreen)) {
             switch (screen) {
                 case GenericContainerScreen containerScreen ->
                     screenHeight = 114 + containerScreen.getScreenHandler().getRows() * 18;

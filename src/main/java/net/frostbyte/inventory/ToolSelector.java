@@ -12,10 +12,13 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.component.type.ToolComponent;
+import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.decoration.ItemFrameEntity;
+import net.minecraft.entity.vehicle.MinecartEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.PickaxeItem;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -93,6 +96,7 @@ public class ToolSelector implements ClientTickEvents.EndTick{
         Blocks.PALE_OAK_LEAVES
     ));
 
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     double getAttackDamageOfItemInSlot(int itemSlot) {
         assert mc.player != null;
         AttributeModifiersComponent component = mc.player.getInventory().getStack(itemSlot).getComponents().get(DataComponentTypes.ATTRIBUTE_MODIFIERS);
@@ -108,6 +112,7 @@ public class ToolSelector implements ClientTickEvents.EndTick{
         return mc.player.getAttributeBaseValue(EntityAttributes.ATTACK_DAMAGE) + modifier;
     }
 
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     double getAttackSpeedOfItemInSlot(int itemSlot) {
         assert mc.player != null;
         AttributeModifiersComponent component = mc.player.getInventory().getStack(itemSlot).getComponents().get(DataComponentTypes.ATTRIBUTE_MODIFIERS);
@@ -147,12 +152,46 @@ public class ToolSelector implements ClientTickEvents.EndTick{
                 if (((EntityHitResult) target).getEntity() instanceof ItemFrameEntity || player.getMainHandStack().isOf(Items.MACE)) {
                     return;
                 }
-                double maxDPS = getAttackDamageOfItemInSlot(player.getInventory().selectedSlot) * getAttackSpeedOfItemInSlot(player.getInventory().selectedSlot);
+                if (((EntityHitResult) target).getEntity() instanceof MinecartEntity) {
+                    float fastestBreak = player.getInventory().getStack(player.getInventory().selectedSlot).getItem().getMiningSpeed(player.getInventory().getStack(player.getInventory().selectedSlot), Blocks.STONE.getDefaultState());
+                    int fastestBreakSlot = player.getInventory().selectedSlot;
+                    for (int i = 0; i < 9; i++) {
+                        if (player.getInventory().getStack(i).getItem() instanceof PickaxeItem && player.getInventory().getStack(i).getItem().getMiningSpeed(player.getInventory().getStack(i), Blocks.STONE.getDefaultState()) > fastestBreak) {
+                            fastestBreak = player.getInventory().getStack(i).getItem().getMiningSpeed(player.getInventory().getStack(i), Blocks.STONE.getDefaultState());
+                            fastestBreakSlot = i;
+                        }
+                    }
+                    mc.player.getInventory().selectedSlot = fastestBreakSlot;
+                    return;
+                }
+                if (((EntityHitResult) target).getEntity() instanceof FallingBlockEntity fallingBlock) {
+                    float fastestBreak = player.getInventory().getStack(player.getInventory().selectedSlot).getItem().getMiningSpeed(player.getInventory().getStack(player.getInventory().selectedSlot), fallingBlock.getBlockState());
+                    int fastestBreakSlot = player.getInventory().selectedSlot;
+                    for (int i = 0; i < 9; i++) {
+                        if (isCorrectForDrops(player.getInventory().getStack(i), fallingBlock.getBlockState()) && player.getInventory().getStack(i).getItem().getMiningSpeed(player.getInventory().getStack(i), fallingBlock.getBlockState()) > fastestBreak) {
+                            fastestBreak = player.getInventory().getStack(i).getItem().getMiningSpeed(player.getInventory().getStack(i), fallingBlock.getBlockState());
+                            fastestBreakSlot = i;
+                        }
+                    }
+                    mc.player.getInventory().selectedSlot = fastestBreakSlot;
+                    return;
+                }
+                double maxDPS = getAttackDamageOfItemInSlot(player.getInventory().selectedSlot);
+                if (ImprovedInventoryConfig.weaponSelectPreference) {
+                    maxDPS *= getAttackSpeedOfItemInSlot(player.getInventory().selectedSlot);
+                }
                 int maxDamageSlot = player.getInventory().selectedSlot;
                 for (int i = 0; i < 9; i++) {
-                    if (maxDPS < getAttackDamageOfItemInSlot(i) * getAttackSpeedOfItemInSlot(i)) {
-                        maxDPS = getAttackDamageOfItemInSlot(i) * getAttackSpeedOfItemInSlot(i);
-                        maxDamageSlot = i;
+                    if (ImprovedInventoryConfig.weaponSelectPreference) {
+                        if (maxDPS < getAttackDamageOfItemInSlot(i) * getAttackSpeedOfItemInSlot(i)) {
+                            maxDPS = getAttackDamageOfItemInSlot(i) * getAttackSpeedOfItemInSlot(i);
+                            maxDamageSlot = i;
+                        }
+                    } else {
+                        if (maxDPS < getAttackDamageOfItemInSlot(i)) {
+                            maxDPS = getAttackDamageOfItemInSlot(i);
+                            maxDamageSlot = i;
+                        }
                     }
                 }
                 player.getInventory().selectedSlot = maxDamageSlot;

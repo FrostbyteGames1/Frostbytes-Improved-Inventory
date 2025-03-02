@@ -32,6 +32,7 @@ public class ImprovedInventoryConfig {
     public static int duraDisplayOffsetX = 0;
     public static int duraDisplayOffsetY = 0;
     public static boolean slotCycle = true;
+    public static boolean slotCycleAltScroll = true;
     public static int slotCycleOffsetX = 0;
     public static int slotCycleOffsetY = 0;
     public static boolean stackRefill = true;
@@ -39,6 +40,7 @@ public class ImprovedInventoryConfig {
     public static Color stackRefillPreviewColor = Color.WHITE;
     public static ArrayList<Item> stackRefillBlacklist = new ArrayList<>();
     public static boolean toolSelect = true;
+    public static boolean weaponSelectPreference = true;
     public static ArrayList<Item> toolSelectBlacklist = new ArrayList<>();
     public static boolean paperdoll = true;
     public static boolean paperdollHorizontalAnchor = true;
@@ -63,6 +65,7 @@ public class ImprovedInventoryConfig {
     public static boolean containerSearch = true;
     public static boolean containerTab = true;
     public static boolean containerTabFreeCursor = true;
+    public static boolean containerTabKeybindOnly = false;
     public static ArrayList<String> containerTabModBlacklist = new ArrayList<>();
     public static boolean shulkerBoxTooltip = true;
     public static boolean mapTooltip = true;
@@ -123,6 +126,12 @@ public class ImprovedInventoryConfig {
                         .binding(true, () -> toolSelect, newVal -> toolSelect = newVal)
                         .controller(TickBoxControllerBuilder::create)
                         .build())
+                    .option(Option.<Boolean>createBuilder()
+                        .name(Text.of("Weapon Selection Damage Preference"))
+                        .description(OptionDescription.of(Text.of("Determines whether damage per second or damage per hit is prioritized when swapping to a weapon")))
+                        .binding(true, () -> weaponSelectPreference, newVal -> weaponSelectPreference = newVal)
+                        .controller(ImprovedInventoryConfig::DpsDphController)
+                        .build())
                     .build())
                 .group(ListOption.<Item>createBuilder()
                     .name(Text.of("Automatic Tool Selection Blacklist"))
@@ -168,6 +177,12 @@ public class ImprovedInventoryConfig {
                         .name(Text.of("Unlocked Cursor"))
                         .description(OptionDescription.of(Text.of("Stops the cursor from snapping to the center of the screen when accessing a nearby container using a tab (If Tab to Nearby Containers is disabled, this setting is ignored)")))
                         .binding(true, () -> containerTabFreeCursor, newVal -> containerTabFreeCursor = newVal)
+                        .controller(TickBoxControllerBuilder::create)
+                        .build())
+                    .option(Option.<Boolean>createBuilder()
+                        .name(Text.of("Keybind Only"))
+                        .description(OptionDescription.of(Text.of("Hides the inventory tabs but maintains the keybind functionality (Useful when using mods with expanded container screens)")))
+                        .binding(false, () -> containerTabKeybindOnly, newVal -> containerTabKeybindOnly = newVal)
                         .controller(TickBoxControllerBuilder::create)
                         .build())
                     .build())
@@ -223,6 +238,12 @@ public class ImprovedInventoryConfig {
                 .group(OptionGroup.createBuilder()
                     .name(Text.of("Slot Cycling"))
                     .collapsed(true)
+                    .option(Option.<Boolean>createBuilder()
+                        .name(Text.of("Use Scroll Wheel for Slot Cycling"))
+                        .description(OptionDescription.of(Text.of("Holding Alt while scrolling activates slot cycling")))
+                        .binding(true, () -> slotCycleAltScroll, newVal -> slotCycleAltScroll = newVal)
+                        .controller(TickBoxControllerBuilder::create)
+                        .build())
                     .option(Option.<Boolean>createBuilder()
                         .name(Text.of("Slot Cycling Preview"))
                         .description(OptionDescription.of(Text.of("Displays a preview of the item stacks that would be cycled to")))
@@ -507,14 +528,19 @@ public class ImprovedInventoryConfig {
             .step(step);
     }
 
-   private static BooleanControllerBuilder leftRightController(Option<Boolean> option) {
+    private static BooleanControllerBuilder leftRightController(Option<Boolean> option) {
         return BooleanControllerBuilder.create(option)
             .formatValue(value -> value ? Text.of("LEFT") : Text.of("RIGHT"));
-   }
+    }
 
     private static BooleanControllerBuilder topBottomController(Option<Boolean> option) {
         return BooleanControllerBuilder.create(option)
             .formatValue(value -> value ? Text.of("TOP") : Text.of("BOTTOM"));
+    }
+
+    private static BooleanControllerBuilder DpsDphController(Option<Boolean> option) {
+        return BooleanControllerBuilder.create(option)
+            .formatValue(value -> value ? Text.of("Damage/Second") : Text.of("Damage/Hit"));
     }
 
    private static DropdownStringControllerBuilder textDisplayDropdownStringController(Option<String> option) {
@@ -581,6 +607,7 @@ public class ImprovedInventoryConfig {
             json.addProperty("duraDisplayOffsetX", duraDisplayOffsetX);
             json.addProperty("duraDisplayOffsetY", duraDisplayOffsetY);
             json.addProperty("slotCycle", slotCycle);
+            json.addProperty("slotCycleAltScroll", slotCycleAltScroll);
             json.addProperty("slotCycleOffsetX", slotCycleOffsetX);
             json.addProperty("slotCycleOffsetY", slotCycleOffsetY);
             json.addProperty("stackRefill", stackRefill);
@@ -588,6 +615,7 @@ public class ImprovedInventoryConfig {
             json.addProperty("stackRefillPreviewColor", stackRefillPreviewColor.getRGB());
             json.addProperty("stackRefillBlacklist", String.valueOf(stackRefillBlacklist));
             json.addProperty("toolSelect", toolSelect);
+            json.addProperty("weaponSelectPreference", weaponSelectPreference);
             json.addProperty("toolSelectBlacklist", String.valueOf(toolSelectBlacklist));
             json.addProperty("paperdoll", paperdoll);
             json.addProperty("paperdollHorizontalAnchor", paperdollHorizontalAnchor ? "LEFT" : "RIGHT");
@@ -612,6 +640,7 @@ public class ImprovedInventoryConfig {
             json.addProperty("containerSearch", containerSearch);
             json.addProperty("containerTab", containerTab);
             json.addProperty("containerTabFreeCursor", containerTabFreeCursor);
+            json.addProperty("containerTabKeybindOnly", containerTabKeybindOnly);
             json.addProperty("containerTabModBlacklist", String.valueOf(containerTabModBlacklist));
             json.addProperty("compassTooltip", compassTooltip);
             json.addProperty("clockTooltip", clockTooltip);
@@ -650,6 +679,9 @@ public class ImprovedInventoryConfig {
             if (json.has("slotCycle")) {
                 slotCycle = json.getAsJsonPrimitive("slotCycle").getAsBoolean();
             }
+            if (json.has("slotCycleAltScroll")) {
+                slotCycleAltScroll = json.getAsJsonPrimitive("slotCycleAltScroll").getAsBoolean();
+            }
             if (json.has("slotCycleOffsetX")) {
                 slotCycleOffsetX = json.getAsJsonPrimitive("slotCycleOffsetX").getAsInt();
             }
@@ -670,6 +702,9 @@ public class ImprovedInventoryConfig {
             }
             if (json.has("toolSelect")) {
                 toolSelect = json.getAsJsonPrimitive("toolSelect").getAsBoolean();
+            }
+            if (json.has("weaponSelectPreference")) {
+                weaponSelectPreference = json.getAsJsonPrimitive("weaponSelectPreference").getAsString().equalsIgnoreCase("Damage/Second");
             }
             if (json.has("toolSelectBlacklist")) {
                 toolSelectBlacklist = stringArrayToItemArrayList(json.getAsJsonPrimitive("toolSelectBlacklist").getAsString().replace("[", "").replace("]", "").split(", "));
@@ -742,6 +777,9 @@ public class ImprovedInventoryConfig {
             }
             if (json.has("containerTabFreeCursor")) {
                 containerTabFreeCursor = json.getAsJsonPrimitive("containerTabFreeCursor").getAsBoolean();
+            }
+            if (json.has("containerTabKeybindOnly")) {
+                containerTabKeybindOnly = json.getAsJsonPrimitive("containerTabKeybindOnly").getAsBoolean();
             }
             if (json.has("containerTabModBlacklist")) {
                 containerTabModBlacklist = stringArrayToStringArrayList(json.getAsJsonPrimitive("containerTabModBlacklist").getAsString().replace("[", "").replace("]", "").split(", "));
