@@ -3,9 +3,8 @@ package net.frostbyte.inventory;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
-import net.minecraft.block.Block;
+import net.frostbyte.inventory.tags.ModTags;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.ChestBlock;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
@@ -179,17 +178,6 @@ public class NearbyContainerViewer implements ClientTickEvents.EndTick {
             new Vec3d(0.8D, 0.2D, 0.8D),
             new Vec3d(0.8D, 0.8D, 0.8D)
         );
-        List<Block> blocksWithGUIs = List.of(
-            Blocks.ANVIL,
-            Blocks.BEACON,
-            Blocks.CARTOGRAPHY_TABLE,
-            Blocks.CHIPPED_ANVIL,
-            Blocks.CRAFTING_TABLE,
-            Blocks.DAMAGED_ANVIL,
-            Blocks.ENDER_CHEST,
-            Blocks.GRINDSTONE,
-            Blocks.SMITHING_TABLE
-        );
         for (BlockPos blockPos : BlockPos.iterate((int) (client.player.getX() - reach), (int) (client.player.getY() - reach), (int) (client.player.getZ() - reach), (int) (client.player.getX() + reach), (int) (client.player.getY() + reach), (int) (client.player.getZ() + reach))) {
             assert client.world != null;
             boolean blacklisted = false;
@@ -214,6 +202,9 @@ public class NearbyContainerViewer implements ClientTickEvents.EndTick {
                                     containers.add(new Vec3i(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
                                     break;
                                 }
+                            } else {
+                                containers.add(new Vec3i(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
+                                break;
                             }
                         } else {
                             containers.add(new Vec3i(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
@@ -222,7 +213,7 @@ public class NearbyContainerViewer implements ClientTickEvents.EndTick {
                     }
                 }
             }
-            if (!blacklisted && blocksWithGUIs.contains(client.world.getBlockState(blockPos).getBlock())) {
+            if (!blacklisted && client.world.getBlockState(blockPos).isIn(ModTags.HAS_GUI)) {
                 for (Vec3d blockOffsetVector : blockOffsetVectors) {
                     BlockHitResult hitResult = client.player.getWorld().raycast(new RaycastContext(client.player.getEyePos(), Vec3d.of(blockPos).add(blockOffsetVector), RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, client.player));
                     if (hitResult.getBlockPos().equals(blockPos) && !containers.contains(blockPos)) {
@@ -237,6 +228,9 @@ public class NearbyContainerViewer implements ClientTickEvents.EndTick {
                                     containers.add(new Vec3i(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
                                     break;
                                 }
+                            } else {
+                                containers.add(new Vec3i(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
+                                break;
                             }
                         } else {
                             containers.add(new Vec3i(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
@@ -262,11 +256,8 @@ public class NearbyContainerViewer implements ClientTickEvents.EndTick {
         }
         current = container;
         Vec3i targetPos = containers.get(current);
-        client.player.currentScreenHandler.updateToClient();
-        client.player.currentScreenHandler.sendContentUpdates();
         client.player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, new BlockPos(targetPos).toCenterPos());
         client.interactionManager.interactBlock(client.player, Hand.MAIN_HAND, new BlockHitResult(Vec3d.of(targetPos), Direction.EAST, new BlockPos(targetPos), false));
-        shouldCenterCursor = client.currentScreen == null;
     }
 
 }

@@ -1,6 +1,5 @@
 package net.frostbyte.inventory;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -19,6 +18,7 @@ import net.minecraft.util.Arm;
 import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
+@SuppressWarnings("deprecation")
 public class SlotCycler implements ClientTickEvents.EndTick, HudRenderCallback {
     public static KeyBinding cycleUpKey;
     public static KeyBinding cycleDownKey;
@@ -50,7 +50,7 @@ public class SlotCycler implements ClientTickEvents.EndTick, HudRenderCallback {
     }
 
     public static void cycleDown(MinecraftClient client, ClientPlayerEntity player) {
-        int current = player.getInventory().selectedSlot;
+        int current = player.getInventory().getSelectedSlot();
         int target = current;
         int top = 9 + current;
         int middle = 18 + current;
@@ -83,7 +83,7 @@ public class SlotCycler implements ClientTickEvents.EndTick, HudRenderCallback {
     }
 
     public static void cycleUp(MinecraftClient client, ClientPlayerEntity player) {
-        int current = player.getInventory().selectedSlot;
+        int current = player.getInventory().getSelectedSlot();
         int target = current;
         int top = 9 + current;
         int middle = 18 + current;
@@ -127,9 +127,6 @@ public class SlotCycler implements ClientTickEvents.EndTick, HudRenderCallback {
             } else {
                 x += ImprovedInventoryConfig.slotCycleOffsetX;
             }
-            //RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            RenderSystem.setShaderTexture(0, PREVIEW_SLOTS);
             assert mc.player != null;
             if (mc.player.getMainArm().equals(Arm.LEFT)) {
                 drawContext.drawTexture(RenderLayer::getGuiTextured, PREVIEW_SLOTS, x - 160, height - 23, 0, 0, 62, 24, 62, 24);
@@ -138,27 +135,27 @@ public class SlotCycler implements ClientTickEvents.EndTick, HudRenderCallback {
             }
             // Item in top slot
             if (mc.player.getMainArm().equals(Arm.LEFT)) {
-                drawContext.drawItem(mc.player.getInventory().getStack(27 + mc.player.getInventory().selectedSlot), x - 157, height - 19);
-                drawContext.drawStackOverlay(mc.textRenderer, mc.player.getInventory().getStack(27 + mc.player.getInventory().selectedSlot), x - 157, height - 19);
+                drawContext.drawItem(mc.player.getInventory().getStack(27 + mc.player.getInventory().getSelectedSlot()), x - 157, height - 19);
+                drawContext.drawStackOverlay(mc.textRenderer, mc.player.getInventory().getStack(27 + mc.player.getInventory().getSelectedSlot()), x - 157, height - 19);
             } else {
-                drawContext.drawItem(mc.player.getInventory().getStack(27 + mc.player.getInventory().selectedSlot), x + 101, height - 19);
-                drawContext.drawStackOverlay(mc.textRenderer, mc.player.getInventory().getStack(27 + mc.player.getInventory().selectedSlot), x + 101, height - 19);
+                drawContext.drawItem(mc.player.getInventory().getStack(27 + mc.player.getInventory().getSelectedSlot()), x + 101, height - 19);
+                drawContext.drawStackOverlay(mc.textRenderer, mc.player.getInventory().getStack(27 + mc.player.getInventory().getSelectedSlot()), x + 101, height - 19);
             }
             // Item in middle slot
             if (mc.player.getMainArm().equals(Arm.LEFT)) {
-                drawContext.drawItem(mc.player.getInventory().getStack(18 + mc.player.getInventory().selectedSlot), x - 137, height - 19);
-                drawContext.drawStackOverlay(mc.textRenderer, mc.player.getInventory().getStack(18 + mc.player.getInventory().selectedSlot), x - 137, height - 19);
+                drawContext.drawItem(mc.player.getInventory().getStack(18 + mc.player.getInventory().getSelectedSlot()), x - 137, height - 19);
+                drawContext.drawStackOverlay(mc.textRenderer, mc.player.getInventory().getStack(18 + mc.player.getInventory().getSelectedSlot()), x - 137, height - 19);
             } else {
-                drawContext.drawItem(mc.player.getInventory().getStack(18 + mc.player.getInventory().selectedSlot), x + 121, height - 19);
-                drawContext.drawStackOverlay(mc.textRenderer, mc.player.getInventory().getStack(18 + mc.player.getInventory().selectedSlot), x + 121, height - 19);
+                drawContext.drawItem(mc.player.getInventory().getStack(18 + mc.player.getInventory().getSelectedSlot()), x + 121, height - 19);
+                drawContext.drawStackOverlay(mc.textRenderer, mc.player.getInventory().getStack(18 + mc.player.getInventory().getSelectedSlot()), x + 121, height - 19);
             }
             // Item in bottom slot
             if (mc.player.getMainArm().equals(Arm.LEFT)) {
-                drawContext.drawItem(mc.player.getInventory().getStack(9 + mc.player.getInventory().selectedSlot), x - 117, height - 19);
-                drawContext.drawStackOverlay(mc.textRenderer, mc.player.getInventory().getStack(9 + mc.player.getInventory().selectedSlot), x - 117, height - 19);
+                drawContext.drawItem(mc.player.getInventory().getStack(9 + mc.player.getInventory().getSelectedSlot()), x - 117, height - 19);
+                drawContext.drawStackOverlay(mc.textRenderer, mc.player.getInventory().getStack(9 + mc.player.getInventory().getSelectedSlot()), x - 117, height - 19);
             } else {
-                drawContext.drawItem(mc.player.getInventory().getStack(9 + mc.player.getInventory().selectedSlot), x + 141, height - 19);
-                drawContext.drawStackOverlay(mc.textRenderer, mc.player.getInventory().getStack(9 + mc.player.getInventory().selectedSlot), x + 141, height - 19);
+                drawContext.drawItem(mc.player.getInventory().getStack(9 + mc.player.getInventory().getSelectedSlot()), x + 141, height - 19);
+                drawContext.drawStackOverlay(mc.textRenderer, mc.player.getInventory().getStack(9 + mc.player.getInventory().getSelectedSlot()), x + 141, height - 19);
             }
         }
     }

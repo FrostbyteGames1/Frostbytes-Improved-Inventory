@@ -1,0 +1,13 @@
+{
+  "values": [
+    "minecraft:anvil",
+    "minecraft:beacon",
+    "minecraft:cartography_table",
+    "minecraft:chipped_anvil",
+    "minecraft:crafting_table",
+    "minecraft:damaged_anvil",
+    "minecraft:ender_chest",
+    "minecraft:grindstone",
+    "minecraft:smithing_table"
+  ]
+}

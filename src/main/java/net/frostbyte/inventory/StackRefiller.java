@@ -16,8 +16,10 @@ import net.minecraft.text.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
+@SuppressWarnings("deprecation")
 public class StackRefiller implements ClientTickEvents.EndTick, HudRenderCallback {
     MinecraftClient mc;
     Item item = Items.AIR;
@@ -46,11 +48,11 @@ public class StackRefiller implements ClientTickEvents.EndTick, HudRenderCallbac
     void tryRefillStack() {
         assert mc.player != null;
         if (mc.player.currentScreenHandler.getStacks().size() == 46 && mc.currentScreen == null) {
-            if (mc.player.getInventory().getMainHandStack().isEmpty() && item != Items.AIR && !ImprovedInventoryConfig.stackRefillBlacklist.contains(item) && slot == mc.player.getInventory().selectedSlot) {
+            if (mc.player.getInventory().getSelectedStack().isEmpty() && item != Items.AIR && !ImprovedInventoryConfig.stackRefillBlacklist.contains(item) && slot == mc.player.getInventory().getSelectedSlot()) {
                 for (int i = 35; i > 8; i--) {
                     if (item == mc.player.getInventory().getStack(i).getItem()) {
                         assert mc.interactionManager != null;
-                        mc.interactionManager.clickSlot(mc.player.playerScreenHandler.syncId, i, mc.player.getInventory().selectedSlot, SlotActionType.SWAP, mc.player.getInventory().player);
+                        mc.interactionManager.clickSlot(mc.player.playerScreenHandler.syncId, i, mc.player.getInventory().getSelectedSlot(), SlotActionType.SWAP, mc.player.getInventory().player);
                         mc.player.getInventory().markDirty();
                         mc.player.playerScreenHandler.sendContentUpdates();
                         mc.player.playerScreenHandler.updateToClient();
@@ -65,7 +67,7 @@ public class StackRefiller implements ClientTickEvents.EndTick, HudRenderCallbac
                             }
                         }
                         assert mc.interactionManager != null;
-                        mc.interactionManager.clickSlot(mc.player.playerScreenHandler.syncId, i, mc.player.getInventory().selectedSlot, SlotActionType.SWAP, mc.player.getInventory().player);
+                        mc.interactionManager.clickSlot(mc.player.playerScreenHandler.syncId, i, mc.player.getInventory().getSelectedSlot(), SlotActionType.SWAP, mc.player.getInventory().player);
                         mc.player.getInventory().markDirty();
                         mc.player.playerScreenHandler.sendContentUpdates();
                         mc.player.playerScreenHandler.updateToClient();
@@ -73,8 +75,8 @@ public class StackRefiller implements ClientTickEvents.EndTick, HudRenderCallbac
                     }
                 }
             }
-            item = mc.player.getInventory().getMainHandStack().getItem();
-            slot = mc.player.getInventory().selectedSlot;
+            item = mc.player.getInventory().getSelectedStack().getItem();
+            slot = mc.player.getInventory().getSelectedSlot();
             numItems = 0;
             for (int i = 35; i > 8; i--) {
                 if (item == mc.player.getInventory().getStack(i).getItem()) {
@@ -90,7 +92,7 @@ public class StackRefiller implements ClientTickEvents.EndTick, HudRenderCallbac
     @Override
     public void onHudRender(DrawContext drawContext, RenderTickCounter tickCounter) {
         MinecraftClient client = MinecraftClient.getInstance();
-        if (ImprovedInventoryConfig.stackRefillPreview && !mc.player.isSpectator() && !mc.options.hudHidden && mc.currentScreen == null) {
+        if (ImprovedInventoryConfig.stackRefillPreview && !Objects.requireNonNull(mc.player).isSpectator() && !mc.options.hudHidden && mc.currentScreen == null) {
             if (numItems > 0) {
                 drawContext.getMatrices().push();
                 drawContext.getMatrices().scale(0.5F, 0.5F, 1.0F);

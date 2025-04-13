@@ -1,6 +1,5 @@
 package net.frostbyte.inventory;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -12,6 +11,7 @@ import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
+@SuppressWarnings("deprecation")
 public class DurabilityDisplayer implements HudRenderCallback {
     MinecraftClient mc = MinecraftClient.getInstance();
     Identifier duraSlot = Identifier.of(ImprovedInventory.MOD_ID, "textures/dura_slot.png");
@@ -24,8 +24,6 @@ public class DurabilityDisplayer implements HudRenderCallback {
                 x = 22 + ImprovedInventoryConfig.duraDisplayOffsetX;
             }
             int y = mc.getWindow().getScaledHeight() - ImprovedInventoryConfig.duraDisplayOffsetY;
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            RenderSystem.setShaderTexture(0, duraSlot);
             if (ImprovedInventoryConfig.duraDisplayVerticalAnchor) {
                 y = 22 - ImprovedInventoryConfig.duraDisplayOffsetY;
                 if (!mc.player.getInventory().getStack(39).isEmpty()) {

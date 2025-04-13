@@ -91,7 +91,6 @@ public abstract class ScreenMixin {
                     // Do Nothing
                 }
             }
-
             ItemStack playerHead = new ItemStack(Items.PLAYER_HEAD);
             playerHead.set(DataComponentTypes.PROFILE, new ProfileComponent(client.player.getGameProfile()));
             TexturedButtonWithItemStackWidget tab;
@@ -100,6 +99,7 @@ public abstract class ScreenMixin {
                     if (client.interactionManager.hasRidingInventory()) {
                         client.player.openRidingInventory();
                     } else {
+                        client.getTutorialManager().onInventoryOpened();
                         client.setScreen(new InventoryScreen(client.player));
                     }
                 });
@@ -108,6 +108,7 @@ public abstract class ScreenMixin {
                     if (client.interactionManager.hasRidingInventory()) {
                         client.player.openRidingInventory();
                     } else {
+                        client.getTutorialManager().onInventoryOpened();
                         client.setScreen(new InventoryScreen(client.player));
                     }
                 });

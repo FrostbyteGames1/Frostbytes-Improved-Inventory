@@ -12,18 +12,17 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Colors;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraft.util.math.random.ChunkRandom;
 import net.minecraft.world.LightType;
 
 import java.awt.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
+@SuppressWarnings("deprecation")
 public class TextDisplayer implements HudRenderCallback {
 
     @Override
@@ -53,7 +52,7 @@ public class TextDisplayer implements HudRenderCallback {
                         drawContext.drawTextWithShadow(mc.textRenderer, "Entity Count: " + mc.world.getRegularEntityCount(), x, y, Colors.WHITE);
                         break;
                     case "Facing Direction":
-                        drawContext.drawTextWithShadow(mc.textRenderer, "Facing: " + mc.player.getHorizontalFacing().getName(), x, y, Colors.WHITE);
+                        drawContext.drawTextWithShadow(mc.textRenderer, "Facing: " + mc.player.getHorizontalFacing().asString(), x, y, Colors.WHITE);
                         break;
                     case "FPS":
                         drawContext.drawTextWithShadow(mc.textRenderer, mc.getCurrentFps() + " FPS", x, y, Colors.WHITE);
@@ -66,7 +65,7 @@ public class TextDisplayer implements HudRenderCallback {
                         break;
                     case "Slime Chunk":
                         if (mc.isIntegratedServerRunning()) {
-                            ServerWorld serverWorld = mc.getServer().getWorld(mc.world.getRegistryKey());
+                            ServerWorld serverWorld = Objects.requireNonNull(mc.getServer()).getWorld(mc.world.getRegistryKey());
                             if (serverWorld != null && ChunkRandom.getSlimeRandom(new ChunkPos(mc.player.getBlockPos()).x, new ChunkPos(mc.player.getBlockPos()).z, serverWorld.getSeed(), 987234911L).nextInt(10) == 0) {
                                 drawContext.drawTextWithShadow(mc.textRenderer, "Slime Chunk", x, y, Colors.WHITE);
                             } else {
@@ -78,8 +77,8 @@ public class TextDisplayer implements HudRenderCallback {
                         break;
                     case "Speed":
                         Vec3d playerPosVec = mc.player.getPos();
-                        double travelledX = playerPosVec.x - mc.player.prevX;
-                        double travelledZ = playerPosVec.z - mc.player.prevZ;
+                        double travelledX = playerPosVec.x - mc.player.lastX;
+                        double travelledZ = playerPosVec.z - mc.player.lastZ;
                         drawContext.drawTextWithShadow(mc.textRenderer, String.format("%.3f m/s", MathHelper.sqrt((float)(travelledX * travelledX + travelledZ * travelledZ)) * 20), x, y, Colors.WHITE);
                         break;
                     case "Sprint Indicator":
@@ -140,8 +139,8 @@ public class TextDisplayer implements HudRenderCallback {
                         drawContext.drawTextWithShadow(mc.textRenderer, "Entity Count: " + mc.world.getRegularEntityCount(), x, y, Colors.WHITE);
                         break;
                     case "Facing Direction":
-                        x -= mc.textRenderer.getWidth("Facing: " + mc.player.getHorizontalFacing().getName());
-                        drawContext.drawTextWithShadow(mc.textRenderer, "Facing: " + mc.player.getHorizontalFacing().getName(), x, y, Colors.WHITE);
+                        x -= mc.textRenderer.getWidth("Facing: " + mc.player.getHorizontalFacing().asString());
+                        drawContext.drawTextWithShadow(mc.textRenderer, "Facing: " + mc.player.getHorizontalFacing().asString(), x, y, Colors.WHITE);
                         break;
                     case "FPS":
                         x -= mc.textRenderer.getWidth(mc.getCurrentFps() + " FPS");
@@ -157,7 +156,7 @@ public class TextDisplayer implements HudRenderCallback {
                         break;
                     case "Slime Chunk":
                         if (mc.isIntegratedServerRunning()) {
-                            ServerWorld serverWorld = mc.getServer().getWorld(mc.world.getRegistryKey());
+                            ServerWorld serverWorld = Objects.requireNonNull(mc.getServer()).getWorld(mc.world.getRegistryKey());
                             if (serverWorld != null && ChunkRandom.getSlimeRandom(new ChunkPos(mc.player.getBlockPos()).x, new ChunkPos(mc.player.getBlockPos()).z, serverWorld.getSeed(), 987234911L).nextInt(10) == 0) {
                                 x -= mc.textRenderer.getWidth("Slime Chunk");
                                 drawContext.drawTextWithShadow(mc.textRenderer, "Slime Chunk", x, y, Colors.WHITE);
@@ -170,8 +169,8 @@ public class TextDisplayer implements HudRenderCallback {
                         break;
                     case "Speed":
                         Vec3d playerPosVec = mc.player.getPos();
-                        double travelledX = playerPosVec.x - mc.player.prevX;
-                        double travelledZ = playerPosVec.z - mc.player.prevZ;
+                        double travelledX = playerPosVec.x - mc.player.lastX;
+                        double travelledZ = playerPosVec.z - mc.player.lastZ;
                         x -= mc.textRenderer.getWidth(String.format("%.3f BPS", MathHelper.sqrt((float)(travelledX * travelledX + travelledZ * travelledZ)) * 20));
                         drawContext.drawTextWithShadow(mc.textRenderer, String.format("%.3f m/s", MathHelper.sqrt((float)(travelledX * travelledX + travelledZ * travelledZ)) * 20), x, y, Colors.WHITE);
                         break;
@@ -210,5 +209,4 @@ public class TextDisplayer implements HudRenderCallback {
             }
         }
     }
-
 }

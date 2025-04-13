@@ -52,8 +52,8 @@ public abstract class InGameHudMixin {
 
             int footArmor = 0;
             ArmorMaterial footMaterial = ArmorMaterials.IRON;
-            if (!player.getInventory().getArmorStack(0).isEmpty()) {
-                Item armorItem = player.getInventory().getArmorStack(0).getItem();
+            if (!player.getInventory().getStack(36).isEmpty()) {
+                Item armorItem = player.getInventory().getStack(36).getItem();
                 for (AttributeModifiersComponent.Entry entry : armorItem.getComponents().getOrDefault(DataComponentTypes.ATTRIBUTE_MODIFIERS, AttributeModifiersComponent.DEFAULT).modifiers()) {
                     if (entry.attribute() == EntityAttributes.ARMOR) {
                         footArmor = (int) entry.modifier().value();
@@ -72,8 +72,8 @@ public abstract class InGameHudMixin {
 
             int legArmor = 0;
             ArmorMaterial legMaterial = ArmorMaterials.IRON;
-            if (!player.getInventory().getArmorStack(1).isEmpty()) {
-                Item armorItem = player.getInventory().getArmorStack(1).getItem();
+            if (!player.getInventory().getStack(37).isEmpty()) {
+                Item armorItem = player.getInventory().getStack(37).getItem();
                 for (AttributeModifiersComponent.Entry entry : armorItem.getComponents().getOrDefault(DataComponentTypes.ATTRIBUTE_MODIFIERS, AttributeModifiersComponent.DEFAULT).modifiers()) {
                     if (entry.attribute() == EntityAttributes.ARMOR) {
                         legArmor = (int) entry.modifier().value();
@@ -92,8 +92,8 @@ public abstract class InGameHudMixin {
 
             int chestArmor = 0;
             ArmorMaterial chestMaterial = ArmorMaterials.IRON;
-            if (!player.getInventory().getArmorStack(2).isEmpty()) {
-                Item armorItem = player.getInventory().getArmorStack(2).getItem();
+            if (!player.getInventory().getStack(38).isEmpty()) {
+                Item armorItem = player.getInventory().getStack(38).getItem();
                 for (AttributeModifiersComponent.Entry entry : armorItem.getComponents().getOrDefault(DataComponentTypes.ATTRIBUTE_MODIFIERS, AttributeModifiersComponent.DEFAULT).modifiers()) {
                     if (entry.attribute() == EntityAttributes.ARMOR) {
                         chestArmor = (int) entry.modifier().value();
@@ -112,8 +112,8 @@ public abstract class InGameHudMixin {
 
             int headArmor = 0;
             ArmorMaterial headMaterial = ArmorMaterials.IRON;
-            if (!player.getInventory().getArmorStack(3).isEmpty()) {
-                Item armorItem = player.getInventory().getArmorStack(3).getItem();
+            if (!player.getInventory().getStack(39).isEmpty()) {
+                Item armorItem = player.getInventory().getStack(39).getItem();
                 for (AttributeModifiersComponent.Entry entry : armorItem.getComponents().getOrDefault(DataComponentTypes.ATTRIBUTE_MODIFIERS, AttributeModifiersComponent.DEFAULT).modifiers()) {
                     if (entry.attribute() == EntityAttributes.ARMOR) {
                         headArmor = (int) entry.modifier().value();

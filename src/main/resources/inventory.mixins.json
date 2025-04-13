@@ -6,14 +6,14 @@
   "mixins": [
     "BundleContentsComponentMixin",
     "BundleTooltipComponentMixin",
-    "ItemMixin",
+    "GlDebugMixin",
     "HandledScreenMixin",
     "HeldItemRendererMixin",
     "InGameHudMixin",
+    "ItemMixin",
     "KeyBindingMixin",
     "MouseMixin",
     "ScreenMixin",
-    "ShulkerBoxBlockMixin",
     "SimpleOptionMixin"
   ],
   "injectors": {

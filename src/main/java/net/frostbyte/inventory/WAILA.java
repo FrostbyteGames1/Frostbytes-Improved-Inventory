@@ -4,6 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
+import net.frostbyte.inventory.tags.ModTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.EndGatewayBlock;
 import net.minecraft.block.EndPortalBlock;
@@ -34,7 +35,7 @@ import java.util.List;
 
 import static net.minecraft.client.gui.screen.ingame.InventoryScreen.drawEntity;
 
-@SuppressWarnings("DataFlowIssue")
+@SuppressWarnings({"DataFlowIssue", "deprecation"})
 @Environment(EnvType.CLIENT)
 public class WAILA implements HudRenderCallback {
     int x, y;
@@ -227,7 +228,7 @@ public class WAILA implements HudRenderCallback {
                 break;
             }
         }
-        if (ToolSelector.SHEARS_MINEABLE.contains(block)) {
+        if (block.getDefaultState().isIn(ModTags.SHEARS_MINEABLE)) {
             tools.add(Items.SHEARS.getDefaultStack());
         }
 
