@@ -41,10 +41,9 @@ public class NearbyContainerViewer implements ClientTickEvents.EndTick {
     public static KeyBinding containerKey;
     public static ArrayList<Vec3i> containers = new ArrayList<>();
     public static int current = 0;
-    public static boolean shouldCenterCursor = true;
     int tabButtonCooldown;
     public void setKeybindings() {
-        KeyBindingHelper.registerKeyBinding(containerKey = new KeyBinding("Next Container (SHIFT for Previous)", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_TAB, "Improved Inventory"));
+        KeyBindingHelper.registerKeyBinding(containerKey = new KeyBinding("Next Container (+SHIFT for Previous)", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_TAB, "Improved Inventory"));
     }
 
     @Override
@@ -89,10 +88,6 @@ public class NearbyContainerViewer implements ClientTickEvents.EndTick {
                 }
                 current = closest;
             }
-            if (!shouldCenterCursor) {
-                shouldCenterCursor = true;
-                client.mouse.lockCursor();
-            }
         }
     }
 
@@ -117,6 +112,7 @@ public class NearbyContainerViewer implements ClientTickEvents.EndTick {
         }
 
         Text name;
+
         // Get name of block
         if (client.world.getBlockEntity(new BlockPos(blockPos)) instanceof NamedScreenHandlerFactory namedScreenHandlerFactory) {
             name = namedScreenHandlerFactory.getDisplayName();
@@ -148,6 +144,7 @@ public class NearbyContainerViewer implements ClientTickEvents.EndTick {
         }
 
         ItemStack stack;
+
         // Get container stack
         stack = new ItemStack(client.world.getBlockState(new BlockPos(blockPos)).getBlock());
 

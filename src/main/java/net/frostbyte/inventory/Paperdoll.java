@@ -10,6 +10,7 @@ import net.minecraft.client.render.RenderTickCounter;
 
 import static net.minecraft.client.gui.screen.ingame.InventoryScreen.drawEntity;
 
+@SuppressWarnings("deprecation")
 @Environment(EnvType.CLIENT)
 public class Paperdoll implements HudRenderCallback {
     @Override

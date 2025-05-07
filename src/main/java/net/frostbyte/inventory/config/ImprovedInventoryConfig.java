@@ -563,7 +563,7 @@ public class ImprovedInventoryConfig {
                 "Targeted Block/Entity",
                 "Time (Game)",
                 "Time (Real)"
-            );
+            ).allowEmptyValue(true).allowAnyValue(false);
    }
 
    private static DropdownStringControllerBuilder loadedModsDropdownStringController(Option<String> option) {
@@ -571,15 +571,17 @@ public class ImprovedInventoryConfig {
         for (ModContainer mod : FabricLoader.getInstance().getAllMods()) {
             loadedMods.add(mod.getMetadata().getId());
         }
-        return DropdownStringControllerBuilder.create(option).values(loadedMods);
+        return DropdownStringControllerBuilder.create(option).values(loadedMods).allowEmptyValue(true).allowAnyValue(false);
    }
 
    private static ArrayList<Item> stringArrayToItemArrayList(String[] stringArray) {
-        ArrayList<Item> itemArrayList = new ArrayList<>();
+       ArrayList<Item> itemArrayList = new ArrayList<>();
        for (String string : stringArray) {
-            try {
-                itemArrayList.add(Registries.ITEM.get(Identifier.of(string)));
-            } catch (Exception ignored) {}
+           if (!string.isEmpty()) {
+               try {
+                   itemArrayList.add(Registries.ITEM.get(Identifier.of(string)));
+               } catch (Exception ignored) {}
+           }
         }
         return itemArrayList;
    }
@@ -615,7 +617,7 @@ public class ImprovedInventoryConfig {
             json.addProperty("stackRefillPreviewColor", stackRefillPreviewColor.getRGB());
             json.addProperty("stackRefillBlacklist", String.valueOf(stackRefillBlacklist));
             json.addProperty("toolSelect", toolSelect);
-            json.addProperty("weaponSelectPreference", weaponSelectPreference);
+            json.addProperty("weaponSelectPreference", weaponSelectPreference ? "DPS" : "DPH");
             json.addProperty("toolSelectBlacklist", String.valueOf(toolSelectBlacklist));
             json.addProperty("paperdoll", paperdoll);
             json.addProperty("paperdollHorizontalAnchor", paperdollHorizontalAnchor ? "LEFT" : "RIGHT");

@@ -99,6 +99,7 @@ public abstract class ScreenMixin {
                     if (client.interactionManager.hasRidingInventory()) {
                         client.player.openRidingInventory();
                     } else {
+                        client.currentScreen.close();
                         client.getTutorialManager().onInventoryOpened();
                         client.setScreen(new InventoryScreen(client.player));
                     }
@@ -108,6 +109,7 @@ public abstract class ScreenMixin {
                     if (client.interactionManager.hasRidingInventory()) {
                         client.player.openRidingInventory();
                     } else {
+                        client.currentScreen.close();
                         client.getTutorialManager().onInventoryOpened();
                         client.setScreen(new InventoryScreen(client.player));
                     }

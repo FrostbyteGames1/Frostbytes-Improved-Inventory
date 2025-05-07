@@ -79,7 +79,7 @@ public class ToolSelector implements ClientTickEvents.EndTick{
             return;
         }
 
-        if (mc.options.attackKey.isPressed() && (player.getMainHandStack().isEmpty() || !ImprovedInventoryConfig.toolSelectBlacklist.contains(player.getMainHandStack().getItem().getDefaultStack().getItem())) && !player.isSpectator() && !player.isCreative() && ImprovedInventoryConfig.toolSelect) {
+        if (mc.options.attackKey.isPressed() && !ImprovedInventoryConfig.toolSelectBlacklist.contains(player.getMainHandStack().getItem().getDefaultStack().getItem()) && !player.isSpectator() && !player.isCreative() && ImprovedInventoryConfig.toolSelect) {
             HitResult target = mc.crosshairTarget;
             assert target != null;
             if (target.getType() == HitResult.Type.ENTITY) {

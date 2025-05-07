@@ -7,6 +7,7 @@ import net.frostbyte.inventory.config.ImprovedInventoryConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
+import net.minecraft.entity.Entity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.Colors;
@@ -19,6 +20,7 @@ import net.minecraft.world.LightType;
 import java.awt.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
@@ -94,7 +96,8 @@ public class TextDisplayer implements HudRenderCallback {
                             if (mc.crosshairTarget.getType() == HitResult.Type.BLOCK) {
                                 target = mc.world.getBlockState(((BlockHitResult) mc.crosshairTarget).getBlockPos()).getBlock().getName().getString();
                             } else if (mc.crosshairTarget.getType() == HitResult.Type.ENTITY) {
-                                target = mc.world.getOtherEntities(mc.player, Box.from(mc.crosshairTarget.getPos()).expand(1)).get(0).getName().getString();
+                                List<Entity> entities = mc.world.getOtherEntities(mc.player, Box.from(mc.crosshairTarget.getPos()).expand(1));
+                                target = entities.isEmpty() ? "Air" : entities.getFirst().getName().getString();
                             }
                         }
                         drawContext.drawTextWithShadow(mc.textRenderer, "Targeted: " + target, x, y, Colors.WHITE);
@@ -188,7 +191,8 @@ public class TextDisplayer implements HudRenderCallback {
                             if (mc.crosshairTarget.getType() == HitResult.Type.BLOCK) {
                                 target = mc.world.getBlockState(((BlockHitResult) mc.crosshairTarget).getBlockPos()).getBlock().getName().getString();
                             } else if (mc.crosshairTarget.getType() == HitResult.Type.ENTITY) {
-                                target = mc.world.getOtherEntities(mc.player, Box.from(mc.crosshairTarget.getPos()).expand(1)).get(0).getName().getString();
+                                List<Entity> entities = mc.world.getOtherEntities(mc.player, Box.from(mc.crosshairTarget.getPos()).expand(1));
+                                target = entities.isEmpty() ? "Air" : entities.getFirst().getName().getString();
                             }
                         }
                         x -= mc.textRenderer.getWidth("Targeted: " + target);
