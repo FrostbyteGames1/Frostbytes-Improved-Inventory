@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(BundleTooltipComponent.class)
+@Mixin(value = BundleTooltipComponent.class)
 public abstract class BundleTooltipComponentMixin {
     @Shadow
     @Final

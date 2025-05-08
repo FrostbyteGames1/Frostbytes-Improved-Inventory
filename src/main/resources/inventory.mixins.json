@@ -3,6 +3,7 @@
   "minVersion": "0.8",
   "package": "net.frostbyte.inventory.mixin",
   "compatibilityLevel": "JAVA_21",
+  "plugin": "net.frostbyte.inventory.util.MixinConfigPlugin",
   "mixins": [
     "BundleContentsComponentMixin",
     "BundleTooltipComponentMixin",
