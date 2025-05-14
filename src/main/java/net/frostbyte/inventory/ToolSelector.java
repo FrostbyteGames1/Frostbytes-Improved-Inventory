@@ -2,7 +2,6 @@ package net.frostbyte.inventory;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
 import net.frostbyte.inventory.tags.ModTags;
 import net.minecraft.block.Block;
@@ -25,13 +24,13 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 
 @Environment(EnvType.CLIENT)
-public class ToolSelector implements ClientTickEvents.EndTick{
-    MinecraftClient mc;
-    int ticksSinceMiningStarted = 0;
-    Block currentlyMiningBlock = Blocks.AIR;
+public class ToolSelector {
+    static int ticksSinceMiningStarted = 0;
+    static Block currentlyMiningBlock = Blocks.AIR;
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
-    double getAttackDamageOfItemInSlot(int itemSlot) {
+    static double getAttackDamageOfItemInSlot(int itemSlot) {
+        MinecraftClient mc = MinecraftClient.getInstance();
         assert mc.player != null;
         AttributeModifiersComponent component = mc.player.getInventory().getStack(itemSlot).getComponents().get(DataComponentTypes.ATTRIBUTE_MODIFIERS);
         double modifier = 0.0F;
@@ -47,7 +46,8 @@ public class ToolSelector implements ClientTickEvents.EndTick{
     }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
-    double getAttackSpeedOfItemInSlot(int itemSlot) {
+    static double getAttackSpeedOfItemInSlot(int itemSlot) {
+        MinecraftClient mc = MinecraftClient.getInstance();
         assert mc.player != null;
         AttributeModifiersComponent component = mc.player.getInventory().getStack(itemSlot).getComponents().get(DataComponentTypes.ATTRIBUTE_MODIFIERS);
         double modifier = 0.0F;
@@ -67,20 +67,14 @@ public class ToolSelector implements ClientTickEvents.EndTick{
         return toolComponent != null && toolComponent.isCorrectForDrops(state);
     }
 
-    @Override
-    public void onEndTick(MinecraftClient client) {
-        ClientPlayerEntity player;
-        mc = client;
-        player = client.player;
-        assert mc.world != null;
-        assert mc.player != null;
-
+    @SuppressWarnings("DataFlowIssue")
+    public static void toolSelectHandler(MinecraftClient client) {
+        ClientPlayerEntity player = client.player;
         if (player == null) {
             return;
         }
-
-        if (mc.options.attackKey.isPressed() && !ImprovedInventoryConfig.toolSelectBlacklist.contains(player.getMainHandStack().getItem().getDefaultStack().getItem()) && !player.isSpectator() && !player.isCreative() && ImprovedInventoryConfig.toolSelect) {
-            HitResult target = mc.crosshairTarget;
+        if (client.options.attackKey.isPressed() && !ImprovedInventoryConfig.toolSelectBlacklist.contains(player.getMainHandStack().getItem().getDefaultStack().getItem()) && !player.isSpectator() && !player.isCreative() && ImprovedInventoryConfig.toolSelect) {
+            HitResult target = client.crosshairTarget;
             assert target != null;
             if (target.getType() == HitResult.Type.ENTITY) {
                 if (((EntityHitResult) target).getEntity() instanceof ItemFrameEntity || player.getMainHandStack().isOf(Items.MACE)) {
@@ -95,7 +89,8 @@ public class ToolSelector implements ClientTickEvents.EndTick{
                             fastestBreakSlot = i;
                         }
                     }
-                    mc.player.getInventory().setSelectedSlot(fastestBreakSlot);
+                    client.player.getInventory().setSelectedSlot(fastestBreakSlot);
+                    player.getInventory().markDirty();
                     return;
                 }
                 if (((EntityHitResult) target).getEntity() instanceof FallingBlockEntity fallingBlock) {
@@ -107,7 +102,8 @@ public class ToolSelector implements ClientTickEvents.EndTick{
                             fastestBreakSlot = i;
                         }
                     }
-                    mc.player.getInventory().setSelectedSlot(fastestBreakSlot);
+                    client.player.getInventory().setSelectedSlot(fastestBreakSlot);
+                    player.getInventory().markDirty();
                     return;
                 }
                 double maxDPS = getAttackDamageOfItemInSlot(player.getInventory().getSelectedSlot());
@@ -133,7 +129,7 @@ public class ToolSelector implements ClientTickEvents.EndTick{
                 if (ticksSinceMiningStarted < 2) {
                     ticksSinceMiningStarted++;
                 } else {
-                    BlockState blockState = mc.world.getBlockState(((BlockHitResult) target).getBlockPos());
+                    BlockState blockState = client.world.getBlockState(((BlockHitResult) target).getBlockPos());
                     if (!currentlyMiningBlock.equals(blockState.getBlock())) {
                         currentlyMiningBlock = blockState.getBlock();
                         ticksSinceMiningStarted = 0;
@@ -141,7 +137,8 @@ public class ToolSelector implements ClientTickEvents.EndTick{
                         if (blockState.isIn(ModTags.SHEARS_MINEABLE)) {
                             for (int i = 0; i < 9; i++) {
                                 if (player.getInventory().getStack(i).isOf(Items.SHEARS)) {
-                                    mc.player.getInventory().setSelectedSlot(i);
+                                    client.player.getInventory().setSelectedSlot(i);
+                                    player.getInventory().markDirty();
                                     return;
                                 }
                             }
@@ -154,7 +151,8 @@ public class ToolSelector implements ClientTickEvents.EndTick{
                                 fastestBreakSlot = i;
                             }
                         }
-                        mc.player.getInventory().setSelectedSlot(fastestBreakSlot);
+                        client.player.getInventory().setSelectedSlot(fastestBreakSlot);
+                        player.getInventory().markDirty();
                     }
                 }
             }
@@ -162,8 +160,6 @@ public class ToolSelector implements ClientTickEvents.EndTick{
             ticksSinceMiningStarted = 0;
             currentlyMiningBlock = Blocks.AIR;
         }
-
-        player.getInventory().markDirty();
     }
 
 }

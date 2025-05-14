@@ -1,7 +1,6 @@
 package net.frostbyte.inventory;
 
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
 import net.frostbyte.inventory.tags.ModTags;
@@ -21,43 +20,25 @@ public class ImprovedInventory implements ModInitializer {
 
 		SlotCycler slotCycler = new SlotCycler();
 		slotCycler.setKeyBindings();
-		ClientTickEvents.END_CLIENT_TICK.register(slotCycler);
 		HudRenderCallback.EVENT.register(slotCycler);
 
-		ToolSelector toolSelector = new ToolSelector();
-		ClientTickEvents.END_CLIENT_TICK.register(toolSelector);
+		HudRenderCallback.EVENT.register(new StackRefiller());
 
-		StackRefiller stackRefiller = new StackRefiller();
-		ClientTickEvents.END_CLIENT_TICK.register(stackRefiller);
-		HudRenderCallback.EVENT.register(stackRefiller);
+		HudRenderCallback.EVENT.register(new DurabilityDisplayer());
 
-		DurabilityDisplayer durabilityDisplayer = new DurabilityDisplayer();
-		HudRenderCallback.EVENT.register(durabilityDisplayer);
+		new InventorySorter().setKeyBindings();
 
-		InventorySorter inventorySorter = new InventorySorter();
-		inventorySorter.setKeyBindings();
-		ClientTickEvents.END_CLIENT_TICK.register(inventorySorter);
+		new Zoom().setKeyBindings();
 
-		Zoom zoom = new Zoom();
-		zoom.setKeyBindings();
-		ClientTickEvents.END_CLIENT_TICK.register(zoom);
+		new Gamma().setKeyBindings();
 
-		Gamma gamma = new Gamma();
-		gamma.setKeyBindings();
-		ClientTickEvents.END_CLIENT_TICK.register(gamma);
+		HudRenderCallback.EVENT.register(new Paperdoll());
 
-		Paperdoll paperdoll = new Paperdoll();
-		HudRenderCallback.EVENT.register(paperdoll);
+		new NearbyContainerViewer().setKeybindings();
 
-		NearbyContainerViewer nearbyContainerViewer = new NearbyContainerViewer();
-		ClientTickEvents.END_CLIENT_TICK.register(nearbyContainerViewer);
-		nearbyContainerViewer.setKeybindings();
+		HudRenderCallback.EVENT.register(new TextDisplayer());
 
-		TextDisplayer textDisplayer = new TextDisplayer();
-		HudRenderCallback.EVENT.register(textDisplayer);
-
-		WAILA waila = new WAILA();
-		HudRenderCallback.EVENT.register(waila);
+		HudRenderCallback.EVENT.register(new WAILA());
 	}
 
 }

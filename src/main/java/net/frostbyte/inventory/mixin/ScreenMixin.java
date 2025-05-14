@@ -1,5 +1,6 @@
 package net.frostbyte.inventory.mixin;
 
+import net.frostbyte.inventory.InventorySorter;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
 import net.frostbyte.inventory.gui.widget.TexturedButtonWithItemStackWidget;
 import net.minecraft.client.MinecraftClient;
@@ -165,7 +166,16 @@ public abstract class ScreenMixin {
 
     @Inject(method = "resize", at = @At("TAIL"))
     public void resize(MinecraftClient client, int width, int height, CallbackInfo ci) {
-        this.init(client, width, height, ci);
+        if (ImprovedInventoryConfig.containerTab && !ImprovedInventoryConfig.containerTabKeybindOnly) {
+            this.init(client, width, height, ci);
+        }
+    }
+
+    @Inject(method = "tick", at = @At("TAIL"))
+    private void tick(CallbackInfo ci) {
+        if (!InventorySorter.sortKey.isUnbound()) {
+            InventorySorter.inventorySortHandler(client);
+        }
     }
 
 }

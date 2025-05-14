@@ -2,7 +2,6 @@ package net.frostbyte.inventory;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
 import net.minecraft.client.MinecraftClient;
@@ -11,7 +10,7 @@ import net.minecraft.client.util.InputUtil;
 import net.minecraft.sound.SoundEvents;
 
 @Environment(EnvType.CLIENT)
-public class Zoom implements ClientTickEvents.EndTick {
+public class Zoom {
     public static int standardFOV = 0;
     public static int scrollAmount = 0;
     public static KeyBinding zoomKey;
@@ -19,20 +18,9 @@ public class Zoom implements ClientTickEvents.EndTick {
     public void setKeyBindings() {
         KeyBindingHelper.registerKeyBinding(zoomKey = new KeyBinding("Zoom (Scroll to Adjust)", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_C, "Improved Inventory"));
     }
-    @Override
-    public void onEndTick(MinecraftClient client) {
-        if (client.player == null) {
-            return;
-        }
 
-        if (standardFOV == 0) {
-            standardFOV = client.options.getFov().getValue();
-        }
-        if (client.options.getFov().getValue() <= 0) {
-            standardFOV = 70;
-            client.options.getFov().setValue(70);
-        }
-
+    @SuppressWarnings("DataFlowIssue")
+    public static void zoomHandler(MinecraftClient client) {
         if (client.currentScreen == null) {
             if (zoomKey.isPressed()) {
                 if (client.options.getFov().getValue() != ImprovedInventoryConfig.zoomFOV - scrollAmount) {

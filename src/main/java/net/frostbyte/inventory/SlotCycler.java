@@ -2,7 +2,6 @@ package net.frostbyte.inventory;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
@@ -19,7 +18,7 @@ import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
 @SuppressWarnings("deprecation")
-public class SlotCycler implements ClientTickEvents.EndTick, HudRenderCallback {
+public class SlotCycler implements HudRenderCallback {
     public static KeyBinding cycleUpKey;
     public static KeyBinding cycleDownKey;
     MinecraftClient mc;
@@ -30,23 +29,16 @@ public class SlotCycler implements ClientTickEvents.EndTick, HudRenderCallback {
         KeyBindingHelper.registerKeyBinding(cycleDownKey = new KeyBinding("Cycle Slot Down", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_H, "Improved Inventory"));
     }
 
-    @Override
-    public void onEndTick(MinecraftClient client) {
-        ClientPlayerEntity player;
-        mc = client;
-        player = client.player;
-
-        if (player==null)
-            return;
-
-        if (cycleUpKey.wasPressed()){
-            cycleUp(mc, player);
+    @SuppressWarnings("DataFlowIssue")
+    public static void slotCycleHandler(MinecraftClient client) {
+        if (SlotCycler.cycleUpKey.wasPressed()){
+            SlotCycler.cycleUp(client, client.player);
+            client.player.getInventory().markDirty();
         }
-        if (cycleDownKey.wasPressed()){
-            cycleDown(mc, player);
+        if (SlotCycler.cycleDownKey.wasPressed()){
+            SlotCycler.cycleDown(client, client.player);
+            client.player.getInventory().markDirty();
         }
-
-        player.getInventory().markDirty();
     }
 
     public static void cycleDown(MinecraftClient client, ClientPlayerEntity player) {
@@ -117,6 +109,7 @@ public class SlotCycler implements ClientTickEvents.EndTick, HudRenderCallback {
 
     @Override
     public void onHudRender(DrawContext drawContext, RenderTickCounter tickCounter) {
+        mc = MinecraftClient.getInstance();
         assert mc.player != null;
         if (!mc.player.isSpectator() && ImprovedInventoryConfig.slotCycle && !mc.options.hudHidden) {
             int width = mc.getWindow().getScaledWidth();

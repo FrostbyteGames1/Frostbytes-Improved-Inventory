@@ -2,7 +2,6 @@ package net.frostbyte.inventory;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
 import net.minecraft.client.MinecraftClient;
@@ -20,12 +19,11 @@ import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
 @SuppressWarnings("deprecation")
-public class StackRefiller implements ClientTickEvents.EndTick, HudRenderCallback {
-    MinecraftClient mc;
-    Item item = Items.AIR;
-    ComponentMap components = ItemStack.EMPTY.getComponents();
-    int slot = -1;
-    int numItems = 0;
+public class StackRefiller implements HudRenderCallback {
+    static Item item = Items.AIR;
+    static ComponentMap components = ItemStack.EMPTY.getComponents();
+    static int slot = -1;
+    static int numItems = 0;
     public static final ArrayList<Item> FOOD_REFILL_BLACKLIST = new ArrayList<>(Arrays.asList(
         Items.GOLDEN_APPLE,
         Items.ENCHANTED_GOLDEN_APPLE,
@@ -33,21 +31,10 @@ public class StackRefiller implements ClientTickEvents.EndTick, HudRenderCallbac
         Items.CHORUS_FRUIT
     ));
 
-    @Override
-    public void onEndTick(MinecraftClient client) {
-        mc = client;
-
+    public static void tryRefillStack(MinecraftClient mc) {
         if (mc.player == null) {
             return;
         }
-
-        if (ImprovedInventoryConfig.stackRefill) {
-            tryRefillStack();
-        }
-    }
-
-    void tryRefillStack() {
-        assert mc.player != null;
         if (mc.player.currentScreenHandler.getStacks().size() == 46 && mc.currentScreen == null) {
             if ((
                 (mc.player.getInventory().getSelectedStack().isEmpty() && item != Items.AIR) ||
@@ -137,7 +124,7 @@ public class StackRefiller implements ClientTickEvents.EndTick, HudRenderCallbac
     @Override
     public void onHudRender(DrawContext drawContext, RenderTickCounter tickCounter) {
         MinecraftClient client = MinecraftClient.getInstance();
-        if (ImprovedInventoryConfig.stackRefillPreview && !mc.player.isSpectator() && !mc.options.hudHidden && mc.currentScreen == null && numItems > 0) {
+        if (ImprovedInventoryConfig.stackRefillPreview && !client.player.isSpectator() && !client.options.hudHidden && client.currentScreen == null && numItems > 0) {
             drawContext.getMatrices().push();
             drawContext.getMatrices().scale(0.5F, 0.5F, 1.0F);
             drawContext.getMatrices().translate(0.0, 0.0, 600.0);

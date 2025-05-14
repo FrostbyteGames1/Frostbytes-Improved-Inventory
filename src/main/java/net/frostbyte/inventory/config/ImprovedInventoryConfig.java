@@ -76,6 +76,7 @@ public class ImprovedInventoryConfig {
     public static boolean compassTooltip = true;
     public static boolean clockTooltip = true;
     public static boolean foodTooltip = true;
+    public static boolean statusEffectTimer = true;
 
     public static Screen createScreen(Screen parent) {
         read();
@@ -158,7 +159,7 @@ public class ImprovedInventoryConfig {
                     .collapsed(true)
                     .option(Option.<Boolean>createBuilder()
                         .name(Text.of("Inventory Search Bar"))
-                        .description(OptionDescription.of(Text.of("Adds a search bar to chests, barrels, and shulker boxes")))
+                        .description(OptionDescription.of(Text.of("Adds a search bar to all container blocks.")))
                         .binding(true, () -> containerSearch, newVal -> containerSearch = newVal)
                         .controller(TickBoxControllerBuilder::create)
                         .build())
@@ -391,6 +392,17 @@ public class ImprovedInventoryConfig {
                         .name(Text.of("Colored Armor Bar"))
                         .description(OptionDescription.of(Text.of("Colors the armor bar icons to match the materials of the equipped armor")))
                         .binding(true, () -> armorBarColors, newVal -> armorBarColors = newVal)
+                        .controller(TickBoxControllerBuilder::create)
+                        .build())
+                    .build())
+
+                .group(OptionGroup.createBuilder()
+                    .name(Text.of("Status Effect Timer"))
+                    .collapsed(true)
+                    .option(Option.<Boolean>createBuilder()
+                        .name(Text.of("Status Effect Timer"))
+                        .description(OptionDescription.of(Text.of("Adds bars to the status effect overlay that show the remaining durations of active effects")))
+                        .binding(true, () -> statusEffectTimer, newVal -> statusEffectTimer = newVal)
                         .controller(TickBoxControllerBuilder::create)
                         .build())
                     .build())
@@ -653,6 +665,7 @@ public class ImprovedInventoryConfig {
             json.addProperty("bundleProgressBarFraction", bundleProgressBarFraction);
             json.addProperty("heldItemsVisibleInBoat", heldItemsVisibleInBoat);
             json.addProperty("armorBarColors", armorBarColors);
+            json.addProperty("statusEffectTimer", statusEffectTimer);
             Files.writeString(configFile, gson.toJson(json));
         } catch (Exception ignored) {}
     }
@@ -812,6 +825,9 @@ public class ImprovedInventoryConfig {
             }
             if (json.has("armorBarColors")) {
                 armorBarColors = json.getAsJsonPrimitive("armorBarColors").getAsBoolean();
+            }
+            if (json.has("statusEffectTimer")) {
+                statusEffectTimer = json.getAsJsonPrimitive("statusEffectTimer").getAsBoolean();
             }
         } catch (Exception ignored) {}
     }

@@ -1,6 +1,5 @@
 package net.frostbyte.inventory;
 
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
 import net.frostbyte.inventory.tags.ModTags;
@@ -37,18 +36,18 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
-public class NearbyContainerViewer implements ClientTickEvents.EndTick {
+public class NearbyContainerViewer {
     public static KeyBinding containerKey;
     public static ArrayList<Vec3i> containers = new ArrayList<>();
     public static int current = 0;
-    int tabButtonCooldown;
+    static int tabButtonCooldown;
     public void setKeybindings() {
         KeyBindingHelper.registerKeyBinding(containerKey = new KeyBinding("Next Container (+SHIFT for Previous)", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_TAB, "Improved Inventory"));
     }
 
-    @Override
-    public void onEndTick(MinecraftClient client) {
-        if (!ImprovedInventoryConfig.containerTab || client.player == null || client.world == null || client.interactionManager == null) {
+
+    public static void nearbyContainerViewerHandler(MinecraftClient client) {
+        if (client.player == null) {
             return;
         }
         if (tabButtonCooldown > 0) {

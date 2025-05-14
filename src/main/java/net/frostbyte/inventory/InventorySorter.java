@@ -2,12 +2,10 @@ package net.frostbyte.inventory;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.*;
-import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.player.PlayerInventory;
@@ -19,43 +17,33 @@ import org.lwjgl.glfw.GLFW;
 import java.util.ArrayList;
 
 @Environment(EnvType.CLIENT)
-public class InventorySorter implements ClientTickEvents.EndTick {
+public class InventorySorter {
     public static KeyBinding sortKey;
-    private int interactions = 0;
-    MinecraftClient mc;
-    ClientPlayerInteractionManager interactionManager;
+    private static int interactions = 0;
 
     public void setKeyBindings() {
         KeyBindingHelper.registerKeyBinding(sortKey = new KeyBinding("Sort Container", InputUtil.Type.MOUSE, 2, "Improved Inventory"));
     }
 
-    @Override
-    public void onEndTick(MinecraftClient client) {
-        mc = client;
-        interactionManager = mc.interactionManager;
-
-        if (mc.player == null) {
-            return;
-        }
-
+    public static void inventorySortHandler(MinecraftClient mc) {
         if (mc.currentScreen instanceof GenericContainerScreen || mc.currentScreen instanceof ShulkerBoxScreen || mc.currentScreen instanceof HopperScreen || mc.currentScreen instanceof Generic3x3ContainerScreen || mc.currentScreen instanceof InventoryScreen) {
-            if (shouldSort()) {
+            if (shouldSort(mc)) {
                 long windowCode = MinecraftClient.getInstance().getWindow().getHandle();
                 int keyCode = InputUtil.fromTranslationKey(sortKey.getBoundKeyTranslationKey()).getCode();
                 if (keyCode >= 32 && keyCode <= 348 && GLFW.glfwGetKey(windowCode, keyCode) == 1) {
                     interactions = 0;
-                    sortStacks(((HandledScreen<?>) mc.currentScreen).getScreenHandler());
+                    sortStacks(mc, ((HandledScreen<?>) mc.currentScreen).getScreenHandler());
                 }
                 if (keyCode >= 0 && keyCode <= 7 && GLFW.glfwGetMouseButton(windowCode, keyCode) == 1) {
                     interactions = 0;
-                    sortStacks(((HandledScreen<?>) mc.currentScreen).getScreenHandler());
+                    sortStacks(mc, ((HandledScreen<?>) mc.currentScreen).getScreenHandler());
                 }
             }
         }
     }
 
     // Prioritizes pick stack over sort if player is in creative mode and both actions have the same keybind
-    boolean shouldSort() {
+    static boolean shouldSort(MinecraftClient mc) {
         if (mc.player == null) {
             // False if player doesn't exist
             return false;
@@ -77,7 +65,7 @@ public class InventorySorter implements ClientTickEvents.EndTick {
     }
 
     // Returns the number of non-player inventory slots on screen
-    int getNumSlots(ScreenHandler screenHandler) {
+    static int getNumSlots(ScreenHandler screenHandler) {
         int num = 0;
         for (int i = 0; i < screenHandler.slots.size(); i++) {
             if (!(screenHandler.getSlot(i).inventory instanceof PlayerInventory)) {
@@ -88,7 +76,8 @@ public class InventorySorter implements ClientTickEvents.EndTick {
     }
 
     // Combines stacks of the same item
-    void combineStacks(ScreenHandler screenHandler) {
+    @SuppressWarnings("DataFlowIssue")
+    static void combineStacks(MinecraftClient mc, ScreenHandler screenHandler) {
         ItemStack stack;
         if (mc.currentScreen instanceof InventoryScreen) {
             for (int i = 9; i < 36; i++) {
@@ -96,11 +85,11 @@ public class InventorySorter implements ClientTickEvents.EndTick {
                 if (!stack.isEmpty() && stack.getMaxCount() > stack.getCount()) {
                     for (int j = i + 1; j < 36; j++) {
                         if (screenHandler.getSlot(j).getStack().getItem().equals(stack.getItem()) && screenHandler.getSlot(j).getStack().getComponents().equals(stack.getComponents())) {
-                            interactionManager.clickSlot(screenHandler.syncId, j, 0, SlotActionType.PICKUP, mc.player);
-                            interactionManager.clickSlot(screenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player);
+                            mc.interactionManager.clickSlot(screenHandler.syncId, j, 0, SlotActionType.PICKUP, mc.player);
+                            mc.interactionManager.clickSlot(screenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player);
                             interactions += 2;
                             if (!screenHandler.getCursorStack().isEmpty()) {
-                                interactionManager.clickSlot(screenHandler.syncId, j, 0, SlotActionType.PICKUP, mc.player);
+                                mc.interactionManager.clickSlot(screenHandler.syncId, j, 0, SlotActionType.PICKUP, mc.player);
                                 interactions ++;
                             }
                         }
@@ -119,11 +108,11 @@ public class InventorySorter implements ClientTickEvents.EndTick {
                 if (!stack.isEmpty() && stack.getMaxCount() > stack.getCount()) {
                     for (int j = i + 1; j < getNumSlots(screenHandler); j++) {
                         if (screenHandler.getSlot(j).getStack().getItem().equals(stack.getItem()) && screenHandler.getSlot(j).getStack().getComponents().equals(stack.getComponents())) {
-                            interactionManager.clickSlot(screenHandler.syncId, j, 0, SlotActionType.PICKUP, mc.player);
-                            interactionManager.clickSlot(screenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player);
+                            mc.interactionManager.clickSlot(screenHandler.syncId, j, 0, SlotActionType.PICKUP, mc.player);
+                            mc.interactionManager.clickSlot(screenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player);
                             interactions += 2;
                             if (!screenHandler.getCursorStack().isEmpty()) {
-                                interactionManager.clickSlot(screenHandler.syncId, j, 0, SlotActionType.PICKUP, mc.player);
+                                mc.interactionManager.clickSlot(screenHandler.syncId, j, 0, SlotActionType.PICKUP, mc.player);
                                 interactions ++;
                             }
                         }
@@ -140,7 +129,7 @@ public class InventorySorter implements ClientTickEvents.EndTick {
     }
 
     // Compares non-empty stacks by localized item name
-    int compareStacks(ItemStack a, ItemStack b) {
+    static int compareStacks(ItemStack a, ItemStack b) {
         if (a.equals(b)) {
             return 0;
         }
@@ -159,7 +148,7 @@ public class InventorySorter implements ClientTickEvents.EndTick {
     }
 
     // Collects combined stacks into an ArrayList and sorts the array
-    ArrayList<ItemStack> getSortedStackArray(ScreenHandler screenHandler) {
+    static ArrayList<ItemStack> getSortedStackArray(MinecraftClient mc, ScreenHandler screenHandler) {
         ArrayList<ItemStack> stacks = new ArrayList<>();
         if (mc.currentScreen instanceof InventoryScreen) {
             for (int i = 9; i < 36; i++) {
@@ -170,7 +159,7 @@ public class InventorySorter implements ClientTickEvents.EndTick {
                 stacks.add(screenHandler.getSlot(i).getStack());
             }
         }
-        stacks.sort(this::compareStacks);
+        stacks.sort(InventorySorter::compareStacks);
         if (mc.currentScreen instanceof InventoryScreen) {
             for (int i = 9; i > 0; i--) {
                 stacks.addFirst(screenHandler.getSlot(i - 1).getStack());
@@ -180,27 +169,28 @@ public class InventorySorter implements ClientTickEvents.EndTick {
     }
 
     // Sorts container
-    void sortStacks(ScreenHandler screenHandler) {
+    @SuppressWarnings("DataFlowIssue")
+    static void sortStacks(MinecraftClient mc, ScreenHandler screenHandler) {
         screenHandler.enableSyncing();
-        combineStacks(screenHandler);
-        ArrayList<ItemStack> sortedStacks = getSortedStackArray(screenHandler);
+        combineStacks(mc, screenHandler);
+        ArrayList<ItemStack> sortedStacks = getSortedStackArray(mc, screenHandler);
         for (int i = 0; i < sortedStacks.size(); i++) {
             if (!screenHandler.getSlot(i).getStack().equals(sortedStacks.get(i))) {
                 int slot = screenHandler.getStacks().indexOf(sortedStacks.get(i));
-                interactionManager.clickSlot(screenHandler.syncId, slot, 0, SlotActionType.PICKUP, mc.player);
-                interactionManager.clickSlot(screenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player);
+                mc.interactionManager.clickSlot(screenHandler.syncId, slot, 0, SlotActionType.PICKUP, mc.player);
+                mc.interactionManager.clickSlot(screenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player);
                 interactions += 2;
                 if (!screenHandler.getCursorStack().isEmpty()) {
                     if (!screenHandler.getCursorStack().isEmpty()) {
                         if (mc.currentScreen instanceof InventoryScreen) {
                             for (int j = 9; j < 36; j++) {
                                 if (screenHandler.slots.get(j).getStack().isEmpty()) {
-                                    interactionManager.clickSlot(screenHandler.syncId, j, 0, SlotActionType.PICKUP, mc.player);
+                                    mc.interactionManager.clickSlot(screenHandler.syncId, j, 0, SlotActionType.PICKUP, mc.player);
                                     break;
                                 }
                             }
                         } else {
-                            interactionManager.clickSlot(screenHandler.syncId, screenHandler.getStacks().indexOf(ItemStack.EMPTY), 0, SlotActionType.PICKUP, mc.player);
+                            mc.interactionManager.clickSlot(screenHandler.syncId, screenHandler.getStacks().indexOf(ItemStack.EMPTY), 0, SlotActionType.PICKUP, mc.player);
                         }
                     }
                     interactions ++;
@@ -215,12 +205,12 @@ public class InventorySorter implements ClientTickEvents.EndTick {
                 if (mc.currentScreen instanceof InventoryScreen) {
                     for (int j = 9; j < 36; j++) {
                         if (screenHandler.slots.get(j).getStack().isEmpty()) {
-                            interactionManager.clickSlot(screenHandler.syncId, j, 0, SlotActionType.PICKUP, mc.player);
+                            mc.interactionManager.clickSlot(screenHandler.syncId, j, 0, SlotActionType.PICKUP, mc.player);
                             break;
                         }
                     }
                 } else {
-                    interactionManager.clickSlot(screenHandler.syncId, screenHandler.getStacks().indexOf(ItemStack.EMPTY), 0, SlotActionType.PICKUP, mc.player);
+                    mc.interactionManager.clickSlot(screenHandler.syncId, screenHandler.getStacks().indexOf(ItemStack.EMPTY), 0, SlotActionType.PICKUP, mc.player);
                 }
             }
         }

@@ -1,4 +1,4 @@
-package net.frostbyte.inventory.util;
+package net.frostbyte.inventory.compat;
 
 import com.google.common.collect.ImmutableMap;
 import net.fabricmc.loader.api.FabricLoader;
@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 
 public class MixinConfigPlugin implements IMixinConfigPlugin {
 
-    private static final Map<String, Supplier<Boolean>> CONDITIONS = ImmutableMap.of(
+    public static final Map<String, Supplier<Boolean>> CONDITIONS = ImmutableMap.of(
         // Don't mixin the bundle classes if Don't Hide My Items is loaded
         "net.frostbyte.inventory.mixin.BundleTooltipComponentMixin", () -> !FabricLoader.getInstance().isModLoaded("dhmi"),
         "net.frostbyte.inventory.mixin.BundleContentsComponentMixin", () -> !FabricLoader.getInstance().isModLoaded("dhmi")

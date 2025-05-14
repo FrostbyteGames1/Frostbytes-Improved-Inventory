@@ -3,7 +3,7 @@
   "minVersion": "0.8",
   "package": "net.frostbyte.inventory.mixin",
   "compatibilityLevel": "JAVA_21",
-  "plugin": "net.frostbyte.inventory.util.MixinConfigPlugin",
+  "plugin": "net.frostbyte.inventory.compat.MixinConfigPlugin",
   "mixins": [
     "BundleContentsComponentMixin",
     "BundleTooltipComponentMixin",
@@ -12,10 +12,13 @@
     "HeldItemRendererMixin",
     "InGameHudMixin",
     "ItemMixin",
+    "ItemStackMixin",
     "KeyBindingMixin",
+    "LivingEntityMixin",
     "MouseMixin",
     "ScreenMixin",
-    "SimpleOptionMixin"
+    "SimpleOptionMixin",
+    "StatusEffectInstanceMixin"
   ],
   "injectors": {
     "defaultRequire": 1
