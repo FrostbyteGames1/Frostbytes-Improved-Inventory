@@ -1,14 +1,17 @@
 package net.frostbyte.inventory;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.MapRenderState;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ContainerComponent;
 import net.minecraft.component.type.FoodComponent;
+import net.minecraft.component.type.MapIdComponent;
 import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.map.MapDecoration;
+import net.minecraft.item.map.MapState;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
@@ -34,12 +37,11 @@ public class ExpandedTooltipInfo {
             items.add(i, inventory.get(i));
         }
         if (!items.isEmpty()) {
-            context.getMatrices().push();
-            context.getMatrices().translate(0.0F, 0.0F, 600.0F);
+            context.getMatrices().pushMatrix();
             int startX = x + 8;
             int startY = y - 16;
             context.drawTexture(
-                RenderLayer::getGuiTextured,
+                RenderPipelines.GUI_TEXTURED,
                 Identifier.of("textures/gui/container/generic_54.png"),
                 startX, startY,
                 0, 0,
@@ -47,7 +49,7 @@ public class ExpandedTooltipInfo {
                 256, 256
             );
             context.drawTexture(
-                RenderLayer::getGuiTextured,
+                RenderPipelines.GUI_TEXTURED,
                 Identifier.of("textures/gui/container/generic_54.png"),
                 startX, startY + 3 * 18 + 17,
                 0, 215,
@@ -71,35 +73,69 @@ public class ExpandedTooltipInfo {
                     context.drawStackOverlay(MinecraftClient.getInstance().textRenderer, items.get(i), startX + 8 + (i - 18) * 18, startY + 18 + 36);
                 }
             }
-            context.getMatrices().pop();
+            context.getMatrices().popMatrix();
         }
     }
 
     public static void mapTooltipHandler(DrawContext context, int x, int y, Slot focusedSlot) {
-        context.getMatrices().push();
+        context.getMatrices().pushMatrix();
         int startX = x - 78;
         int startY = y - 16;
-        context.getMatrices().translate(0.0F, 0.0F, 599.0F);
         context.drawTexture(
-            RenderLayer::getGuiTextured,
+            RenderPipelines.GUI_TEXTURED,
             Identifier.of("textures/map/map_background_checkerboard.png"),
             startX, startY,
             0, 0,
             70, 70,
             70, 70
         );
-        context.getMatrices().translate(startX + 3.0F, startY + 3.0F, 1.0F);
-        context.getMatrices().scale(0.5F, 0.5F, 1.0F);
-        MapRenderState mapRenderState = new MapRenderState();
-        mapRenderState.texture = MinecraftClient.getInstance().getMapRenderer().textureManager.getTextureId(focusedSlot.getStack().get(DataComponentTypes.MAP_ID), FilledMapItem.getMapState(focusedSlot.getStack(), MinecraftClient.getInstance().world));
-        MinecraftClient.getInstance().getMapRenderer().draw(
-            mapRenderState,
-            context.getMatrices(),
-            context.vertexConsumers,
-            true,
-            15728880
-        );
-        context.getMatrices().pop();
+        startX += 3;
+        startY += 3;
+        MapIdComponent mapIdComponent = focusedSlot.getStack().get(DataComponentTypes.MAP_ID);
+        MapState mapState = FilledMapItem.getMapState(mapIdComponent, MinecraftClient.getInstance().world);
+        if (mapState != null) {
+            MinecraftClient.getInstance().getMapRenderer().update(mapIdComponent, mapState, new MapRenderState());
+            context.drawTexture(
+                RenderPipelines.GUI_TEXTURED,
+                MinecraftClient.getInstance().getMapRenderer().textureManager.getTextureId(mapIdComponent, mapState),
+                startX, startY,
+                0, 0,
+                64, 64,
+                64, 64
+            );
+
+            for (MapDecoration decoration : mapState.getDecorations()) {
+                Identifier sprite = decoration.getAssetId();
+                if (sprite != null) {
+                    sprite = sprite.withPrefixedPath("textures/map/decorations/");
+                    sprite = sprite.withSuffixedPath(".png");
+                    if (sprite.toString().endsWith("player.png")) {
+                        String rotation = switch (decoration.rotation()) {
+                            case 0 -> "_south";
+                            case 1, 2, 3 -> "_southwest";
+                            case 4 -> "_west";
+                            case 5, 6, 7 -> "_northwest";
+                            default -> "_north";
+                            case 9, 10, 11 -> "_northeast";
+                            case 12 -> "_east";
+                            case 13, 14, 15 -> "_southeast";
+                        };
+                        sprite = Identifier.of(ImprovedInventory.MOD_ID, "textures/map/decorations/player" + rotation + ".png");
+                    }
+                    float decorationX = decoration.x() / 4F + 32F;
+                    float decorationY = decoration.z() / 4F + 32F;
+                    context.drawTexture(
+                        RenderPipelines.GUI_TEXTURED,
+                        sprite,
+                        (int) (startX + decorationX), (int) (startY + decorationY),
+                        0, 0,
+                        4, 4,
+                        4, 4
+                    );
+                }
+            }
+        }
+        context.getMatrices().popMatrix();
     }
 
     public static void compassTooltipHandler(ItemStack stack, Consumer<Text> textConsumer) {

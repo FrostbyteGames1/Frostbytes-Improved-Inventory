@@ -15,6 +15,7 @@
     "ItemStackMixin",
     "KeyBindingMixin",
     "LivingEntityMixin",
+    "LocatorBarMixin",
     "MouseMixin",
     "ScreenMixin",
     "SimpleOptionMixin",

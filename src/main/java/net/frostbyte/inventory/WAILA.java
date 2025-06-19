@@ -10,8 +10,8 @@ import net.minecraft.block.EndGatewayBlock;
 import net.minecraft.block.EndPortalBlock;
 import net.minecraft.block.NetherPortalBlock;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.Entity;
@@ -100,10 +100,10 @@ public class WAILA implements HudRenderCallback {
                     int i = 0;
                     for (ItemStack stack : getToolsForBlock(block)) {
                         i++;
-                        drawContext.getMatrices().push();
-                        drawContext.getMatrices().scale(0.8f, 0.8f, 1);
-                        drawContext.drawItem(stack, (int) (1.25 * (x + 16 + i * 12)), (int) (1.25 * (y + 16)), 0, 150);
-                        drawContext.getMatrices().pop();
+                        drawContext.getMatrices().pushMatrix();
+                        drawContext.getMatrices().scale(0.8f, 0.8f);
+                        drawContext.drawItem(mc.player, stack, (int) (1.25 * (x + 16 + i * 12)), (int) (1.25 * (y + 16)), 0);
+                        drawContext.getMatrices().popMatrix();
                     }
                     if (block instanceof EndPortalBlock || block instanceof EndGatewayBlock) {
                         ItemStack stack = Items.BARRIER.getDefaultStack();
@@ -144,17 +144,17 @@ public class WAILA implements HudRenderCallback {
                         drawEntity(drawContext, x, y, x + 32, y + 32, getScaleFromHeight(livingEntity.getHeight()), 0.0625F, x + 64, y + 16, livingEntity);
                         drawContext.drawTextWithShadow(mc.textRenderer, name, x + 30, y + 8, Colors.WHITE);
                         drawContext.drawTextWithShadow(mc.textRenderer, String.format("%.1f", livingEntity.getHealth() / 2), x + 30, y + 18, Colors.WHITE);
-                        drawContext.drawTexture(RenderLayer::getGuiTextured, HEART, x + 30 + mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)), y + 17, 0, 0, 9, 9, 9, 9);
+                        drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, HEART, x + 30 + mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)), y + 17, 0, 0, 9, 9, 9, 9);
                         drawContext.drawTextWithShadow(mc.textRenderer, String.format("%.1f", (float) livingEntity.getArmor() / 2), x + 30 + mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16, y + 18, Colors.WHITE);
-                        drawContext.drawTexture(RenderLayer::getGuiTextured, ARMOR, x + 30 + mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", (float) livingEntity.getArmor() / 2)), y + 17, 0, 0, 9, 9, 9, 9);
+                        drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, ARMOR, x + 30 + mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", (float) livingEntity.getArmor() / 2)), y + 17, 0, 0, 9, 9, 9, 9);
                         if (livingEntity instanceof LlamaEntity llamaEntity) {
                             drawContext.drawTextWithShadow(mc.textRenderer, String.valueOf(3 * llamaEntity.getStrength()), x + 30 + mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", (float) livingEntity.getArmor() / 2)) + 16, y + 18, Colors.WHITE);
-                            drawContext.drawTexture(RenderLayer::getGuiTextured, LLAMA_STRENGTH, x + 30 + mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", (float) livingEntity.getArmor() / 2)) + 16 + mc.textRenderer.getWidth(String.valueOf(3 * llamaEntity.getStrength())), y + 17, 0, 0, 9, 9, 9, 9);
+                            drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, LLAMA_STRENGTH, x + 30 + mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", (float) livingEntity.getArmor() / 2)) + 16 + mc.textRenderer.getWidth(String.valueOf(3 * llamaEntity.getStrength())), y + 17, 0, 0, 9, 9, 9, 9);
                         } else if (livingEntity instanceof AbstractHorseEntity horseEntity) {
                             drawContext.drawTextWithShadow(mc.textRenderer, String.format("%.1f", 42.16 * horseEntity.getAttributeValue(EntityAttributes.MOVEMENT_SPEED)), x + 30 + mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", (float) livingEntity.getArmor() / 2)) + 16, y + 18, Colors.WHITE);
-                            drawContext.drawTexture(RenderLayer::getGuiTextured, HORSE_SPEED, x + 30 + mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", (float) livingEntity.getArmor() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", 42.16 * horseEntity.getAttributeValue(EntityAttributes.MOVEMENT_SPEED))), y + 17, 0, 0, 9, 9, 9, 9);
+                            drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, HORSE_SPEED, x + 30 + mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", (float) livingEntity.getArmor() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", 42.16 * horseEntity.getAttributeValue(EntityAttributes.MOVEMENT_SPEED))), y + 17, 0, 0, 9, 9, 9, 9);
                             drawContext.drawTextWithShadow(mc.textRenderer, String.format("%.1f", 7.375 * horseEntity.getAttributeValue(EntityAttributes.JUMP_STRENGTH) - 2.125), x + 30 + mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", (float) livingEntity.getArmor() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", 42.16 * horseEntity.getAttributeValue(EntityAttributes.MOVEMENT_SPEED))) + 16, y + 18, Colors.WHITE);
-                            drawContext.drawTexture(RenderLayer::getGuiTextured, HORSE_JUMP, x + 30 + mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", (float) livingEntity.getArmor() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", 42.16 * horseEntity.getAttributeValue(EntityAttributes.MOVEMENT_SPEED))) + 16 + mc.textRenderer.getWidth(String.format("%.1f", 7.375 * horseEntity.getAttributeValue(EntityAttributes.JUMP_STRENGTH) - 2.125)), y + 17, 0, 0, 9, 9, 9, 9);
+                            drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, HORSE_JUMP, x + 30 + mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", (float) livingEntity.getArmor() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", 42.16 * horseEntity.getAttributeValue(EntityAttributes.MOVEMENT_SPEED))) + 16 + mc.textRenderer.getWidth(String.format("%.1f", 7.375 * horseEntity.getAttributeValue(EntityAttributes.JUMP_STRENGTH) - 2.125)), y + 17, 0, 0, 9, 9, 9, 9);
                         }
 
                     } else if (entity instanceof FallingBlockEntity fallingBlockEntity) {
@@ -180,19 +180,19 @@ public class WAILA implements HudRenderCallback {
             x = MinecraftClient.getInstance().getWindow().getScaledWidth() - textWidth - 38 - ImprovedInventoryConfig.wailaOffsetX;
         }
         if (textWidth <= 130) {
-            drawContext.drawTexture(RenderLayer::getGuiTextured, BOX, x + 4, y, 4, 0, 26 + textWidth, 32, 160, 32);
+            drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, BOX, x + 4, y, 4, 0, 26 + textWidth, 32, 160, 32);
         } else {
             int temp = textWidth;
             int i = 0;
             while (temp > 130) {
-                drawContext.drawTexture(RenderLayer::getGuiTextured, BOX, x + 4 + i * 130, y, 4, 0, 152, 32, 160, 32);
+                drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, BOX, x + 4 + i * 130, y, 4, 0, 152, 32, 160, 32);
                 temp -= 130;
                 i++;
             }
-            drawContext.drawTexture(RenderLayer::getGuiTextured, BOX, x + 26 + i * 130, y, 4, 0, temp + 4, 32, 160, 32);
+            drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, BOX, x + 26 + i * 130, y, 4, 0, temp + 4, 32, 160, 32);
         }
-        drawContext.drawTexture(RenderLayer::getGuiTextured, BOX, x + 30 + textWidth, y, 152, 0, 8, 32, 160, 32);
-        drawContext.drawTexture(RenderLayer::getGuiTextured, BOX, x, y, 0, 0, 4, 32, 160, 32);
+        drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, BOX, x + 30 + textWidth, y, 152, 0, 8, 32, 160, 32);
+        drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, BOX, x, y, 0, 0, 4, 32, 160, 32);
     }
 
     ArrayList<ItemStack> getToolsForBlock(Block block) {

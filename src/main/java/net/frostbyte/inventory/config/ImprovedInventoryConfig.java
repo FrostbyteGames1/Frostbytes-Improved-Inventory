@@ -77,6 +77,8 @@ public class ImprovedInventoryConfig {
     public static boolean clockTooltip = true;
     public static boolean foodTooltip = true;
     public static boolean statusEffectTimer = true;
+    public static boolean combineExpAndLocatorBars = true;
+    public static boolean playerHeadWaypoints = true;
 
     public static Screen createScreen(Screen parent) {
         read();
@@ -406,6 +408,23 @@ public class ImprovedInventoryConfig {
                         .controller(TickBoxControllerBuilder::create)
                         .build())
                     .build())
+
+                .group(OptionGroup.createBuilder()
+                    .name(Text.of("Locator Bar"))
+                    .collapsed(true)
+                    .option(Option.<Boolean>createBuilder()
+                        .name(Text.of("Don't Hide Experience Bar"))
+                        .description(OptionDescription.of(Text.of("Renders the locator bar on top of the experience bar, instead of replacing it.")))
+                        .binding(true, () -> combineExpAndLocatorBars, newVal -> combineExpAndLocatorBars = newVal)
+                        .controller(TickBoxControllerBuilder::create)
+                        .build())
+                    .option(Option.<Boolean>createBuilder()
+                        .name(Text.of("Players' Waypoints Use Their Skins"))
+                        .description(OptionDescription.of(Text.of("Waypoints that point to a player use that player's head as the sprite")))
+                        .binding(true, () -> playerHeadWaypoints, newVal -> playerHeadWaypoints = newVal)
+                        .controller(TickBoxControllerBuilder::create)
+                        .build())
+                    .build())
                 .build())
 
             .category(ConfigCategory.createBuilder()
@@ -666,6 +685,8 @@ public class ImprovedInventoryConfig {
             json.addProperty("heldItemsVisibleInBoat", heldItemsVisibleInBoat);
             json.addProperty("armorBarColors", armorBarColors);
             json.addProperty("statusEffectTimer", statusEffectTimer);
+            json.addProperty("combineExpAndLocatorBars", combineExpAndLocatorBars);
+            json.addProperty("playerHeadWaypoints", playerHeadWaypoints);
             Files.writeString(configFile, gson.toJson(json));
         } catch (Exception ignored) {}
     }
@@ -828,6 +849,12 @@ public class ImprovedInventoryConfig {
             }
             if (json.has("statusEffectTimer")) {
                 statusEffectTimer = json.getAsJsonPrimitive("statusEffectTimer").getAsBoolean();
+            }
+            if (json.has("combineExpAndLocatorBars")) {
+                combineExpAndLocatorBars = json.getAsJsonPrimitive("combineExpAndLocatorBars").getAsBoolean();
+            }
+            if (json.has("playerHeadWaypoints")) {
+                playerHeadWaypoints = json.getAsJsonPrimitive("playerHeadWaypoints").getAsBoolean();
             }
         } catch (Exception ignored) {}
     }

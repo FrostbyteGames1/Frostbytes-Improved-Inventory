@@ -7,6 +7,7 @@ import net.frostbyte.inventory.NearbyContainerViewer;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
 import net.frostbyte.inventory.gui.widget.HoverableIconWidget;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.screen.Screen;
@@ -14,7 +15,6 @@ import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemGroups;
@@ -113,7 +113,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     @Inject(method = "render", at = @At("RETURN"))
     private void render(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (ImprovedInventoryConfig.containerSearch && (this.handler instanceof GenericContainerScreenHandler || this.handler instanceof ShulkerBoxScreenHandler)) {
-            context.drawTexture(RenderLayer::getGuiTextured, BUTTON_WIDGET_TEXTURE, this.x + this.backgroundWidth - 19, this.y + 4, 0, 0, 12, 12, 12, 12);
+            context.drawTexture(RenderPipelines.GUI_TEXTURED, BUTTON_WIDGET_TEXTURE, this.x + this.backgroundWidth - 19, this.y + 4, 0, 0, 12, 12, 12, 12);
             searchButton.render(context, mouseX, mouseY, delta);
             searchField.render(context, mouseX, mouseY, delta);
             searchInfoHoverableIcon.render(context, mouseX, mouseY, delta);
@@ -154,8 +154,8 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     protected void drawSlot(DrawContext context, Slot slot, CallbackInfo ci) {
         if (ImprovedInventoryConfig.containerSearch && (this.handler instanceof GenericContainerScreenHandler || this.handler instanceof ShulkerBoxScreenHandler)) {
             if (ContainerSearch.doesStackContainString(MinecraftClient.getInstance(), searchField.getText(), slot.getStack())) {
-                context.drawGuiTexture(RenderLayer::getGuiTextured, HandledScreen.SLOT_HIGHLIGHT_BACK_TEXTURE, slot.x - 4, slot.y - 4, 24, 24);
-                context.drawGuiTexture(RenderLayer::getGuiTexturedOverlay, HandledScreen.SLOT_HIGHLIGHT_FRONT_TEXTURE, slot.x - 4, slot.y - 4, 24, 24);
+                context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, HandledScreen.SLOT_HIGHLIGHT_BACK_TEXTURE, slot.x - 4, slot.y - 4, 24, 24);
+                context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, HandledScreen.SLOT_HIGHLIGHT_FRONT_TEXTURE, slot.x - 4, slot.y - 4, 24, 24);
             }
         }
     }

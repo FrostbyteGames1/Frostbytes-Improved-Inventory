@@ -125,11 +125,10 @@ public class StackRefiller implements HudRenderCallback {
     public void onHudRender(DrawContext drawContext, RenderTickCounter tickCounter) {
         MinecraftClient client = MinecraftClient.getInstance();
         if (ImprovedInventoryConfig.stackRefillPreview && !client.player.isSpectator() && !client.options.hudHidden && client.currentScreen == null && numItems > 0) {
-            drawContext.getMatrices().push();
-            drawContext.getMatrices().scale(0.5F, 0.5F, 1.0F);
-            drawContext.getMatrices().translate(0.0, 0.0, 600.0);
+            drawContext.getMatrices().pushMatrix();
+            drawContext.getMatrices().scale(0.5F, 0.5F);
             drawContext.drawText(client.textRenderer, Text.of("+ " + numItems), 2 * (drawContext.getScaledWindowWidth() / 2 - 90 + slot * 20 + 2), 2 * (drawContext.getScaledWindowHeight() - 20), ImprovedInventoryConfig.stackRefillPreviewColor.getRGB(), true);
-            drawContext.getMatrices().pop();
+            drawContext.getMatrices().popMatrix();
         }
     }
 }

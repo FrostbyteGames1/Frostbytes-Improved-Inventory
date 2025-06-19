@@ -27,12 +27,12 @@
 	"accessWidener": "inventory.accesswidener",
 	"depends": {
 		"fabricloader": ">=0.16.13",
-		"minecraft": "1.21.5",
+		"minecraft": "1.21.6",
 		"java": ">=21",
 		"fabric-api": "*",
-		"yet_another_config_lib_v3": ">=3.6.6+1.21.5-fabric"
+		"yet_another_config_lib_v3": ">=3.7.1+1.21.6-fabric"
 	},
 	"suggests": {
-		"modmenu": ">=14.0.0-rc.2"
+		"modmenu": ">=15.0.0-beta.2"
 	}
 }

@@ -7,9 +7,9 @@ accessible field net/minecraft/client/gui/screen/ingame/HandledScreen focusedSlo
 accessible field net/minecraft/client/gui/screen/ingame/HandledScreen SLOT_HIGHLIGHT_BACK_TEXTURE Lnet/minecraft/util/Identifier;
 accessible field net/minecraft/client/gui/screen/ingame/HandledScreen SLOT_HIGHLIGHT_FRONT_TEXTURE Lnet/minecraft/util/Identifier;
 
-accessible field net/minecraft/client/option/KeyBinding timesPressed I
+accessible class net/minecraft/client/gui/hud/InGameHud$BarType
 
-accessible field net/minecraft/client/gui/DrawContext vertexConsumers Lnet/minecraft/client/render/VertexConsumerProvider$Immediate;
+accessible field net/minecraft/client/option/KeyBinding timesPressed I
 
 accessible field net/minecraft/client/render/MapRenderer textureManager Lnet/minecraft/client/texture/MapTextureManager;
 

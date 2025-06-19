@@ -4,6 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.navigation.GuiNavigation;
 import net.minecraft.client.gui.navigation.GuiNavigationPath;
@@ -11,7 +12,6 @@ import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.tooltip.TooltipState;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.sound.SoundManager;
 import net.minecraft.sound.SoundEvents;
@@ -62,7 +62,7 @@ public class HoverableIconWidget implements Drawable, Element, Widget {
         if (this.visible) {
             this.hovered = context.scissorContains(mouseX, mouseY) && mouseX >= this.getX() && mouseY >= this.getY() && mouseX < this.getX() + this.width && mouseY < this.getY() + this.height;
             this.renderWidget(context, mouseX, mouseY, deltaTicks);
-            this.tooltip.render(this.isHovered(), this.isFocused(), this.getNavigationFocus());
+            this.tooltip.render(context, mouseX, mouseY, this.isHovered(), this.isFocused(), this.getNavigationFocus());
         }
     }
 
@@ -278,7 +278,7 @@ public class HoverableIconWidget implements Drawable, Element, Widget {
         }
 
         protected void renderWidget(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
-            context.drawTexture(RenderLayer::getGuiTextured, this.texture, this.getX(), this.getY(), 0.0F, 0.0F, this.getWidth(), this.getHeight(), this.textureWidth, this.textureHeight);
+            context.drawTexture(RenderPipelines.GUI_TEXTURED, this.texture, this.getX(), this.getY(), 0.0F, 0.0F, this.getWidth(), this.getHeight(), this.textureWidth, this.textureHeight);
         }
     }
 
@@ -292,7 +292,7 @@ public class HoverableIconWidget implements Drawable, Element, Widget {
         }
 
         public void renderWidget(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
-            context.drawGuiTexture(RenderLayer::getGuiTextured, this.texture, this.getX(), this.getY(), this.getWidth(), this.getHeight());
+            context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, this.texture, this.getX(), this.getY(), this.getWidth(), this.getHeight());
         }
     }
 }

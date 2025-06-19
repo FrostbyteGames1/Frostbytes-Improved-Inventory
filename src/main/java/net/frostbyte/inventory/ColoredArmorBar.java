@@ -1,7 +1,7 @@
 package net.frostbyte.inventory;
 
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -124,45 +124,45 @@ public class ColoredArmorBar {
             for(int n = 0; n < 10; ++n) {
                 int o = x + n * 8;
 
-                context.drawGuiTexture(RenderLayer::getGuiTextured, ARMOR_EMPTY_TEXTURE, o, m, 9, 9);
+                context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, ARMOR_EMPTY_TEXTURE, o, m, 9, 9);
 
                 if (n * 2 + 1 < footArmor) {
-                    context.drawGuiTexture(RenderLayer::getGuiTextured, getTexture(footMaterial, "full"), o, m, 9, 9);
+                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(footMaterial, "full"), o, m, 9, 9);
                 } else if (n * 2 + 1 == footArmor) {
-                    context.drawGuiTexture(RenderLayer::getGuiTextured, getTexture(footMaterial, "half1"), o, m, 9, 9);
+                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(footMaterial, "half1"), o, m, 9, 9);
                     if (legArmor > 0) {
-                        context.drawGuiTexture(RenderLayer::getGuiTextured, getTexture(legMaterial, "half2"), o, m, 9, 9);
+                        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(legMaterial, "half2"), o, m, 9, 9);
                     } else if (chestArmor > 0) {
-                        context.drawGuiTexture(RenderLayer::getGuiTextured, getTexture(chestMaterial, "half2"), o, m, 9, 9);
+                        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(chestMaterial, "half2"), o, m, 9, 9);
                     } else if (headArmor > 0) {
-                        context.drawGuiTexture(RenderLayer::getGuiTextured, getTexture(headMaterial, "half2"), o, m, 9, 9);
+                        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(headMaterial, "half2"), o, m, 9, 9);
                     }
                 }
 
                 else if (n * 2 + 1 < (footArmor + legArmor)) {
-                    context.drawGuiTexture(RenderLayer::getGuiTextured, getTexture(legMaterial, "full"), o, m, 9, 9);
+                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(legMaterial, "full"), o, m, 9, 9);
                 } else if (n * 2 + 1 == (footArmor + legArmor)) {
-                    context.drawGuiTexture(RenderLayer::getGuiTextured, getTexture(legMaterial, "half1"), o, m, 9, 9);
+                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(legMaterial, "half1"), o, m, 9, 9);
                     if (chestArmor > 0) {
-                        context.drawGuiTexture(RenderLayer::getGuiTextured, getTexture(chestMaterial, "half2"), o, m, 9, 9);
+                        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(chestMaterial, "half2"), o, m, 9, 9);
                     } else if (headArmor > 0) {
-                        context.drawGuiTexture(RenderLayer::getGuiTextured, getTexture(headMaterial, "half2"), o, m, 9, 9);
+                        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(headMaterial, "half2"), o, m, 9, 9);
                     }
                 }
 
                 else if (n * 2 + 1 < (footArmor + legArmor + chestArmor)) {
-                    context.drawGuiTexture(RenderLayer::getGuiTextured, getTexture(chestMaterial, "full"), o, m, 9, 9);
+                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(chestMaterial, "full"), o, m, 9, 9);
                 } else if (n * 2 + 1 == (footArmor + legArmor + chestArmor)) {
-                    context.drawGuiTexture(RenderLayer::getGuiTextured, getTexture(chestMaterial, "half1"), o, m, 9, 9);
+                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(chestMaterial, "half1"), o, m, 9, 9);
                     if (headArmor > 0) {
-                        context.drawGuiTexture(RenderLayer::getGuiTextured, getTexture(headMaterial, "half2"), o, m, 9, 9);
+                        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(headMaterial, "half2"), o, m, 9, 9);
                     }
                 }
 
                 else if (n * 2 + 1 < totalArmor ) {
-                    context.drawGuiTexture(RenderLayer::getGuiTextured, getTexture(headMaterial, "full"), o, m, 9, 9);
+                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(headMaterial, "full"), o, m, 9, 9);
                 } else if (n * 2 + 1 == totalArmor) {
-                    context.drawGuiTexture(RenderLayer::getGuiTextured, getTexture(headMaterial, "half1"), o, m, 9, 9);
+                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(headMaterial, "half1"), o, m, 9, 9);
                 }
 
             }

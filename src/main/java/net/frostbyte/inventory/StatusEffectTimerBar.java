@@ -4,10 +4,9 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
 import net.frostbyte.inventory.duck.StatusEffectInstanceDuck;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.texture.StatusEffectSpriteManager;
+import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -26,10 +25,9 @@ public class StatusEffectTimerBar {
     @SuppressWarnings("DataFlowIssue")
     public static void statusEffectTimerHandler(DrawContext context, MinecraftClient client) {
         Collection<StatusEffectInstance> collection = client.player.getStatusEffects();
-        if (!collection.isEmpty() && (client.currentScreen == null || !client.currentScreen.shouldHideStatusEffectHud())) {
+        if (!collection.isEmpty() && (client.currentScreen == null || !client.currentScreen.showsStatusEffects())) {
             int i = 0;
             int j = 0;
-            StatusEffectSpriteManager statusEffectSpriteManager = client.getStatusEffectSpriteManager();
             List<Runnable> list = Lists.newArrayListWithExpectedSize(collection.size());
 
             for (StatusEffectInstance statusEffectInstance : Ordering.natural().reverse().sortedCopy(collection)) {
@@ -52,9 +50,9 @@ public class StatusEffectTimerBar {
 
                     float f = 1.0F;
                     if (statusEffectInstance.isAmbient()) {
-                        context.drawGuiTexture(RenderLayer::getGuiTextured, EFFECT_BACKGROUND_AMBIENT_TEXTURE, k, l, 24, 24);
+                        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, EFFECT_BACKGROUND_AMBIENT_TEXTURE, k, l, 24, 24);
                     } else {
-                        context.drawGuiTexture(RenderLayer::getGuiTextured, EFFECT_BACKGROUND_TEXTURE, k, l, 24, 24);
+                        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, EFFECT_BACKGROUND_TEXTURE, k, l, 24, 24);
                         if (statusEffectInstance.isDurationBelow(200)) {
                             int m = statusEffectInstance.getDuration();
                             int n = 10 - m / 20;
@@ -68,13 +66,12 @@ public class StatusEffectTimerBar {
                         }
                     }
 
-                    Sprite sprite = statusEffectSpriteManager.getSprite(registryEntry);
                     final float finalF = f;
                     final int finalK = k;
                     final int finalL = l;
                     list.add(() -> {
                         int kx = ColorHelper.getWhite(finalF);
-                        context.drawSpriteStretched(RenderLayer::getGuiTextured, sprite, finalK + 3, finalL + 3, 18, 18, kx);
+                        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, InGameHud.getEffectTexture(registryEntry), finalK + 3, finalL + 3, 18, 18, kx);
                     });
                 }
             }

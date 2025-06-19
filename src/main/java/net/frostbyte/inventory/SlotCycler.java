@@ -6,10 +6,10 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.screen.slot.SlotActionType;
@@ -122,9 +122,9 @@ public class SlotCycler implements HudRenderCallback {
             }
             assert mc.player != null;
             if (mc.player.getMainArm().equals(Arm.LEFT)) {
-                drawContext.drawTexture(RenderLayer::getGuiTextured, PREVIEW_SLOTS, x - 160, height - 23, 0, 0, 62, 24, 62, 24);
+                drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, PREVIEW_SLOTS, x - 160, height - 23, 0, 0, 62, 24, 62, 24);
             } else {
-                drawContext.drawTexture(RenderLayer::getGuiTextured, PREVIEW_SLOTS, x + 98, height - 23, 0, 0, 62, 24, 62, 24);
+                drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, PREVIEW_SLOTS, x + 98, height - 23, 0, 0, 62, 24, 62, 24);
             }
             // Item in top slot
             if (mc.player.getMainArm().equals(Arm.LEFT)) {
