@@ -33,8 +33,6 @@ import net.minecraft.util.hit.HitResult;
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.minecraft.client.gui.screen.ingame.InventoryScreen.drawEntity;
-
 @SuppressWarnings({"DataFlowIssue", "deprecation"})
 @Environment(EnvType.CLIENT)
 public class WAILA implements HudRenderCallback {
@@ -141,7 +139,8 @@ public class WAILA implements HudRenderCallback {
                     }
                     drawBox(drawContext, textWidth);
                     if (entity instanceof LivingEntity livingEntity) {
-                        drawEntity(drawContext, x, y, x + 32, y + 32, getScaleFromHeight(livingEntity.getHeight()), 0.0625F, x + 64, y + 16, livingEntity);
+                        drawContext.drawItem(livingEntity.getPickBlockStack(), x + 8, y + 8);
+                        //drawEntity(drawContext, x, y, x + 32, y + 32, getScaleFromHeight(livingEntity.getHeight()), 0.0625F, x + 64, y + 16, livingEntity);
                         drawContext.drawTextWithShadow(mc.textRenderer, name, x + 30, y + 8, Colors.WHITE);
                         drawContext.drawTextWithShadow(mc.textRenderer, String.format("%.1f", livingEntity.getHealth() / 2), x + 30, y + 18, Colors.WHITE);
                         drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, HEART, x + 30 + mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)), y + 17, 0, 0, 9, 9, 9, 9);
@@ -171,6 +170,7 @@ public class WAILA implements HudRenderCallback {
         }
     }
 
+    @SuppressWarnings("unused")
     int getScaleFromHeight(float height) {
         return (int) (26.835890 * Math.pow(Math.E, height / -1.6296130) + 2.0259996);
     }

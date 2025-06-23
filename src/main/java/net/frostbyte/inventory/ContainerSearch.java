@@ -16,17 +16,13 @@ import java.util.regex.Pattern;
 
 public class ContainerSearch {
 
-    public static Text searchInfoTooltipText = Text.of(
-    """
-        Search for items whose names contain the text in the search field. You can also use the following operators:
-        
-        @: Search for items with the specified mod ID
-        #: Search for items with the specified text in their tooltips
-        $: Search for items in the specified block and/or item tag
-        %: Search for items in the specified creative mode tab
-        &: Search for items with the specified item ID
-        -: Negate the following search (can be used with another operator)"""
-    );
+    public static Text searchInfoTooltipText = Text.translatable("container.search.tooltip_header").append("\n\n")
+        .append(Text.translatable("container.search.tooltip_@")).append("\n")
+        .append(Text.translatable("container.search.tooltip_#")).append("\n")
+        .append(Text.translatable("container.search.tooltip_$")).append("\n")
+        .append(Text.translatable("container.search.tooltip_%")).append("\n")
+        .append(Text.translatable("container.search.tooltip_&")).append("\n")
+        .append(Text.translatable("container.search.tooltip_-"));
 
     public static boolean doesStackContainString(MinecraftClient client, String search, ItemStack stack) {
         // Empty strings & stacks are ignored

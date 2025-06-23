@@ -1,0 +1,40 @@
+{
+  "container.search.tooltip_header": "Search for items whose names contain the text in the search field. You can also use the following operators:",
+  "container.search.tooltip_@": "@: Search for items with the specified mod ID",
+  "container.search.tooltip_#": "#: Search for items with the specified text in their tooltips",
+  "container.search.tooltip_$": "$: Search for items in the specified block and/or item tag",
+  "container.search.tooltip_%": "%: Search for items in the specified creative mode tab",
+  "container.search.tooltip_&": "&: Search for items with the specified item ID",
+  "container.search.tooltip_-": "-: Negate the following search (can be used with another operator)",
+
+  "compass.target.none": "No Target",
+
+  "clock.time.day": "Day",
+  "clock.time.noon": "Noon",
+  "clock.time.night": "Night",
+  "clock.time.midnight": "Midnight",
+  "clock.time.none": "Time Unknown",
+
+  "food.tooltip_nutrition": "Nutrition: ",
+  "food.tooltip_saturation": "Saturation: ",
+
+  "key.categories.improved_inventory": "Frostbyte's Improved Inventory",
+  "key.toggle_gamma": "Toggle Gamma",
+  "key.sort_container": "Sort Container",
+  "key.next_container": "Next Container (+SHIFT for Previous)",
+  "key.cycle_up": "Cycle Slot Up",
+  "key.cycle_down": "Cycle Slot Down",
+  "key.zoom": "Zoom (Scroll to Adjust)",
+
+  "info.gamma_changed": "Gamma set to ",
+  "info.block_light": "Block Light: ",
+  "info.day_number": "Day: ",
+  "info.entity_count": "Entity Count: ",
+  "info.facing_direction": "Facing: ",
+  "info.local_difficulty": "Local Difficulty",
+  "info.slime_chunk": "Slime Chunk",
+  "info.sprint_indicator": "Sprinting",
+  "info.crosshair_target": "Targeted: ",
+  "info.in_game_time": "Game Time: ",
+  "info.local_time": "Real Time: "
+}

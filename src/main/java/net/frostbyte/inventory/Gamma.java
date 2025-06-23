@@ -17,7 +17,7 @@ public class Gamma {
     private static boolean enabled;
     public static KeyBinding gammaKey;
     public void setKeyBindings() {
-        KeyBindingHelper.registerKeyBinding(gammaKey = new KeyBinding("Toggle Gamma", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_G, "Improved Inventory"));
+        KeyBindingHelper.registerKeyBinding(gammaKey = new KeyBinding("key.toggle_gamma", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_G, Text.translatable("key.categories.improved_inventory").getString()));
     }
 
     public static void gammaHandler(MinecraftClient mc) {
@@ -30,15 +30,15 @@ public class Gamma {
             if (enabled) {
                 standardBrightness = mc.options.getGamma().getValue();
                 mc.options.getGamma().setValue((double) ImprovedInventoryConfig.gamma);
-                mc.inGameHud.setOverlayMessage(Text.of("Gamma set to " + ImprovedInventoryConfig.gamma + "%").getWithStyle(Style.EMPTY.withFormatting(Formatting.GREEN)).getFirst(), false);
+                mc.inGameHud.setOverlayMessage(Text.of(Text.translatable("info.gamma_changed").getString() + ImprovedInventoryConfig.gamma + "%").getWithStyle(Style.EMPTY.withFormatting(Formatting.GREEN)).getFirst(), false);
             } else {
                 mc.options.getGamma().setValue(standardBrightness);
-                mc.inGameHud.setOverlayMessage(Text.of("Gamma set to " + ((int) (standardBrightness * 100)) + "%").getWithStyle(Style.EMPTY.withFormatting(Formatting.RED)).getFirst(), false);
+                mc.inGameHud.setOverlayMessage(Text.of(Text.translatable("info.gamma_changed").getString() + (int) (standardBrightness * 100) + "%").getWithStyle(Style.EMPTY.withFormatting(Formatting.RED)).getFirst(), false);
             }
         }
 
         if (mc.world == null) {
-            mc.options.getGamma().setValue(standardBrightness);
+            mc.options.getGamma().setValue(Math.min(standardBrightness, 100));
         }
     }
 }

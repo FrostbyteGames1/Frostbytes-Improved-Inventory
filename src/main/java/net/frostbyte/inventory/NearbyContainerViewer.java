@@ -42,7 +42,7 @@ public class NearbyContainerViewer {
     public static int current = 0;
     static int tabButtonCooldown;
     public void setKeybindings() {
-        KeyBindingHelper.registerKeyBinding(containerKey = new KeyBinding("Next Container (+SHIFT for Previous)", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_TAB, "Improved Inventory"));
+        KeyBindingHelper.registerKeyBinding(containerKey = new KeyBinding("key.next_container", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_TAB, Text.translatable("key.categories.improved_inventory").getString()));
     }
 
 

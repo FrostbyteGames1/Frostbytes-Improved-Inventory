@@ -145,12 +145,12 @@ public class ExpandedTooltipInfo {
             if (optional.isPresent() && Objects.requireNonNull(MinecraftClient.getInstance().world).getDimensionEntry().getIdAsString().contains(optional.get().dimension().getValue().toShortTranslationKey())) {
                 text = MutableText.of(Text.of(optional.get().pos().toShortString()).getContent());
             } else {
-                text = MutableText.of(Text.of("No Target").getContent());
+                text = MutableText.of(Text.translatable("compass.target.none").getContent());
             }
         } else if (Objects.requireNonNull(MinecraftClient.getInstance().world).getDimensionEntry().getIdAsString().contains("overworld")) {
             text = MutableText.of(Text.of(MinecraftClient.getInstance().world.getSpawnPos().toShortString()).getContent());
         } else {
-            text = MutableText.of(Text.of("No Target").getContent());
+            text = MutableText.of(Text.translatable("compass.target.none").getContent());
         }
         Texts.setStyleIfAbsent(text, Style.EMPTY.withColor(Formatting.GRAY));
         textConsumer.accept(text);
@@ -162,7 +162,7 @@ public class ExpandedTooltipInfo {
         if (optional.isPresent() && Objects.requireNonNull(MinecraftClient.getInstance().world).getDimensionEntry().getIdAsString().contains(optional.get().dimension().getValue().toShortTranslationKey())) {
             text = MutableText.of(Text.of(optional.get().pos().toShortString()).getContent());
         } else {
-            text = MutableText.of(Text.of("No Target").getContent());
+            text = MutableText.of(Text.translatable("compass.target.none").getContent());
         }
         Texts.setStyleIfAbsent(text, Style.EMPTY.withColor(Formatting.GRAY));
         textConsumer.accept(text);
@@ -179,14 +179,14 @@ public class ExpandedTooltipInfo {
         if (!Objects.requireNonNull(MinecraftClient.getInstance().world).getDimension().hasFixedTime()) {
             long time = MinecraftClient.getInstance().world.getTimeOfDay() % 24000L;
             text = switch ((int) time) {
-                case 1000 -> MutableText.of(Text.of("Day").getContent());
-                case 6000 -> MutableText.of(Text.of("Noon").getContent());
-                case 13000 -> MutableText.of(Text.of("Night").getContent());
-                case 18000 -> MutableText.of(Text.of("Midnight").getContent());
+                case 1000 -> MutableText.of(Text.translatable("clock.time.day").getContent());
+                case 6000 -> MutableText.of(Text.translatable("clock.time.noon").getContent());
+                case 13000 -> MutableText.of(Text.translatable("clock.time.night").getContent());
+                case 18000 -> MutableText.of(Text.translatable("clock.time.midnight").getContent());
                 default -> MutableText.of(Text.of(String.valueOf(time)).getContent());
             };
         } else {
-            text = MutableText.of(Text.of("Time Unknown").getContent());
+            text = MutableText.of(Text.translatable("clock.time.none").getContent());
         }
         return text;
     }
@@ -195,11 +195,11 @@ public class ExpandedTooltipInfo {
         MutableText text;
         FoodComponent food = stack.getComponents().get(DataComponentTypes.FOOD);
 
-        text = MutableText.of(Text.of("Nutrition: " + Objects.requireNonNull(food).nutrition()).getContent());
+        text = MutableText.of(Text.of(Text.translatable("food.tooltip_nutrition").getString() + Objects.requireNonNull(food).nutrition()).getContent());
         Texts.setStyleIfAbsent(text, Style.EMPTY.withColor(Formatting.GRAY));
         textConsumer.accept(text);
 
-        text = MutableText.of(Text.of(String.format("Saturation: %.1f", food.saturation())).getContent());
+        text = MutableText.of(Text.of(Text.translatable("food.tooltip_saturation").getString() + String.format("%.1f", food.saturation())).getContent());
         Texts.setStyleIfAbsent(text, Style.EMPTY.withColor(Formatting.GRAY));
         textConsumer.accept(text);
     }
