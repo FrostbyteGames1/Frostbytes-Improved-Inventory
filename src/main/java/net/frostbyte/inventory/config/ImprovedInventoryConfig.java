@@ -648,7 +648,7 @@ public class ImprovedInventoryConfig {
             json.addProperty("stackRefillPreviewColor", stackRefillPreviewColor.getRGB());
             json.addProperty("stackRefillBlacklist", String.valueOf(stackRefillBlacklist));
             json.addProperty("toolSelect", toolSelect);
-            json.addProperty("weaponSelectPreference", weaponSelectPreference ? "DPS" : "DPH");
+            json.addProperty("weaponSelectPreference", weaponSelectPreference ? "Damage/Second" : "Damage/Hit");
             json.addProperty("toolSelectBlacklist", String.valueOf(toolSelectBlacklist));
             json.addProperty("paperdoll", paperdoll);
             json.addProperty("paperdollHorizontalAnchor", paperdollHorizontalAnchor ? "LEFT" : "RIGHT");
