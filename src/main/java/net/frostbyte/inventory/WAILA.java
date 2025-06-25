@@ -12,6 +12,7 @@ import net.minecraft.block.NetherPortalBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.PlayerSkinDrawer;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.Entity;
@@ -21,6 +22,7 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.passive.AbstractHorseEntity;
 import net.minecraft.entity.passive.LlamaEntity;
 import net.minecraft.entity.passive.TameableEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -139,8 +141,12 @@ public class WAILA implements HudRenderCallback {
                     }
                     drawBox(drawContext, textWidth);
                     if (entity instanceof LivingEntity livingEntity) {
-                        drawContext.drawItem(livingEntity.getPickBlockStack(), x + 8, y + 8);
                         //drawEntity(drawContext, x, y, x + 32, y + 32, getScaleFromHeight(livingEntity.getHeight()), 0.0625F, x + 64, y + 16, livingEntity);
+                        if (entity instanceof PlayerEntity player) {
+                            PlayerSkinDrawer.draw(drawContext, mc.getNetworkHandler().getPlayerListEntry(player.getUuid()).getSkinTextures().texture(), x + 8, y + 8, 16, true, false, -1);
+                        } else {
+                            drawContext.drawItem(livingEntity.getPickBlockStack() != null ? livingEntity.getPickBlockStack() : ItemStack.EMPTY, x + 8, y + 8);
+                        }
                         drawContext.drawTextWithShadow(mc.textRenderer, name, x + 30, y + 8, Colors.WHITE);
                         drawContext.drawTextWithShadow(mc.textRenderer, String.format("%.1f", livingEntity.getHealth() / 2), x + 30, y + 18, Colors.WHITE);
                         drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, HEART, x + 30 + mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)), y + 17, 0, 0, 9, 9, 9, 9);

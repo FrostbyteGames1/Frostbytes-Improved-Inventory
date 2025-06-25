@@ -20,8 +20,10 @@ public class Zoom {
         KeyBindingHelper.registerKeyBinding(zoomKey = new KeyBinding("key.zoom", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_C, Text.translatable("key.categories.improved_inventory").getString()));
     }
 
-    @SuppressWarnings("DataFlowIssue")
     public static void zoomHandler(MinecraftClient client) {
+        if (client.player == null) {
+            return;
+        }
         if (client.currentScreen == null) {
             if (zoomKey.isPressed()) {
                 if (client.options.getFov().getValue() != ImprovedInventoryConfig.zoomFOV - scrollAmount) {
