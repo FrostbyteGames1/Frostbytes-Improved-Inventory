@@ -7,6 +7,11 @@ accessible field net/minecraft/client/gui/screen/ingame/HandledScreen focusedSlo
 accessible field net/minecraft/client/gui/screen/ingame/HandledScreen SLOT_HIGHLIGHT_BACK_TEXTURE Lnet/minecraft/util/Identifier;
 accessible field net/minecraft/client/gui/screen/ingame/HandledScreen SLOT_HIGHLIGHT_FRONT_TEXTURE Lnet/minecraft/util/Identifier;
 
+accessible method net/minecraft/client/gui/tooltip/BundleTooltipComponent getXMargin (I)I
+accessible method net/minecraft/client/gui/tooltip/BundleTooltipComponent getRows ()I
+accessible method net/minecraft/client/gui/tooltip/BundleTooltipComponent getProgressBarFill ()I
+accessible method net/minecraft/client/gui/tooltip/BundleTooltipComponent getProgressBarLabel ()Lnet/minecraft/text/Text;
+
 accessible class net/minecraft/client/gui/hud/InGameHud$BarType
 
 accessible field net/minecraft/client/option/KeyBinding timesPressed I

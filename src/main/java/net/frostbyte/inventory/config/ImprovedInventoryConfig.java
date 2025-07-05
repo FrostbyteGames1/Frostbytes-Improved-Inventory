@@ -487,7 +487,7 @@ public class ImprovedInventoryConfig {
                     .build())
 
                 .group(OptionGroup.createBuilder()
-                    .name(Text.of("Expanded Bundle Tooltip"))
+                    .name(Text.of("Bundles"))
                     .collapsed(true)
                     .option(Option.<Boolean>createBuilder()
                         .name(Text.of("Expanded Bundle Tooltip"))
@@ -495,11 +495,6 @@ public class ImprovedInventoryConfig {
                         .binding(true, () -> expandedBundleTooltip, newVal -> expandedBundleTooltip = newVal)
                         .controller(TickBoxControllerBuilder::create)
                         .build())
-                    .build())
-
-                .group(OptionGroup.createBuilder()
-                    .name(Text.of("Bundle Progress Bar Fraction"))
-                    .collapsed(true)
                     .option(Option.<Boolean>createBuilder()
                         .name(Text.of("Bundle Progress Bar Fraction"))
                         .description(OptionDescription.of(Text.of("Displays a bundle's fullness as a fraction of 64 on top of its progress bar")))
