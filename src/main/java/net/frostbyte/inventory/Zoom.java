@@ -12,7 +12,7 @@ import net.minecraft.text.Text;
 
 @Environment(EnvType.CLIENT)
 public class Zoom {
-    public static int standardFOV = 70;
+    public static int standardFOV = 0;
     public static int scrollAmount = 0;
     public static KeyBinding zoomKey;
 
@@ -21,6 +21,12 @@ public class Zoom {
     }
 
     public static void zoomHandler(MinecraftClient client) {
+        if (standardFOV == 0 && !zoomKey.isPressed()) {
+            standardFOV = client.options.getFov().getValue();
+            if (standardFOV == 0) {
+                return;
+            }
+        }
         if (client.player == null) {
             return;
         }
