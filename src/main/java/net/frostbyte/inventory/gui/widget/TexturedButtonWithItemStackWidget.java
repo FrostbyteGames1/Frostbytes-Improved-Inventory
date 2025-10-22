@@ -16,7 +16,7 @@ public class TexturedButtonWithItemStackWidget extends TexturedButtonWidget {
 
     @Override
     public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-        Identifier identifier = this.textures.get(this.isNarratable(), this.isSelected());
+        Identifier identifier = this.textures.get(this.active, this.isSelected());
         context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, identifier, this.getX(), this.getY(), this.width, this.height);
         context.drawItem(itemStack, this.getX() + 5, this.getY() + 8);
     }

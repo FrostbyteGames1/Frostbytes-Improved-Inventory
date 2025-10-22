@@ -11,6 +11,7 @@ import net.minecraft.component.type.MapIdComponent;
 import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.map.MapDecoration;
+import net.minecraft.item.map.MapDecorationTypes;
 import net.minecraft.item.map.MapState;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.MutableText;
@@ -79,63 +80,47 @@ public class ExpandedTooltipInfo {
 
     public static void mapTooltipHandler(DrawContext context, int x, int y, Slot focusedSlot) {
         context.getMatrices().pushMatrix();
-        int startX = x - 78;
-        int startY = y - 16;
         context.drawTexture(
             RenderPipelines.GUI_TEXTURED,
             Identifier.of("textures/map/map_background_checkerboard.png"),
-            startX, startY,
+            x - 78, y - 16,
             0, 0,
             70, 70,
             70, 70
         );
-        startX += 3;
-        startY += 3;
+        context.getMatrices().popMatrix();
+
+        MapRenderState mapRenderState = new MapRenderState();
         MapIdComponent mapIdComponent = focusedSlot.getStack().get(DataComponentTypes.MAP_ID);
-        MapState mapState = FilledMapItem.getMapState(mapIdComponent, MinecraftClient.getInstance().world);
+        MapState mapState = null;
+        if (mapIdComponent != null) {
+            mapState = FilledMapItem.getMapState(mapIdComponent, MinecraftClient.getInstance().world);
+        }
         if (mapState != null) {
-            MinecraftClient.getInstance().getMapRenderer().update(mapIdComponent, mapState, new MapRenderState());
-            context.drawTexture(
-                RenderPipelines.GUI_TEXTURED,
-                MinecraftClient.getInstance().getMapRenderer().textureManager.getTextureId(mapIdComponent, mapState),
-                startX, startY,
-                0, 0,
-                64, 64,
-                64, 64
-            );
+            context.getMatrices().pushMatrix();
+            context.getMatrices().translate(x - 78 + 3, y - 16 + 3);
+            context.getMatrices().scale(0.5f);
+            MinecraftClient.getInstance().getMapRenderer().update(mapIdComponent, mapState, mapRenderState);
+            context.drawMap(mapRenderState);
+            context.getMatrices().popMatrix();
 
             for (MapDecoration decoration : mapState.getDecorations()) {
-                Identifier sprite = decoration.getAssetId();
-                if (sprite != null) {
-                    sprite = sprite.withPrefixedPath("textures/map/decorations/");
-                    sprite = sprite.withSuffixedPath(".png");
-                    if (sprite.toString().endsWith("player.png")) {
-                        String rotation = switch (decoration.rotation()) {
-                            case 0 -> "_south";
-                            case 1, 2, 3 -> "_southwest";
-                            case 4 -> "_west";
-                            case 5, 6, 7 -> "_northwest";
-                            default -> "_north";
-                            case 9, 10, 11 -> "_northeast";
-                            case 12 -> "_east";
-                            case 13, 14, 15 -> "_southeast";
-                        };
-                        sprite = Identifier.of(ImprovedInventory.MOD_ID, "textures/map/decorations/player" + rotation + ".png");
-                    }
-                    float decorationX = decoration.x() / 4F + 32F;
-                    float decorationY = decoration.z() / 4F + 32F;
+                if (decoration.type() == MapDecorationTypes.PLAYER) {
+                    context.getMatrices().pushMatrix();
+                    context.getMatrices().translate(x - 78 + 3 + decoration.x() / 4F + 32F, y - 16 + 3 + decoration.z() / 4F + 32F);
+                    context.getMatrices().scale(0.5f);
                     context.drawTexture(
                         RenderPipelines.GUI_TEXTURED,
-                        sprite,
-                        (int) (startX + decorationX), (int) (startY + decorationY),
+                        Identifier.of("textures/map/decorations/player_off_map.png"),
                         0, 0,
-                        4, 4,
-                        4, 4
+                        0, 0,
+                        8, 8,
+                        8, 8
                     );
+                    context.getMatrices().popMatrix();
                 }
             }
         }
-        context.getMatrices().popMatrix();
     }
 
     public static void compassTooltipHandler(ItemStack stack, Consumer<Text> textConsumer) {
@@ -148,7 +133,7 @@ public class ExpandedTooltipInfo {
                 text = MutableText.of(Text.translatable("compass.target.none").getContent());
             }
         } else if (Objects.requireNonNull(MinecraftClient.getInstance().world).getDimensionEntry().getIdAsString().contains("overworld")) {
-            text = MutableText.of(Text.of(MinecraftClient.getInstance().world.getSpawnPos().toShortString()).getContent());
+            text = MutableText.of(Text.of(MinecraftClient.getInstance().world.getSpawnPoint().getPos().toShortString()).getContent());
         } else {
             text = MutableText.of(Text.translatable("compass.target.none").getContent());
         }

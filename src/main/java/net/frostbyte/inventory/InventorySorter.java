@@ -12,7 +12,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.SlotActionType;
-import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ public class InventorySorter {
     private static int interactions = 0;
 
     public void setKeyBindings() {
-        KeyBindingHelper.registerKeyBinding(sortKey = new KeyBinding("key.sort_container", InputUtil.Type.MOUSE, 2, Text.translatable("key.categories.improved_inventory").getString()));
+        KeyBindingHelper.registerKeyBinding(sortKey = new KeyBinding("key.sort_container", InputUtil.Type.MOUSE, InputUtil.GLFW_MOUSE_BUTTON_MIDDLE, ImprovedInventory.KEYBIND_CATEGORY));
     }
 
     public static void inventorySortHandler(MinecraftClient mc) {

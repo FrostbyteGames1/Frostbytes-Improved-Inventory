@@ -8,7 +8,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
 
 @Environment(EnvType.CLIENT)
 public class Zoom {
@@ -17,7 +16,7 @@ public class Zoom {
     public static KeyBinding zoomKey;
 
     public void setKeyBindings() {
-        KeyBindingHelper.registerKeyBinding(zoomKey = new KeyBinding("key.zoom", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_C, Text.translatable("key.categories.improved_inventory").getString()));
+        KeyBindingHelper.registerKeyBinding(zoomKey = new KeyBinding("key.zoom", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_C, ImprovedInventory.KEYBIND_CATEGORY));
     }
 
     public static void zoomHandler(MinecraftClient client) {

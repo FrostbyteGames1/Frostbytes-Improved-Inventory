@@ -93,7 +93,7 @@ public abstract class ScreenMixin {
                 }
             }
             ItemStack playerHead = new ItemStack(Items.PLAYER_HEAD);
-            playerHead.set(DataComponentTypes.PROFILE, new ProfileComponent(client.player.getGameProfile()));
+            playerHead.set(DataComponentTypes.PROFILE, ProfileComponent.ofStatic(client.player.getGameProfile()));
             TexturedButtonWithItemStackWidget tab;
             if (client.currentScreen instanceof InventoryScreen) {
                 tab = new TexturedButtonWithItemStackWidget(width / 2 - screenWidth / 2, height / 2 - screenHeight / 2 - 28, 26, 32, TEXTURES_LEFT_SELECTED, playerHead, button -> {

@@ -9,7 +9,6 @@ import net.minecraft.block.entity.LockableContainerBlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.block.enums.ChestType;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.option.KeyBinding;
@@ -29,6 +28,7 @@ import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.lwjgl.glfw.GLFW;
 
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -42,7 +42,7 @@ public class NearbyContainerViewer {
     public static int current = 0;
     static int tabButtonCooldown;
     public void setKeybindings() {
-        KeyBindingHelper.registerKeyBinding(containerKey = new KeyBinding("key.next_container", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_TAB, Text.translatable("key.categories.improved_inventory").getString()));
+        KeyBindingHelper.registerKeyBinding(containerKey = new KeyBinding("key.next_container", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_TAB, ImprovedInventory.KEYBIND_CATEGORY));
     }
 
 
@@ -59,7 +59,7 @@ public class NearbyContainerViewer {
             }
             int keyCode = KeyBindingHelper.getBoundKeyOf(containerKey).getCode();
             if (((keyCode > 31 && GLFW.glfwGetKey(client.getWindow().getHandle(), keyCode) == 1) || (keyCode < 8 && GLFW.glfwGetMouseButton(client.getWindow().getHandle(), keyCode) == 1)) && tabButtonCooldown == 0) {
-                if (Screen.hasShiftDown()) {
+                if (InputUtil.isKeyPressed(client.getWindow(), KeyEvent.VK_SHIFT)) {
                     current--;
                     if (current < 0) {
                         current = containers.size() - 1;
@@ -185,7 +185,7 @@ public class NearbyContainerViewer {
             }
             if (!blacklisted && client.world.getBlockEntity(blockPos) instanceof LockableContainerBlockEntity lockableContainerBlockEntity && lockableContainerBlockEntity.canPlayerUse(client.player) && !containers.contains(blockPos)) {
                 for (Vec3d blockOffsetVector : blockOffsetVectors) {
-                    BlockHitResult hitResult = client.player.getWorld().raycast(new RaycastContext(client.player.getEyePos(), Vec3d.of(blockPos).add(blockOffsetVector), RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, client.player));
+                    BlockHitResult hitResult = client.player.getEntityWorld().raycast(new RaycastContext(client.player.getEyePos(), Vec3d.of(blockPos).add(blockOffsetVector), RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, client.player));
                     if (hitResult.getBlockPos().equals(blockPos) && !containers.contains(blockPos)) {
                         if (client.world.getBlockState(blockPos).contains(Properties.CHEST_TYPE)) {
                             if (client.world.getBlockState(blockPos).get(Properties.CHEST_TYPE).equals(ChestType.LEFT)) {
@@ -211,7 +211,7 @@ public class NearbyContainerViewer {
             }
             if (!blacklisted && client.world.getBlockState(blockPos).isIn(ModTags.HAS_GUI)) {
                 for (Vec3d blockOffsetVector : blockOffsetVectors) {
-                    BlockHitResult hitResult = client.player.getWorld().raycast(new RaycastContext(client.player.getEyePos(), Vec3d.of(blockPos).add(blockOffsetVector), RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, client.player));
+                    BlockHitResult hitResult = client.player.getEntityWorld().raycast(new RaycastContext(client.player.getEyePos(), Vec3d.of(blockPos).add(blockOffsetVector), RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, client.player));
                     if (hitResult.getBlockPos().equals(blockPos) && !containers.contains(blockPos)) {
                         if (client.world.getBlockState(blockPos).contains(Properties.CHEST_TYPE)) {
                             if (client.world.getBlockState(blockPos).get(Properties.CHEST_TYPE).equals(ChestType.LEFT)) {

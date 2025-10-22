@@ -10,10 +10,13 @@ import net.minecraft.client.gui.hud.bar.LocatorBar;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.client.resource.waypoint.WaypointStyleAsset;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
+import net.minecraft.world.tick.TickManager;
+import net.minecraft.world.waypoint.EntityTickProgress;
 import net.minecraft.world.waypoint.TrackedWaypoint;
 import net.minecraft.world.waypoint.Waypoint;
 import org.spongepowered.asm.mixin.Final;
@@ -62,44 +65,30 @@ public abstract class LocatorBarMixin implements Bar {
     @SuppressWarnings("DataFlowIssue")
     @Inject(method = "renderAddons", at = @At("HEAD"), cancellable = true)
     public void renderAddons(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
+        int i = this.getCenterY(this.client.getWindow());
+        Entity entity = this.client.getCameraEntity();
         if (ImprovedInventoryConfig.playerHeadWaypoints) {
-            int i = this.getCenterY(this.client.getWindow());
-            this.client.player.networkHandler.getWaypointHandler().forEachWaypoint(this.client.cameraEntity, (waypoint) -> {
-                if (waypoint.getSource().left().isPresent() && this.client.world.getEntity(waypoint.getSource().left().get()) instanceof PlayerEntity player) {
-                    if (player != this.client.cameraEntity) {
-                        double d = waypoint.getRelativeYaw(this.client.world, this.client.gameRenderer.getCamera());
-                        if (!(d <= -61.0) && !(d > 60.0)) {
+            if (entity != null) {
+                World world = entity.getEntityWorld();
+                TickManager tickManager = world.getTickManager();
+                EntityTickProgress entityTickProgress = (entityx) -> tickCounter.getTickProgress(!tickManager.shouldSkipTick(entityx));
+                this.client.player.networkHandler.getWaypointHandler().forEachWaypoint(entity, (waypoint) -> {
+                    if (!(Boolean) waypoint.getSource().left().map((uuid) -> uuid.equals(entity.getUuid())).orElse(false)) {
+                        double d = waypoint.getRelativeYaw(world, this.client.gameRenderer.getCamera(), entityTickProgress);
+                        if (!(d <= -60.0) && !(d > 60.0)) {
                             int j = MathHelper.ceil((float) (context.getScaledWindowWidth() - 9) / 2.0F);
-                            int l = (int) (d * 173.0 / 2.0 / 60.0);
-                            PlayerSkinDrawer.draw(context, this.client.getNetworkHandler().getPlayerListEntry(waypoint.getSource().left().get()).getSkinTextures().texture(), j + l, i - 2, 8, true, false, -1);
-                            TrackedWaypoint.Pitch pitch = waypoint.getPitch(this.client.world, this.client.gameRenderer);
-                            if (pitch != TrackedWaypoint.Pitch.NONE) {
-                                byte m;
-                                Identifier identifier;
-                                if (pitch == TrackedWaypoint.Pitch.DOWN) {
-                                    m = 6;
-                                    identifier = ARROW_DOWN;
-                                } else {
-                                    m = -6;
-                                    identifier = ARROW_UP;
-                                }
-                                context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, identifier, j + l + 1, i + m, 7, 5);
+                            int l = MathHelper.floor(d * 173.0 / 2.0 / 60.0);
+                            if (waypoint.getSource().left().isPresent() && this.client.getNetworkHandler().getPlayerListEntry(waypoint.getSource().left().get()) != null) {
+                                PlayerSkinDrawer.draw(context, this.client.getNetworkHandler().getPlayerListEntry(waypoint.getSource().left().get()).getSkinTextures().body().texturePath(), j + l, i - 2, 8, true, false, -1);
+                            } else {
+                                Waypoint.Config config = waypoint.getConfig();
+                                WaypointStyleAsset waypointStyleAsset = this.client.getWaypointStyleAssetManager().get(config.style);
+                                float f = MathHelper.sqrt((float)waypoint.squaredDistanceTo(entity));
+                                Identifier identifier = waypointStyleAsset.getSpriteForDistance(f);
+                                int k = config.color.orElseGet(() -> waypoint.getSource().map((uuid) -> ColorHelper.withBrightness(ColorHelper.withAlpha(255, uuid.hashCode()), 0.9F), (name) -> ColorHelper.withBrightness(ColorHelper.withAlpha(255, name.hashCode()), 0.9F)));
+                                context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, identifier, j + l, i - 2, 9, 9, k);
                             }
-                        }
-                    }
-                } else {
-                    if (!((Boolean) waypoint.getSource().left().map((uuid) -> uuid.equals(this.client.cameraEntity.getUuid())).orElse(false))) {
-                        double d = waypoint.getRelativeYaw(this.client.world, this.client.gameRenderer.getCamera());
-                        if (!(d <= -61.0) && !(d > 60.0)) {
-                            int j = MathHelper.ceil((float)(context.getScaledWindowWidth() - 9) / 2.0F);
-                            Waypoint.Config config = waypoint.getConfig();
-                            WaypointStyleAsset waypointStyleAsset = this.client.getWaypointStyleAssetManager().get(config.style);
-                            float f = MathHelper.sqrt((float)waypoint.squaredDistanceTo(this.client.cameraEntity));
-                            Identifier identifier = waypointStyleAsset.getSpriteForDistance(f);
-                            int k = config.color.orElseGet(() -> waypoint.getSource().map((uuid) -> ColorHelper.withBrightness(ColorHelper.withAlpha(255, uuid.hashCode()), 0.9F), (name) -> ColorHelper.withBrightness(ColorHelper.withAlpha(255, name.hashCode()), 0.9F)));
-                            int l = (int)(d * 173.0 / 2.0 / 60.0);
-                            context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, identifier, j + l, i - 2, 9, 9, k);
-                            TrackedWaypoint.Pitch pitch = waypoint.getPitch(this.client.world, this.client.gameRenderer);
+                            TrackedWaypoint.Pitch pitch = waypoint.getPitch(world, this.client.gameRenderer, entityTickProgress);
                             if (pitch != TrackedWaypoint.Pitch.NONE) {
                                 byte m;
                                 Identifier identifier2;
@@ -112,10 +101,11 @@ public abstract class LocatorBarMixin implements Bar {
                                 }
                                 context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, identifier2, j + l + 1, i + m, 7, 5);
                             }
+
                         }
                     }
-                }
-            });
+                });
+            }
             ci.cancel();
         }
     }

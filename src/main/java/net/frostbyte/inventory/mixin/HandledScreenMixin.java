@@ -8,6 +8,7 @@ import net.frostbyte.inventory.config.ImprovedInventoryConfig;
 import net.frostbyte.inventory.gui.widget.HoverableIconWidget;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.screen.Screen;
@@ -15,6 +16,7 @@ import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemGroups;
@@ -121,19 +123,19 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     }
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
-    public void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if (super.keyPressed(keyCode, scanCode, modifiers)) {
+    public void keyPressed(KeyInput input, CallbackInfoReturnable<Boolean> cir) {
+        if (super.keyPressed(input)) {
             cir.setReturnValue(true);
         } else if (ImprovedInventoryConfig.containerSearch && (this.handler instanceof GenericContainerScreenHandler || this.handler instanceof ShulkerBoxScreenHandler)) {
             if (searchField.isActive()) {
-                searchField.keyPressed(keyCode, scanCode, modifiers);
+                searchField.keyPressed(input);
                 cir.setReturnValue(true);
             }
         }
     }
 
     @Inject(method = "mouseClicked", at = @At("HEAD"))
-    public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
+    public void mouseClicked(Click click, boolean doubled, CallbackInfoReturnable<Boolean> cir) {
         if (ImprovedInventoryConfig.containerSearch && (this.handler instanceof GenericContainerScreenHandler || this.handler instanceof ShulkerBoxScreenHandler)) {
             if (!searchField.isHovered()) {
                 searchField.setFocused(false);
@@ -142,9 +144,9 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                     searchInfoHoverableIcon.visible = false;
                     searchInfoHoverableIcon.active = false;
                 }
-            } else if (searchField.isHovered() && button == GLFW.GLFW_MOUSE_BUTTON_2) {
+            } else if (searchField.isHovered() && click.button() == GLFW.GLFW_MOUSE_BUTTON_2) {
                 searchField.setText("");
-            } else if (searchField.isHovered() && button == GLFW.GLFW_MOUSE_BUTTON_1) {
+            } else if (searchField.isHovered() && click.button() == GLFW.GLFW_MOUSE_BUTTON_1) {
                 searchField.setFocused(true);
             }
         }

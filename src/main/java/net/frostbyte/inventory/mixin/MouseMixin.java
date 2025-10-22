@@ -1,5 +1,6 @@
 package net.frostbyte.inventory.mixin;
 
+import net.frostbyte.inventory.ImprovedInventory;
 import net.frostbyte.inventory.SlotCycler;
 import net.frostbyte.inventory.Zoom;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
@@ -27,11 +28,9 @@ public abstract class MouseMixin {
         if (ImprovedInventoryConfig.containerTab && ImprovedInventoryConfig.containerTabFreeCursor) {
             if (this.client.isWindowFocused()) {
                 if (!this.cursorLocked) {
-                    if (!MinecraftClient.IS_SYSTEM_MAC) {
-                        KeyBinding.updatePressedStates();
-                    }
+                    KeyBinding.updatePressedStates();
                     this.cursorLocked = true;
-                    InputUtil.setCursorParameters(this.client.getWindow().getHandle(), 212995, this.x, this.y);
+                    InputUtil.setCursorParameters(this.client.getWindow(), 212995, this.x, this.y);
                     this.client.setScreen(null);
                     this.client.attackCooldown = 10000;
                     this.hasResolutionChanged = true;
@@ -46,7 +45,7 @@ public abstract class MouseMixin {
         if (ImprovedInventoryConfig.containerTab && ImprovedInventoryConfig.containerTabFreeCursor) {
             if (this.cursorLocked) {
                 this.cursorLocked = false;
-                InputUtil.setCursorParameters(this.client.getWindow().getHandle(), 212993, this.x, this.y);
+                InputUtil.setCursorParameters(this.client.getWindow(), 212993, this.x, this.y);
             }
             ci.cancel();
         }
@@ -54,27 +53,29 @@ public abstract class MouseMixin {
 
     @Inject(method = "onMouseScroll", at = @At("HEAD"), cancellable = true)
     private void onMouseScroll(long window, double horizontal, double vertical, CallbackInfo ci) {
-        if (Zoom.zoomKey.isPressed()) {
-            if (ImprovedInventoryConfig.zoomScrollRequiresControl) {
-                if (InputUtil.isKeyPressed(window, InputUtil.GLFW_KEY_LEFT_CONTROL) || InputUtil.isKeyPressed(window, InputUtil.GLFW_KEY_RIGHT_CONTROL)) {
+        if (window == this.client.getWindow().getHandle()) {
+            if (Zoom.zoomKey.isPressed()) {
+                if (ImprovedInventoryConfig.zoomScrollRequiresControl) {
+                    if (InputUtil.isKeyPressed(this.client.getWindow(), InputUtil.GLFW_KEY_LEFT_CONTROL) || InputUtil.isKeyPressed(this.client.getWindow(), InputUtil.GLFW_KEY_RIGHT_CONTROL)) {
+                        Zoom.scrollAmount = (int) Math.clamp(Zoom.scrollAmount + Math.signum(vertical), 0, ImprovedInventoryConfig.zoomFOV - 2);
+                        ci.cancel();
+                    }
+                } else {
                     Zoom.scrollAmount = (int) Math.clamp(Zoom.scrollAmount + Math.signum(vertical), 0, ImprovedInventoryConfig.zoomFOV - 2);
                     ci.cancel();
                 }
-            } else {
-                Zoom.scrollAmount = (int) Math.clamp(Zoom.scrollAmount + Math.signum(vertical), 0, ImprovedInventoryConfig.zoomFOV - 2);
-                ci.cancel();
             }
-        }
-        if (ImprovedInventoryConfig.slotCycle) {
-            if (InputUtil.isKeyPressed(window, InputUtil.GLFW_KEY_LEFT_ALT) || InputUtil.isKeyPressed(window, InputUtil.GLFW_KEY_RIGHT_ALT)) {
-                if (Math.signum(vertical) > 0) {
-                    assert client.player != null;
-                    SlotCycler.cycleUp(client, client.player);
-                    ci.cancel();
-                } else if (Math.signum(vertical) < 0) {
-                    assert client.player != null;
-                    SlotCycler.cycleDown(client, client.player);
-                    ci.cancel();
+            if (ImprovedInventoryConfig.slotCycle && ImprovedInventoryConfig.slotCycleAltScroll) {
+                if (InputUtil.isKeyPressed(this.client.getWindow(), InputUtil.GLFW_KEY_LEFT_ALT) || InputUtil.isKeyPressed(this.client.getWindow(), InputUtil.GLFW_KEY_RIGHT_ALT)) {
+                    if (Math.signum(vertical) > 0) {
+                        assert client.player != null;
+                        SlotCycler.cycleUp(client, client.player);
+                        ci.cancel();
+                    } else if (Math.signum(vertical) < 0) {
+                        assert client.player != null;
+                        SlotCycler.cycleDown(client, client.player);
+                        ci.cancel();
+                    }
                 }
             }
         }

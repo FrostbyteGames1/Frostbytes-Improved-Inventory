@@ -43,7 +43,7 @@ public class TextDisplayer implements HudRenderCallback {
                         drawContext.drawTextWithShadow(mc.textRenderer, Text.translatable("info.block_light").getString() + mc.world.getLightLevel(LightType.BLOCK, mc.player.getBlockPos()), x, y, Colors.WHITE);
                         break;
                     case "Coordinates":
-                        drawContext.drawTextWithShadow(mc.textRenderer, String.format("XYZ: %.3f / %.3f / %.3f", mc.player.getPos().getX(), mc.player.getPos().getY(), mc.player.getPos().getZ()), x, y, Colors.WHITE);
+                        drawContext.drawTextWithShadow(mc.textRenderer, String.format("XYZ: %.3f / %.3f / %.3f", mc.player.getX(), mc.player.getY(), mc.player.getZ()), x, y, Colors.WHITE);
                         break;
                     case "Day":
                         drawContext.drawTextWithShadow(mc.textRenderer, Text.translatable("info.day_number").getString() + (mc.world.getTimeOfDay() / 24000L % Integer.MAX_VALUE), x, y, Colors.WHITE);
@@ -79,7 +79,7 @@ public class TextDisplayer implements HudRenderCallback {
                         }
                         break;
                     case "Speed":
-                        Vec3d playerPosVec = mc.player.getPos();
+                        Vec3d playerPosVec = mc.player.getEntityPos();
                         double travelledX = playerPosVec.x - mc.player.lastX;
                         double travelledZ = playerPosVec.z - mc.player.lastZ;
                         drawContext.drawTextWithShadow(mc.textRenderer, String.format("%.3f m/s", MathHelper.sqrt((float)(travelledX * travelledX + travelledZ * travelledZ)) * 20), x, y, Colors.WHITE);
@@ -127,8 +127,8 @@ public class TextDisplayer implements HudRenderCallback {
                         drawContext.drawTextWithShadow(mc.textRenderer, Text.translatable("info.block_light").getString() + mc.world.getLightLevel(LightType.BLOCK, mc.player.getBlockPos()), x, y, Colors.WHITE);
                         break;
                     case "Coordinates":
-                        x -= mc.textRenderer.getWidth(String.format("XYZ: %.3f / %.3f / %.3f", mc.player.getPos().getX(), mc.player.getPos().getY(), mc.player.getPos().getZ()));
-                        drawContext.drawTextWithShadow(mc.textRenderer, String.format("XYZ: %.3f / %.3f / %.3f", mc.player.getPos().getX(), mc.player.getPos().getY(), mc.player.getPos().getZ()), x, y, Colors.WHITE);
+                        x -= mc.textRenderer.getWidth(String.format("XYZ: %.3f / %.3f / %.3f", mc.player.getX(), mc.player.getY(), mc.player.getZ()));
+                        drawContext.drawTextWithShadow(mc.textRenderer, String.format("XYZ: %.3f / %.3f / %.3f", mc.player.getX(), mc.player.getY(), mc.player.getZ()), x, y, Colors.WHITE);
                         break;
                     case "Day":
                         x -= mc.textRenderer.getWidth(Text.translatable("info.day_number").getString() + (mc.world.getTimeOfDay() / 24000L % Integer.MAX_VALUE));
@@ -172,7 +172,7 @@ public class TextDisplayer implements HudRenderCallback {
                         }
                         break;
                     case "Speed":
-                        Vec3d playerPosVec = mc.player.getPos();
+                        Vec3d playerPosVec = mc.player.getEntityPos();
                         double travelledX = playerPosVec.x - mc.player.lastX;
                         double travelledZ = playerPosVec.z - mc.player.lastZ;
                         x -= mc.textRenderer.getWidth(String.format("%.3f BPS", MathHelper.sqrt((float)(travelledX * travelledX + travelledZ * travelledZ)) * 20));

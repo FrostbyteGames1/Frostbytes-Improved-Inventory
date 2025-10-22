@@ -17,7 +17,7 @@ public class Gamma {
     private static boolean enabled;
     public static KeyBinding gammaKey;
     public void setKeyBindings() {
-        KeyBindingHelper.registerKeyBinding(gammaKey = new KeyBinding("key.toggle_gamma", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_G, Text.translatable("key.categories.improved_inventory").getString()));
+        KeyBindingHelper.registerKeyBinding(gammaKey = new KeyBinding("key.toggle_gamma", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_G, ImprovedInventory.KEYBIND_CATEGORY));
     }
 
     public static void gammaHandler(MinecraftClient mc) {

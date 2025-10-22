@@ -13,7 +13,6 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.screen.slot.SlotActionType;
-import net.minecraft.text.Text;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Identifier;
 
@@ -26,8 +25,8 @@ public class SlotCycler implements HudRenderCallback {
     final Identifier PREVIEW_SLOTS = Identifier.of(ImprovedInventory.MOD_ID, "textures/extra_slots.png");
 
     public void setKeyBindings() {
-        KeyBindingHelper.registerKeyBinding(cycleUpKey = new KeyBinding("key.cycle_up", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_J, Text.translatable("key.categories.improved_inventory").getString()));
-        KeyBindingHelper.registerKeyBinding(cycleDownKey = new KeyBinding("key.cycle_down", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_H, Text.translatable("key.categories.improved_inventory").getString()));
+        KeyBindingHelper.registerKeyBinding(cycleUpKey = new KeyBinding("key.cycle_up", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_J, ImprovedInventory.KEYBIND_CATEGORY));
+        KeyBindingHelper.registerKeyBinding(cycleDownKey = new KeyBinding("key.cycle_down", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_H, ImprovedInventory.KEYBIND_CATEGORY));
     }
 
     @SuppressWarnings("DataFlowIssue")

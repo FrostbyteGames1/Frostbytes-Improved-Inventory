@@ -26,6 +26,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.util.Colors;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
@@ -48,6 +49,7 @@ public class WAILA implements HudRenderCallback {
     ArrayList<Item> AXES = new ArrayList<>(List.of(
         Items.WOODEN_AXE,
         Items.STONE_AXE,
+        Items.COPPER_AXE,
         Items.GOLDEN_AXE,
         Items.IRON_AXE,
         Items.DIAMOND_AXE,
@@ -56,6 +58,7 @@ public class WAILA implements HudRenderCallback {
     ArrayList<Item> HOES = new ArrayList<>(List.of(
         Items.WOODEN_HOE,
         Items.STONE_HOE,
+        Items.COPPER_HOE,
         Items.GOLDEN_HOE,
         Items.IRON_HOE,
         Items.DIAMOND_HOE,
@@ -64,6 +67,7 @@ public class WAILA implements HudRenderCallback {
     ArrayList<Item> PICKAXES = new ArrayList<>(List.of(
         Items.WOODEN_PICKAXE,
         Items.STONE_PICKAXE,
+        Items.COPPER_PICKAXE,
         Items.GOLDEN_PICKAXE,
         Items.IRON_PICKAXE,
         Items.DIAMOND_PICKAXE,
@@ -72,6 +76,7 @@ public class WAILA implements HudRenderCallback {
     ArrayList<Item> SHOVELS = new ArrayList<>(List.of(
         Items.WOODEN_SHOVEL,
         Items.STONE_SHOVEL,
+        Items.COPPER_PICKAXE,
         Items.GOLDEN_SHOVEL,
         Items.IRON_SHOVEL,
         Items.DIAMOND_SHOVEL,
@@ -79,6 +84,7 @@ public class WAILA implements HudRenderCallback {
     ));
     ArrayList<Item> SWORDS = new ArrayList<>(List.of(
         Items.WOODEN_SWORD,
+        Items.STONE_SWORD,
         Items.STONE_SWORD,
         Items.GOLDEN_SWORD,
         Items.IRON_SWORD,
@@ -143,7 +149,7 @@ public class WAILA implements HudRenderCallback {
                     if (entity instanceof LivingEntity livingEntity) {
                         //drawEntity(drawContext, x, y, x + 32, y + 32, getScaleFromHeight(livingEntity.getHeight()), 0.0625F, x + 64, y + 16, livingEntity);
                         if (entity instanceof PlayerEntity player) {
-                            PlayerSkinDrawer.draw(drawContext, mc.getNetworkHandler().getPlayerListEntry(player.getUuid()).getSkinTextures().texture(), x + 8, y + 8, 16, true, false, -1);
+                            PlayerSkinDrawer.draw(drawContext, mc.getNetworkHandler().getPlayerListEntry(player.getUuid()).getSkinTextures().body().texturePath(), x + 8, y + 8, 16, true, false, -1);
                         } else {
                             drawContext.drawItem(livingEntity.getPickBlockStack() != null ? livingEntity.getPickBlockStack() : ItemStack.EMPTY, x + 8, y + 8);
                         }
