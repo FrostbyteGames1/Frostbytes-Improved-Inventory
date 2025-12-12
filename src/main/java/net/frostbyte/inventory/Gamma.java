@@ -14,7 +14,7 @@ import net.minecraft.util.Formatting;
 @Environment(EnvType.CLIENT)
 public class Gamma {
     static double standardBrightness = 1;
-    private static boolean enabled;
+    public static boolean enabled;
     public static KeyBinding gammaKey;
     public void setKeyBindings() {
         KeyBindingHelper.registerKeyBinding(gammaKey = new KeyBinding("key.toggle_gamma", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_G, ImprovedInventory.KEYBIND_CATEGORY));
@@ -38,6 +38,7 @@ public class Gamma {
         }
 
         if (mc.world == null) {
+            enabled = false;
             mc.options.getGamma().setValue(Math.min(standardBrightness, 100));
         }
     }

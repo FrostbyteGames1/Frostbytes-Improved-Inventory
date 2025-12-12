@@ -21,10 +21,7 @@ public class Zoom {
 
     public static void zoomHandler(MinecraftClient client) {
         if (standardFOV == 0 && !zoomKey.isPressed()) {
-            standardFOV = client.options.getFov().getValue();
-            if (standardFOV == 0) {
-                return;
-            }
+            standardFOV = Math.max(client.options.getFov().getValue(), 30);
         }
         if (client.player == null) {
             return;

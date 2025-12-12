@@ -8,7 +8,6 @@ import dev.isxander.yacl3.api.controller.*;
 import dev.isxander.yacl3.impl.controller.ColorControllerBuilderImpl;
 import dev.isxander.yacl3.impl.controller.IntegerFieldControllerBuilderImpl;
 import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -66,7 +65,7 @@ public class ImprovedInventoryConfig {
     public static boolean containerTab = true;
     public static boolean containerTabFreeCursor = true;
     public static boolean containerTabKeybindOnly = false;
-    public static ArrayList<String> containerTabModBlacklist = new ArrayList<>();
+    public static ArrayList<Item> containerTabBlacklist = new ArrayList<>();
     public static boolean shulkerBoxTooltip = true;
     public static boolean mapTooltip = true;
     public static boolean heldItemsVisibleInBoat = true;
@@ -189,13 +188,13 @@ public class ImprovedInventoryConfig {
                         .controller(TickBoxControllerBuilder::create)
                         .build())
                     .build())
-                .group(ListOption.<String>createBuilder()
+                .group(ListOption.<Item>createBuilder()
                     .name(Text.of("Tab To Nearby Containers Mod Blacklist"))
                     .collapsed(true)
                     .description(OptionDescription.of(Text.of("Defines a list of mods whose containers will be ignored")))
-                    .binding(new ArrayList<>(), () -> containerTabModBlacklist, newVal -> containerTabModBlacklist = new ArrayList<>(newVal))
-                    .controller(ImprovedInventoryConfig::loadedModsDropdownStringController)
-                    .initial("")
+                    .binding(new ArrayList<>(), () -> containerTabBlacklist, newVal -> containerTabBlacklist = new ArrayList<>(newVal))
+                    .controller(ItemControllerBuilder::create)
+                    .initial(ItemStack.EMPTY.getItem())
                     .build())
                 .build())
         
@@ -312,7 +311,7 @@ public class ImprovedInventoryConfig {
                         .controller(TickBoxControllerBuilder::create)
                         .build())
                     .option(Option.<Integer>createBuilder()
-                        .name(Text.of("text Display X Offset"))
+                        .name(Text.of("Text Display X Offset"))
                         .description(OptionDescription.of(Text.of("Adjusts the x position of the text display")))
                         .binding(0, () -> textDisplayOffsetX, newVal -> textDisplayOffsetX = newVal)
                         .controller(IntegerFieldControllerBuilderImpl::new)
@@ -592,14 +591,6 @@ public class ImprovedInventoryConfig {
             ).allowEmptyValue(true).allowAnyValue(false);
    }
 
-   private static DropdownStringControllerBuilder loadedModsDropdownStringController(Option<String> option) {
-        ArrayList<String> loadedMods = new ArrayList<>();
-        for (ModContainer mod : FabricLoader.getInstance().getAllMods()) {
-            loadedMods.add(mod.getMetadata().getId());
-        }
-        return DropdownStringControllerBuilder.create(option).values(loadedMods).allowEmptyValue(true).allowAnyValue(false);
-   }
-
    private static ArrayList<Item> stringArrayToItemArrayList(String[] stringArray) {
        ArrayList<Item> itemArrayList = new ArrayList<>();
        for (String string : stringArray) {
@@ -669,7 +660,7 @@ public class ImprovedInventoryConfig {
             json.addProperty("containerTab", containerTab);
             json.addProperty("containerTabFreeCursor", containerTabFreeCursor);
             json.addProperty("containerTabKeybindOnly", containerTabKeybindOnly);
-            json.addProperty("containerTabModBlacklist", String.valueOf(containerTabModBlacklist));
+            json.addProperty("containerTabBlacklist", String.valueOf(containerTabBlacklist));
             json.addProperty("compassTooltip", compassTooltip);
             json.addProperty("clockTooltip", clockTooltip);
             json.addProperty("foodTooltip", foodTooltip);
@@ -812,8 +803,8 @@ public class ImprovedInventoryConfig {
             if (json.has("containerTabKeybindOnly")) {
                 containerTabKeybindOnly = json.getAsJsonPrimitive("containerTabKeybindOnly").getAsBoolean();
             }
-            if (json.has("containerTabModBlacklist")) {
-                containerTabModBlacklist = stringArrayToStringArrayList(json.getAsJsonPrimitive("containerTabModBlacklist").getAsString().replace("[", "").replace("]", "").split(", "));
+            if (json.has("containerTabBlacklist")) {
+                containerTabBlacklist = stringArrayToItemArrayList(json.getAsJsonPrimitive("containerTabBlacklist").getAsString().replace("[", "").replace("]", "").split(", "));
             }
             if (json.has("compassTooltip")) {
                 compassTooltip = json.getAsJsonPrimitive("compassTooltip").getAsBoolean();

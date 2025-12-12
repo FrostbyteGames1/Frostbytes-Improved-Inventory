@@ -158,6 +158,7 @@ public class NearbyContainerViewer {
         return stack;
     }
 
+    @SuppressWarnings("DataFlowIssue")
     public static void updateContainerList() {
         MinecraftClient client = MinecraftClient.getInstance();
         containers.clear();
@@ -175,14 +176,7 @@ public class NearbyContainerViewer {
             new Vec3d(0.8D, 0.8D, 0.8D)
         );
         for (BlockPos blockPos : BlockPos.iterate((int) (client.player.getX() - reach), (int) (client.player.getY() - reach), (int) (client.player.getZ() - reach), (int) (client.player.getX() + reach), (int) (client.player.getY() + reach), (int) (client.player.getZ() + reach))) {
-            assert client.world != null;
-            boolean blacklisted = false;
-            for (String mod : ImprovedInventoryConfig.containerTabModBlacklist) {
-                if (client.world.getBlockState(blockPos).getBlock().getTranslationKey().contains("." + mod + ".")) {
-                    blacklisted = true;
-                    break;
-                }
-            }
+            boolean blacklisted = ImprovedInventoryConfig.containerTabBlacklist.contains(client.world.getBlockState(blockPos).getBlock().asItem());
             if (!blacklisted && client.world.getBlockEntity(blockPos) instanceof LockableContainerBlockEntity lockableContainerBlockEntity && lockableContainerBlockEntity.canPlayerUse(client.player) && !containers.contains(blockPos)) {
                 for (Vec3d blockOffsetVector : blockOffsetVectors) {
                     BlockHitResult hitResult = client.player.getEntityWorld().raycast(new RaycastContext(client.player.getEyePos(), Vec3d.of(blockPos).add(blockOffsetVector), RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, client.player));

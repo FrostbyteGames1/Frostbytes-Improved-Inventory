@@ -82,15 +82,9 @@ public abstract class ScreenMixin {
     public void init(MinecraftClient client, int width, int height, CallbackInfo ci) {
         if (ImprovedInventoryConfig.containerTab && !ImprovedInventoryConfig.containerTabKeybindOnly && !containers.isEmpty() && client.world != null && client.player != null && client.interactionManager != null && client.currentScreen instanceof HandledScreen<?> screen && !(client.currentScreen instanceof CreativeInventoryScreen) && !(client.currentScreen instanceof MerchantScreen)) {
             switch (screen) {
-                case GenericContainerScreen containerScreen ->
-                    screenHeight = 114 + containerScreen.getScreenHandler().getRows() * 18;
-                case HopperScreen ignored ->
-                    screenHeight = 135;
-                case ShulkerBoxScreen ignored ->
-                    screenHeight = 169;
-                default -> {
-                    // Do Nothing
-                }
+                case HopperScreen ignored -> screenHeight = 135;
+                case ShulkerBoxScreen ignored -> screenHeight = 169;
+                default -> screenHeight = screen.backgroundHeight;
             }
             ItemStack playerHead = new ItemStack(Items.PLAYER_HEAD);
             playerHead.set(DataComponentTypes.PROFILE, ProfileComponent.ofStatic(client.player.getGameProfile()));

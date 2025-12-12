@@ -1,6 +1,8 @@
 package net.frostbyte.inventory.mixin;
 
 import com.mojang.serialization.Codec;
+import net.frostbyte.inventory.Gamma;
+import net.frostbyte.inventory.Zoom;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.Text;
@@ -34,7 +36,11 @@ public abstract class SimpleOptionMixin<T> {
 
     @Inject(method = "setValue", at = @At("HEAD"), cancellable = true)
     public void setValue(T value, CallbackInfo info) {
-        if (text.getString().equals(I18n.translate("options.gamma")) || text.getString().equals(I18n.translate("options.fov"))) {
+        if (text.getString().equals(I18n.translate("options.gamma")) && Gamma.enabled) {
+            this.value = value;
+            info.cancel();
+        }
+        if (text.getString().equals(I18n.translate("options.fov")) && Zoom.zoomKey.isPressed()) {
             this.value = value;
             info.cancel();
         }
