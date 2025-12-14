@@ -17,7 +17,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec3i;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -30,9 +29,9 @@ import static net.frostbyte.inventory.NearbyContainerViewer.*;
 @Mixin(Screen.class)
 public abstract class ScreenMixin {
     @Shadow protected abstract <T extends Element & Drawable> T addDrawableChild(T drawableElement);
-    @Shadow protected abstract void clearChildren();
-    @Shadow public abstract void init();
     @Shadow protected MinecraftClient client;
+    @Shadow protected abstract void clearChildren();
+    @Shadow protected abstract void init();
     @Unique
     private static final ButtonTextures TEXTURES_LEFT = new ButtonTextures(
         Identifier.of("container/creative_inventory/tab_top_unselected_1"),
@@ -74,17 +73,19 @@ public abstract class ScreenMixin {
         Identifier.of("transferable_list/unselect_highlighted")
     );
     @Unique
-    int screenWidth = 176;
+    int screenWidth;
     @Unique
-    int screenHeight = 166;
+    int screenHeight;
 
     @Inject(method = "init", at = @At("HEAD"))
-    public void init(MinecraftClient client, int width, int height, CallbackInfo ci) {
+    public void init(int width, int height, CallbackInfo ci) {
         if (ImprovedInventoryConfig.containerTab && !ImprovedInventoryConfig.containerTabKeybindOnly && !containers.isEmpty() && client.world != null && client.player != null && client.interactionManager != null && client.currentScreen instanceof HandledScreen<?> screen && !(client.currentScreen instanceof CreativeInventoryScreen) && !(client.currentScreen instanceof MerchantScreen)) {
-            switch (screen) {
-                case HopperScreen ignored -> screenHeight = 135;
-                case ShulkerBoxScreen ignored -> screenHeight = 169;
-                default -> screenHeight = screen.backgroundHeight;
+            screenWidth = screen.backgroundWidth;
+            screenHeight = screen.backgroundHeight;
+            if (screen instanceof HopperScreen) {
+                screenHeight += 2;
+            } else if (screen instanceof ShulkerBoxScreen) {
+                screenHeight += 1;
             }
             ItemStack playerHead = new ItemStack(Items.PLAYER_HEAD);
             playerHead.set(DataComponentTypes.PROFILE, ProfileComponent.ofStatic(client.player.getGameProfile()));
@@ -113,12 +114,13 @@ public abstract class ScreenMixin {
             tab.setTooltip(Tooltip.of(client.player.getDisplayName()));
             addDrawableChild(tab);
 
-            int numTabs = Math.min(6, containers.size());
+            int maxTabs = screenWidth / 26;
+            int numTabs = Math.min(maxTabs, containers.size());
             for (int i = 0; i < numTabs; i++) {
                 int container = i;
                 Text displayName = getDisplayName(containers.get(container));
                 ItemStack displayStack = getDisplayStack(containers.get(container));
-                if (i == 5) {
+                if (i == maxTabs - 1) {
                     if (!(client.currentScreen instanceof InventoryScreen) && current == container) {
                         tab = new TexturedButtonWithItemStackWidget(width / 2 + screenWidth / 2 - 26, height / 2 - screenHeight / 2 - 28, 26, 32, TEXTURES_RIGHT_SELECTED, displayStack, button -> openContainer(container));
                     } else {
@@ -135,21 +137,25 @@ public abstract class ScreenMixin {
                 addDrawableChild(tab);
             }
 
-            if (containers.size() > 6) {
+            if (containers.size() > maxTabs - 1) {
                 TexturedButtonWidget backButton = new TexturedButtonWidget(width / 2 + screenWidth / 2 - 2, height / 2 - screenHeight / 2 - 24, 24, 24, TEXTURES_FORWARD, button -> {
-                    Vec3i temp = containers.get(current);
                     containers.addLast(containers.removeFirst());
-                    current = containers.indexOf(temp);
+                    current--;
+                    if (current < 0) {
+                        current = containers.size() - 1;
+                    }
                     this.clearChildren();
-                    this.init(client, width, height, ci);
+                    this.init(width, height, ci);
                     this.init();
                 });
                 TexturedButtonWidget forwardButton = new TexturedButtonWidget(width / 2 - screenWidth / 2 - 17, height / 2 - screenHeight / 2 - 24, 24, 24, TEXTURES_BACK, button -> {
-                    Vec3i temp = containers.get(current);
                     containers.addFirst(containers.removeLast());
-                    current = containers.indexOf(temp);
+                    current++;
+                    if (current == containers.size()) {
+                        current = 0;
+                    }
                     this.clearChildren();
-                    this.init(client, width, height, ci);
+                    this.init(width, height, ci);
                     this.init();
                 });
                 addDrawableChild(backButton);
@@ -159,9 +165,9 @@ public abstract class ScreenMixin {
     }
 
     @Inject(method = "resize", at = @At("TAIL"))
-    public void resize(MinecraftClient client, int width, int height, CallbackInfo ci) {
+    public void resize(int width, int height, CallbackInfo ci) {
         if (ImprovedInventoryConfig.containerTab && !ImprovedInventoryConfig.containerTabKeybindOnly) {
-            this.init(client, width, height, ci);
+            this.init(width, height, ci);
         }
     }
 

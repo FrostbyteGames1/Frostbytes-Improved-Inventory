@@ -153,7 +153,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     }
 
     @Inject(method = "drawSlot", at = @At("TAIL"))
-    protected void drawSlot(DrawContext context, Slot slot, CallbackInfo ci) {
+    protected void drawSlot(DrawContext context, Slot slot, int mouseX, int mouseY, CallbackInfo ci) {
         if (ImprovedInventoryConfig.containerSearch && (this.handler instanceof GenericContainerScreenHandler || this.handler instanceof ShulkerBoxScreenHandler)) {
             if (ContainerSearch.doesStackContainString(MinecraftClient.getInstance(), searchField.getText(), slot.getStack())) {
                 context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, HandledScreen.SLOT_HIGHLIGHT_BACK_TEXTURE, slot.x - 4, slot.y - 4, 24, 24);
@@ -162,7 +162,6 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         }
     }
 
-    @SuppressWarnings("DataFlowIssue")
     @Inject(method = "tick", at = @At("TAIL"))
     private void tick(CallbackInfo ci) {
         // Nearby Container Viewer

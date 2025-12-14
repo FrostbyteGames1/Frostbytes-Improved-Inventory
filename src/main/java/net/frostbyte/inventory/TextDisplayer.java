@@ -17,6 +17,7 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.random.ChunkRandom;
 import net.minecraft.world.LightType;
+import net.minecraft.world.LocalDifficulty;
 
 import java.awt.*;
 import java.time.LocalDateTime;
@@ -61,7 +62,7 @@ public class TextDisplayer implements HudRenderCallback {
                         drawContext.drawTextWithShadow(mc.textRenderer, mc.getCurrentFps() + " FPS", x, y, Colors.WHITE);
                         break;
                     case "Local Difficulty":
-                        drawContext.drawTextWithShadow(mc.textRenderer, Text.translatable("info.local_difficulty").getString() + mc.world.getLocalDifficulty(mc.player.getBlockPos()).getLocalDifficulty(), x, y, Colors.WHITE);
+                        drawContext.drawTextWithShadow(mc.textRenderer, Text.translatable("info.local_difficulty").getString() + new LocalDifficulty(mc.world.getDifficulty(), mc.world.getTimeOfDay(), mc.world.getChunk(mc.player.getBlockX(), mc.player.getBlockY()).getInhabitedTime(), mc.world.getServer().getWorld(mc.world.getRegistryKey()).getMoonSize(mc.player.getBlockPos())).getLocalDifficulty(), x, y, Colors.WHITE);
                         break;
                     case "Memory Usage":
                         drawContext.drawTextWithShadow(mc.textRenderer, ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1048576) + "/" + (Runtime.getRuntime().maxMemory() / 1048576) + " MB", x, y, Colors.WHITE);
@@ -151,8 +152,8 @@ public class TextDisplayer implements HudRenderCallback {
                         drawContext.drawTextWithShadow(mc.textRenderer, mc.getCurrentFps() + " FPS", x, y, Colors.WHITE);
                         break;
                     case "Local Difficulty":
-                        x -= mc.textRenderer.getWidth(Text.translatable("info.local_difficulty").getString() + mc.world.getLocalDifficulty(mc.player.getBlockPos()).getLocalDifficulty());
-                        drawContext.drawTextWithShadow(mc.textRenderer, Text.translatable("info.local_difficulty").getString() + mc.world.getLocalDifficulty(mc.player.getBlockPos()).getLocalDifficulty(), x, y, Colors.WHITE);
+                        x -= mc.textRenderer.getWidth(Text.translatable("info.local_difficulty").getString() + new LocalDifficulty(mc.world.getDifficulty(), mc.world.getTimeOfDay(), mc.world.getChunk(mc.player.getBlockX(), mc.player.getBlockY()).getInhabitedTime(), mc.world.getServer().getWorld(mc.world.getRegistryKey()).getMoonSize(mc.player.getBlockPos())).getLocalDifficulty());
+                        drawContext.drawTextWithShadow(mc.textRenderer, Text.translatable("info.local_difficulty").getString() + new LocalDifficulty(mc.world.getDifficulty(), mc.world.getTimeOfDay(), mc.world.getChunk(mc.player.getBlockX(), mc.player.getBlockY()).getInhabitedTime(), mc.world.getServer().getWorld(mc.world.getRegistryKey()).getMoonSize(mc.player.getBlockPos())).getLocalDifficulty(), x, y, Colors.WHITE);
                         break;
                     case "Memory Usage":
                         x -= mc.textRenderer.getWidth(((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1048576) + "/" + (Runtime.getRuntime().maxMemory() / 1048576) + " MB");
