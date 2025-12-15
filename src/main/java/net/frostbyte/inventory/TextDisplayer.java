@@ -7,14 +7,16 @@ import net.frostbyte.inventory.config.ImprovedInventoryConfig;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.Colors;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.ChunkRandom;
 import net.minecraft.world.LightType;
 
@@ -25,19 +27,19 @@ import java.util.List;
 import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
-@SuppressWarnings("deprecation")
 public class TextDisplayer implements HudRenderCallback {
 
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Override
-    public void onHudRender(DrawContext drawContext, RenderTickCounter tickCounter) {
+    public void onHudRender(DrawContext drawContext, float tickCounter) {
         MinecraftClient mc = MinecraftClient.getInstance();
-        if (mc.player != null && !mc.player.isSpectator() && mc.world != null && ImprovedInventoryConfig.textDisplay && !mc.options.hudHidden && mc.currentScreen == null && !mc.inGameHud.getDebugHud().shouldShowDebugHud()) {
+        if (mc.player != null && !mc.player.isSpectator() && mc.world != null && ImprovedInventoryConfig.textDisplay && !mc.options.hudHidden && mc.currentScreen == null && !mc.options.debugEnabled) {
             int x = 1 + ImprovedInventoryConfig.textDisplayOffsetX;
             int y = 1 + ImprovedInventoryConfig.textDisplayOffsetY;
             for (String line : ImprovedInventoryConfig.textDisplayLeft) {
                 switch (line) {
                     case "Biome":
-                        drawContext.drawTextWithShadow(mc.textRenderer, Text.translatable("biome." + mc.world.getBiome(mc.player.getBlockPos()).getIdAsString().replace(':', '.')), x, y, Colors.WHITE);
+                        drawContext.drawTextWithShadow(mc.textRenderer, Text.translatable("biome." + mc.world.getBiome(mc.player.getBlockPos()).getKey().get().getValue().toTranslationKey()), x, y, Colors.WHITE);
                         break;
                     case "Block Light":
                         drawContext.drawTextWithShadow(mc.textRenderer, Text.translatable("info.block_light").getString() + mc.world.getLightLevel(LightType.BLOCK, mc.player.getBlockPos()), x, y, Colors.WHITE);
@@ -49,7 +51,7 @@ public class TextDisplayer implements HudRenderCallback {
                         drawContext.drawTextWithShadow(mc.textRenderer, Text.translatable("info.day_number").getString() + (mc.world.getTimeOfDay() / 24000L % Integer.MAX_VALUE), x, y, Colors.WHITE);
                         break;
                     case "Dimension":
-                        drawContext.drawTextWithShadow(mc.textRenderer, mc.world.getDimensionEntry().getIdAsString(), x, y, Colors.WHITE);
+                        drawContext.drawTextWithShadow(mc.textRenderer, Text.translatable("dimension." + mc.world.getDimensionEntry().getKey().get().getValue().toTranslationKey()), x, y, Colors.WHITE);
                         break;
                     case "Entity Count":
                         drawContext.drawTextWithShadow(mc.textRenderer, Text.translatable("info.entity_count").getString() + mc.world.getRegularEntityCount(), x, y, Colors.WHITE);
@@ -61,7 +63,7 @@ public class TextDisplayer implements HudRenderCallback {
                         drawContext.drawTextWithShadow(mc.textRenderer, mc.getCurrentFps() + " FPS", x, y, Colors.WHITE);
                         break;
                     case "Local Difficulty":
-                        drawContext.drawTextWithShadow(mc.textRenderer, Text.translatable("info.local_difficulty").getString() + mc.world.getLocalDifficulty(mc.player.getBlockPos()).getLocalDifficulty(), x, y, Colors.WHITE);
+                        drawContext.drawTextWithShadow(mc.textRenderer, Text.translatable("info.local_difficulty").getString() + ": " + mc.world.getLocalDifficulty(mc.player.getBlockPos()).getLocalDifficulty(), x, y, Colors.WHITE);
                         break;
                     case "Memory Usage":
                         drawContext.drawTextWithShadow(mc.textRenderer, ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1048576) + "/" + (Runtime.getRuntime().maxMemory() / 1048576) + " MB", x, y, Colors.WHITE);
@@ -79,9 +81,9 @@ public class TextDisplayer implements HudRenderCallback {
                         }
                         break;
                     case "Speed":
-                        Vec3d playerPosVec = mc.player.getEntityPos();
-                        double travelledX = playerPosVec.x - mc.player.lastX;
-                        double travelledZ = playerPosVec.z - mc.player.lastZ;
+                        Vec3d playerPosVec = mc.player.getPos();
+                        double travelledX = playerPosVec.x - mc.player.prevX;
+                        double travelledZ = playerPosVec.z - mc.player.prevZ;
                         drawContext.drawTextWithShadow(mc.textRenderer, String.format("%.3f m/s", MathHelper.sqrt((float)(travelledX * travelledX + travelledZ * travelledZ)) * 20), x, y, Colors.WHITE);
                         break;
                     case "Sprint Indicator":
@@ -119,8 +121,8 @@ public class TextDisplayer implements HudRenderCallback {
                 x = mc.getWindow().getScaledWidth() - 1 - ImprovedInventoryConfig.textDisplayOffsetX;
                 switch (line) {
                     case "Biome":
-                        x -= mc.textRenderer.getWidth(Text.translatable("biome." + mc.world.getBiome(mc.player.getBlockPos()).getIdAsString().replace(':', '.')));
-                        drawContext.drawTextWithShadow(mc.textRenderer, Text.translatable("biome." + mc.world.getBiome(mc.player.getBlockPos()).getIdAsString().replace(':', '.')), x, y, Colors.WHITE);
+                        x -= mc.textRenderer.getWidth(Text.translatable("biome." + mc.world.getBiome(mc.player.getBlockPos()).getKey().get().getValue().toTranslationKey()));
+                        drawContext.drawTextWithShadow(mc.textRenderer, Text.translatable("biome." + mc.world.getBiome(mc.player.getBlockPos()).getKey().get().getValue().toTranslationKey()), x, y, Colors.WHITE);
                         break;
                     case "Block Light":
                         x -= mc.textRenderer.getWidth(Text.translatable("info.block_light").getString() + mc.world.getLightLevel(LightType.BLOCK, mc.player.getBlockPos()));
@@ -135,8 +137,8 @@ public class TextDisplayer implements HudRenderCallback {
                         drawContext.drawTextWithShadow(mc.textRenderer, Text.translatable("info.day_number").getString() + (mc.world.getTimeOfDay() / 24000L % Integer.MAX_VALUE), x, y, Colors.WHITE);
                         break;
                     case "Dimension":
-                        x -= mc.textRenderer.getWidth(mc.world.getDimensionEntry().getIdAsString());
-                        drawContext.drawTextWithShadow(mc.textRenderer, mc.world.getDimensionEntry().getIdAsString(), x, y, Colors.WHITE);
+                        x -= mc.textRenderer.getWidth(Text.translatable("dimension." + mc.world.getDimensionEntry().getKey().get().getValue().toTranslationKey()));
+                        drawContext.drawTextWithShadow(mc.textRenderer, Text.translatable("dimension." + mc.world.getDimensionEntry().getKey().get().getValue().toTranslationKey()), x, y, Colors.WHITE);
                         break;
                     case "Entity Count":
                         x -= mc.textRenderer.getWidth(Text.translatable("info.entity_count").getString() + mc.world.getRegularEntityCount());
@@ -151,8 +153,8 @@ public class TextDisplayer implements HudRenderCallback {
                         drawContext.drawTextWithShadow(mc.textRenderer, mc.getCurrentFps() + " FPS", x, y, Colors.WHITE);
                         break;
                     case "Local Difficulty":
-                        x -= mc.textRenderer.getWidth(Text.translatable("info.local_difficulty").getString() + mc.world.getLocalDifficulty(mc.player.getBlockPos()).getLocalDifficulty());
-                        drawContext.drawTextWithShadow(mc.textRenderer, Text.translatable("info.local_difficulty").getString() + mc.world.getLocalDifficulty(mc.player.getBlockPos()).getLocalDifficulty(), x, y, Colors.WHITE);
+                        x -= mc.textRenderer.getWidth(Text.translatable("info.local_difficulty").getString() + ": " + mc.world.getLocalDifficulty(mc.player.getBlockPos()).getLocalDifficulty());
+                        drawContext.drawTextWithShadow(mc.textRenderer, Text.translatable("info.local_difficulty").getString() + ": " + mc.world.getLocalDifficulty(mc.player.getBlockPos()).getLocalDifficulty(), x, y, Colors.WHITE);
                         break;
                     case "Memory Usage":
                         x -= mc.textRenderer.getWidth(((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1048576) + "/" + (Runtime.getRuntime().maxMemory() / 1048576) + " MB");
@@ -172,9 +174,9 @@ public class TextDisplayer implements HudRenderCallback {
                         }
                         break;
                     case "Speed":
-                        Vec3d playerPosVec = mc.player.getEntityPos();
-                        double travelledX = playerPosVec.x - mc.player.lastX;
-                        double travelledZ = playerPosVec.z - mc.player.lastZ;
+                        Vec3d playerPosVec = mc.player.getPos();
+                        double travelledX = playerPosVec.x - mc.player.prevX;
+                        double travelledZ = playerPosVec.z - mc.player.prevZ;
                         x -= mc.textRenderer.getWidth(String.format("%.3f BPS", MathHelper.sqrt((float)(travelledX * travelledX + travelledZ * travelledZ)) * 20));
                         drawContext.drawTextWithShadow(mc.textRenderer, String.format("%.3f m/s", MathHelper.sqrt((float)(travelledX * travelledX + travelledZ * travelledZ)) * 20), x, y, Colors.WHITE);
                         break;

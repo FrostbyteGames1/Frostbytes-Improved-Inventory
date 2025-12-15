@@ -1,88 +1,43 @@
 package net.frostbyte.inventory;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.AttributeModifiersComponent;
-import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.equipment.ArmorMaterials;
-import net.minecraft.item.equipment.EquipmentAsset;
-import net.minecraft.registry.RegistryKey;
+import net.minecraft.item.ArmorItem;
+import net.minecraft.item.ArmorMaterials;
 import net.minecraft.util.Identifier;
 
-import java.util.Optional;
-
 public class ColoredArmorBar {
-    private static final Identifier ARMOR_EMPTY_TEXTURE = Identifier.of("hud/armor_empty");
     
     public static void coloredArmorBarHandler(DrawContext context, PlayerEntity player, int i, int j, int k, int x) {
         int totalArmor = player.getArmor();
 
         int footArmor = 0;
-        Identifier footMaterial = ArmorMaterials.IRON.assetId().getValue();
-        if (!player.getInventory().getStack(36).isEmpty()) {
-            Item armorItem = player.getInventory().getStack(36).getItem();
-            for (AttributeModifiersComponent.Entry entry : armorItem.getComponents().getOrDefault(DataComponentTypes.ATTRIBUTE_MODIFIERS, AttributeModifiersComponent.DEFAULT).modifiers()) {
-                if (entry.attribute() == EntityAttributes.ARMOR) {
-                    footArmor = (int) entry.modifier().value();
-                    break;
-                }
-            }
-            Optional<RegistryKey<EquipmentAsset>> equipmentAssetRegistryKey = armorItem.getComponents().getOrDefault(DataComponentTypes.EQUIPPABLE, null).assetId();
-            if (equipmentAssetRegistryKey.isPresent()) {
-                footMaterial =  equipmentAssetRegistryKey.get().getValue();
-            }
+        String footMaterial = ArmorMaterials.IRON.getName();
+        if (!player.getInventory().getStack(36).isEmpty() && player.getInventory().getStack(36).getItem() instanceof ArmorItem armorItem) {
+            footArmor = armorItem.getProtection();
+            footMaterial = armorItem.getMaterial().getName();
         }
 
         int legArmor = 0;
-        Identifier legMaterial = ArmorMaterials.IRON.assetId().getValue();
-        if (!player.getInventory().getStack(37).isEmpty()) {
-            Item armorItem = player.getInventory().getStack(37).getItem();
-            for (AttributeModifiersComponent.Entry entry : armorItem.getComponents().getOrDefault(DataComponentTypes.ATTRIBUTE_MODIFIERS, AttributeModifiersComponent.DEFAULT).modifiers()) {
-                if (entry.attribute() == EntityAttributes.ARMOR) {
-                    legArmor = (int) entry.modifier().value();
-                    break;
-                }
-            }
-            Optional<RegistryKey<EquipmentAsset>> equipmentAssetRegistryKey = armorItem.getComponents().getOrDefault(DataComponentTypes.EQUIPPABLE, null).assetId();
-            if (equipmentAssetRegistryKey.isPresent()) {
-                legMaterial =  equipmentAssetRegistryKey.get().getValue();
-            }
+        String legMaterial = ArmorMaterials.IRON.getName();
+        if (!player.getInventory().getStack(37).isEmpty() && player.getInventory().getStack(37).getItem() instanceof ArmorItem armorItem) {
+            legArmor = armorItem.getProtection();
+            legMaterial = armorItem.getMaterial().getName();
         }
 
         int chestArmor = 0;
-        Identifier chestMaterial = ArmorMaterials.IRON.assetId().getValue();
-        if (!player.getInventory().getStack(38).isEmpty()) {
-            Item armorItem = player.getInventory().getStack(38).getItem();
-            for (AttributeModifiersComponent.Entry entry : armorItem.getComponents().getOrDefault(DataComponentTypes.ATTRIBUTE_MODIFIERS, AttributeModifiersComponent.DEFAULT).modifiers()) {
-                if (entry.attribute() == EntityAttributes.ARMOR) {
-                    chestArmor = (int) entry.modifier().value();
-                    break;
-                }
-            }
-            Optional<RegistryKey<EquipmentAsset>> equipmentAssetRegistryKey = armorItem.getComponents().getOrDefault(DataComponentTypes.EQUIPPABLE, null).assetId();
-            if (equipmentAssetRegistryKey.isPresent()) {
-                chestMaterial =  equipmentAssetRegistryKey.get().getValue();
-            }
+        String chestMaterial = ArmorMaterials.IRON.getName();
+        if (!player.getInventory().getStack(38).isEmpty() && player.getInventory().getStack(38).getItem() instanceof ArmorItem armorItem) {
+            chestArmor = armorItem.getProtection();
+            chestMaterial = armorItem.getMaterial().getName();
         }
 
         int headArmor = 0;
-        Identifier headMaterial = ArmorMaterials.IRON.assetId().getValue();
-        if (!player.getInventory().getStack(39).isEmpty()) {
-            Item armorItem = player.getInventory().getStack(39).getItem();
-            for (AttributeModifiersComponent.Entry entry : armorItem.getComponents().getOrDefault(DataComponentTypes.ATTRIBUTE_MODIFIERS, AttributeModifiersComponent.DEFAULT).modifiers()) {
-                if (entry.attribute() == EntityAttributes.ARMOR) {
-                    headArmor = (int) entry.modifier().value();
-                    break;
-                }
-            }
-            Optional<RegistryKey<EquipmentAsset>> equipmentAssetRegistryKey = armorItem.getComponents().getOrDefault(DataComponentTypes.EQUIPPABLE, null).assetId();
-            if (equipmentAssetRegistryKey.isPresent()) {
-                headMaterial =  equipmentAssetRegistryKey.get().getValue();
-            }
+        String headMaterial = ArmorMaterials.IRON.getName();
+        if (!player.getInventory().getStack(39).isEmpty() && player.getInventory().getStack(39).getItem() instanceof ArmorItem armorItem) {
+            headArmor = armorItem.getProtection();
+            headMaterial = armorItem.getMaterial().getName();
         }
 
         if (totalArmor > 0) {
@@ -90,56 +45,54 @@ public class ColoredArmorBar {
             for(int n = 0; n < 10; ++n) {
                 int o = x + n * 8;
 
-                context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, ARMOR_EMPTY_TEXTURE, o, m, 9, 9);
-
                 if (n * 2 + 1 < footArmor) {
-                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(footMaterial, "full"), o, m, 9, 9);
+                    context.drawTexture(getTexture(footMaterial, "full"), o, m, 0, 0, 9, 9, 9, 9);
                 } else if (n * 2 + 1 == footArmor) {
-                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(footMaterial, "half1"), o, m, 9, 9);
+                    context.drawTexture(getTexture(footMaterial, "half1"), o, m, 0, 0, 9, 9, 9, 9);
                     if (legArmor > 0) {
-                        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(legMaterial, "half2"), o, m, 9, 9);
+                        context.drawTexture(getTexture(legMaterial, "half2"), o, m, 0, 0, 9, 9, 9, 9);
                     } else if (chestArmor > 0) {
-                        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(chestMaterial, "half2"), o, m, 9, 9);
+                        context.drawTexture(getTexture(chestMaterial, "half2"), o, m, 0, 0, 9, 9, 9, 9);
                     } else if (headArmor > 0) {
-                        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(headMaterial, "half2"), o, m, 9, 9);
+                        context.drawTexture(getTexture(headMaterial, "half2"), o, m, 0, 0, 9, 9, 9, 9);
                     }
                 }
 
                 else if (n * 2 + 1 < (footArmor + legArmor)) {
-                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(legMaterial, "full"), o, m, 9, 9);
+                    context.drawTexture(getTexture(legMaterial, "full"), o, m, 0, 0, 9, 9, 9, 9);
                 } else if (n * 2 + 1 == (footArmor + legArmor)) {
-                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(legMaterial, "half1"), o, m, 9, 9);
+                    context.drawTexture(getTexture(legMaterial, "half1"), o, m, 0, 0, 9, 9, 9, 9);
                     if (chestArmor > 0) {
-                        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(chestMaterial, "half2"), o, m, 9, 9);
+                        context.drawTexture(getTexture(chestMaterial, "half2"), o, m, 0, 0, 9, 9, 9, 9);
                     } else if (headArmor > 0) {
-                        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(headMaterial, "half2"), o, m, 9, 9);
+                        context.drawTexture(getTexture(headMaterial, "half2"), o, m, 0, 0, 9, 9, 9, 9);
                     }
                 }
 
                 else if (n * 2 + 1 < (footArmor + legArmor + chestArmor)) {
-                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(chestMaterial, "full"), o, m, 9, 9);
+                    context.drawTexture(getTexture(chestMaterial, "full"), o, m, 0, 0, 9, 9, 9, 9);
                 } else if (n * 2 + 1 == (footArmor + legArmor + chestArmor)) {
-                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(chestMaterial, "half1"), o, m, 9, 9);
+                    context.drawTexture(getTexture(chestMaterial, "half1"), o, m, 0, 0, 9, 9, 9, 9);
                     if (headArmor > 0) {
-                        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(headMaterial, "half2"), o, m, 9, 9);
+                        context.drawTexture(getTexture(headMaterial, "half2"), o, m, 0, 0, 9, 9, 9, 9);
                     }
                 }
 
                 else if (n * 2 + 1 < totalArmor ) {
-                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(headMaterial, "full"), o, m, 9, 9);
+                    context.drawTexture(getTexture(headMaterial, "full"), o, m, 0, 0, 9, 9, 9, 9);
                 } else if (n * 2 + 1 == totalArmor) {
-                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(headMaterial, "half1"), o, m, 9, 9);
+                    context.drawTexture(getTexture(headMaterial, "half1"), o, m, 0, 0, 9, 9, 9, 9);
                 }
 
             }
         }
     }
 
-    private static Identifier getTexture(Identifier material, String shape) {
-        Identifier texture = Identifier.of(ImprovedInventory.MOD_ID, "hud/" + material.getPath() + "_armor_" + shape);
-        if (MinecraftClient.getInstance().getResourceManager().getResource(Identifier.of(ImprovedInventory.MOD_ID, "textures/gui/sprites/" + texture.getPath() + ".png")).isPresent()) {
+    private static Identifier getTexture(String material, String shape) {
+        Identifier texture = Identifier.of(ImprovedInventory.MOD_ID, "textures/gui/sprites/hud/" + material + "_armor_" + shape + ".png");
+        if (MinecraftClient.getInstance().getResourceManager().getResource(texture).isPresent()) {
             return texture;
         }
-        return Identifier.of(ImprovedInventory.MOD_ID, "hud/iron_armor_" + shape);
+        return Identifier.of(ImprovedInventory.MOD_ID, "textures/gui/sprites/hud/iron_armor_" + shape + ".png");
     }
 }

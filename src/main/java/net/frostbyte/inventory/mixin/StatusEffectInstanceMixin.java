@@ -18,7 +18,7 @@ public abstract class StatusEffectInstanceMixin implements StatusEffectInstanceD
     @Shadow
     private int duration;
 
-    @Inject(method = "<init>(Lnet/minecraft/registry/entry/RegistryEntry;IIZZZLnet/minecraft/entity/effect/StatusEffectInstance;)V", at = @At("RETURN"))
+    @Inject(method = "<init>(Lnet/minecraft/entity/effect/StatusEffect;IIZZZLnet/minecraft/entity/effect/StatusEffectInstance;Ljava/util/Optional;)V", at = @At("RETURN"))
     private void onInit(CallbackInfo ci) {
         this.maxDuration = this.duration;
     }

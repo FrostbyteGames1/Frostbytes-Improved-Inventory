@@ -22,30 +22,30 @@ public abstract class GlDebugMixin {
     private static Logger LOGGER;
     @Shadow
     @Final
-    private Queue<DebugMessage> debugMessages;
+    private static Queue<DebugMessage> DEBUG_MESSAGES;
     @Shadow
     @Nullable
-    private volatile DebugMessage lastDebugMessage;
+    private static volatile DebugMessage lastDebugMessage;
     @Unique
     private static boolean reportedError1282 = false;
 
     @SuppressWarnings("SynchronizeOnNonFinalField")
-    @Inject(method = "onDebugMessage", at = @At(value = "HEAD"), cancellable = true)
-    private void onDebugMessage(int source, int type, int id, int severity, int length, long message, long l, CallbackInfo ci) {
+    @Inject(method = "info", at = @At(value = "HEAD"), cancellable = true)
+    private static void info(int source, int type, int id, int severity, int length, long message, long l, CallbackInfo ci) {
         if (id == 1282) {
             if (reportedError1282) {
                 ci.cancel();
             } else {
                 String string = GLDebugMessageCallback.getMessage(length, message);
                 DebugMessage debugMessage;
-                synchronized(this.debugMessages) {
-                    debugMessage = this.lastDebugMessage;
+                synchronized(DEBUG_MESSAGES) {
+                    debugMessage = lastDebugMessage;
                     if (debugMessage != null && debugMessage.equals(source, type, id, severity, string)) {
                         ++debugMessage.count;
                     } else {
                         debugMessage = new DebugMessage(source, type, id, severity, string);
-                        this.debugMessages.add(debugMessage);
-                        this.lastDebugMessage = debugMessage;
+                        DEBUG_MESSAGES.add(debugMessage);
+                        lastDebugMessage = debugMessage;
                     }
                 }
                 LOGGER.info("OpenGL debug message: {}", debugMessage);

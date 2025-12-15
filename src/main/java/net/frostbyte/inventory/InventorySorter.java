@@ -22,7 +22,7 @@ public class InventorySorter {
     private static int interactions = 0;
 
     public void setKeyBindings() {
-        KeyBindingHelper.registerKeyBinding(sortKey = new KeyBinding("key.sort_container", InputUtil.Type.MOUSE, InputUtil.GLFW_MOUSE_BUTTON_MIDDLE, ImprovedInventory.KEYBIND_CATEGORY));
+        KeyBindingHelper.registerKeyBinding(sortKey = new KeyBinding("key.sort_container", InputUtil.Type.MOUSE, 2, ImprovedInventory.KEYBIND_CATEGORY.toString()));
     }
 
     public static void inventorySortHandler(MinecraftClient mc) {
@@ -84,7 +84,7 @@ public class InventorySorter {
                 stack = screenHandler.getSlot(i).getStack();
                 if (!stack.isEmpty() && stack.getMaxCount() > stack.getCount()) {
                     for (int j = i + 1; j < 36; j++) {
-                        if (screenHandler.getSlot(j).getStack().getItem().equals(stack.getItem()) && screenHandler.getSlot(j).getStack().getComponents().equals(stack.getComponents())) {
+                        if (ItemStack.areEqual(screenHandler.getSlot(i).getStack(), screenHandler.getSlot(j).getStack())) {
                             mc.interactionManager.clickSlot(screenHandler.syncId, j, 0, SlotActionType.PICKUP, mc.player);
                             mc.interactionManager.clickSlot(screenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player);
                             interactions += 2;
@@ -107,7 +107,7 @@ public class InventorySorter {
                 stack = screenHandler.getSlot(i).getStack();
                 if (!stack.isEmpty() && stack.getMaxCount() > stack.getCount()) {
                     for (int j = i + 1; j < getNumSlots(screenHandler); j++) {
-                        if (screenHandler.getSlot(j).getStack().getItem().equals(stack.getItem()) && screenHandler.getSlot(j).getStack().getComponents().equals(stack.getComponents())) {
+                        if (ItemStack.areEqual(screenHandler.getSlot(i).getStack(), screenHandler.getSlot(j).getStack())) {
                             mc.interactionManager.clickSlot(screenHandler.syncId, j, 0, SlotActionType.PICKUP, mc.player);
                             mc.interactionManager.clickSlot(screenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player);
                             interactions += 2;

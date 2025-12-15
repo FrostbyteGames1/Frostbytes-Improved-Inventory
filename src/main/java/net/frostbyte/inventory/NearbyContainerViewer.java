@@ -1,9 +1,11 @@
 package net.frostbyte.inventory;
 
+import com.google.common.collect.Lists;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
-import net.frostbyte.inventory.tags.ModTags;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.ChestBlock;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
@@ -14,7 +16,6 @@ import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
-import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.NamedScreenHandlerFactory;
@@ -28,7 +29,6 @@ import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.lwjgl.glfw.GLFW;
 
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -41,10 +41,22 @@ public class NearbyContainerViewer {
     public static ArrayList<Vec3i> containers = new ArrayList<>();
     public static int current = 0;
     static int tabButtonCooldown;
+    
+    static ArrayList<Block> HAS_GUI = Lists.newArrayList(
+        Blocks.ANVIL,
+        Blocks.BEACON,
+        Blocks.CARTOGRAPHY_TABLE,
+        Blocks.CHIPPED_ANVIL,
+        Blocks.CRAFTING_TABLE,
+        Blocks.DAMAGED_ANVIL,
+        Blocks.ENDER_CHEST,
+        Blocks.GRINDSTONE,
+        Blocks.SMITHING_TABLE
+    );
+    
     public void setKeybindings() {
-        KeyBindingHelper.registerKeyBinding(containerKey = new KeyBinding("key.next_container", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_TAB, ImprovedInventory.KEYBIND_CATEGORY));
+        KeyBindingHelper.registerKeyBinding(containerKey = new KeyBinding("key.next_container", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_TAB, ImprovedInventory.KEYBIND_CATEGORY.toString()));
     }
-
 
     public static void nearbyContainerViewerHandler(MinecraftClient client) {
         if (client.player == null) {
@@ -58,8 +70,8 @@ public class NearbyContainerViewer {
                 return;
             }
             int keyCode = KeyBindingHelper.getBoundKeyOf(containerKey).getCode();
-            if (((keyCode > 31 && GLFW.glfwGetKey(client.getWindow().getHandle(), keyCode) == 1) || (keyCode < 8 && GLFW.glfwGetMouseButton(client.getWindow().getHandle(), keyCode) == 1)) && tabButtonCooldown == 0) {
-                if (InputUtil.isKeyPressed(client.getWindow(), KeyEvent.VK_SHIFT)) {
+            if (tabButtonCooldown == 0 && ((keyCode >= 31 && keyCode <= 348 && GLFW.glfwGetKey(client.getWindow().getHandle(), keyCode) == GLFW.GLFW_PRESS) || (keyCode >= 0 && keyCode <= 7 && GLFW.glfwGetMouseButton(client.getWindow().getHandle(), keyCode) == GLFW.GLFW_PRESS))) {
+                if (GLFW.glfwGetKey(client.getWindow().getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT) == GLFW.GLFW_PRESS || GLFW.glfwGetKey(client.getWindow().getHandle(), GLFW.GLFW_KEY_RIGHT_SHIFT) == GLFW.GLFW_PRESS) {
                     current--;
                     if (current < 0) {
                         current = containers.size() - 1;
@@ -128,7 +140,7 @@ public class NearbyContainerViewer {
         // Get name of item in item frame
         List<ItemFrameEntity> itemFrames = client.world.getNonSpectatingEntities(ItemFrameEntity.class, new Box(new BlockPos(blockPos).toCenterPos(), new BlockPos(blockPos).toCenterPos()).expand(0.55, 0.55, 0.55));
         if (!itemFrames.isEmpty() && itemFrames.get(0).getHeldItemStack() != null) {
-            if (itemFrames.get(0).getHeldItemStack().getComponents().contains(DataComponentTypes.CUSTOM_NAME)) {
+            if (itemFrames.get(0).getHeldItemStack().hasCustomName()) {
                 name = itemFrames.get(0).getHeldItemStack().getName();
             }
         }
@@ -163,7 +175,7 @@ public class NearbyContainerViewer {
         MinecraftClient client = MinecraftClient.getInstance();
         containers.clear();
         assert client.player != null;
-        double reach = client.player.getBlockInteractionRange();
+        double reach = 5;
         List<Vec3d> blockOffsetVectors = List.of(
             new Vec3d(0.5D, 0.5D, 0.5D),
             new Vec3d(0.2D, 0.2D, 0.2D),
@@ -176,34 +188,7 @@ public class NearbyContainerViewer {
             new Vec3d(0.8D, 0.8D, 0.8D)
         );
         for (BlockPos blockPos : BlockPos.iterate((int) (client.player.getX() - reach), (int) (client.player.getY() - reach), (int) (client.player.getZ() - reach), (int) (client.player.getX() + reach), (int) (client.player.getY() + reach), (int) (client.player.getZ() + reach))) {
-            boolean blacklisted = ImprovedInventoryConfig.containerTabBlacklist.contains(client.world.getBlockState(blockPos).getBlock().asItem());
-            if (!blacklisted && client.world.getBlockEntity(blockPos) instanceof LockableContainerBlockEntity lockableContainerBlockEntity && lockableContainerBlockEntity.canPlayerUse(client.player) && !containers.contains(blockPos)) {
-                for (Vec3d blockOffsetVector : blockOffsetVectors) {
-                    BlockHitResult hitResult = client.player.getEntityWorld().raycast(new RaycastContext(client.player.getEyePos(), Vec3d.of(blockPos).add(blockOffsetVector), RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, client.player));
-                    if (hitResult.getBlockPos().equals(blockPos) && !containers.contains(blockPos)) {
-                        if (client.world.getBlockState(blockPos).contains(Properties.CHEST_TYPE)) {
-                            if (client.world.getBlockState(blockPos).get(Properties.CHEST_TYPE).equals(ChestType.LEFT)) {
-                                if (!containers.contains(blockPos.offset(client.world.getBlockState(blockPos).get(ChestBlock.FACING).rotateYClockwise()))) {
-                                    containers.add(new Vec3i(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
-                                    break;
-                                }
-                            } else if (client.world.getBlockState(blockPos).get(Properties.CHEST_TYPE).equals(ChestType.RIGHT)) {
-                                if (!containers.contains(blockPos.offset(client.world.getBlockState(blockPos).get(ChestBlock.FACING).rotateYCounterclockwise()))) {
-                                    containers.add(new Vec3i(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
-                                    break;
-                                }
-                            } else {
-                                containers.add(new Vec3i(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
-                                break;
-                            }
-                        } else {
-                            containers.add(new Vec3i(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
-                            break;
-                        }
-                    }
-                }
-            }
-            if (!blacklisted && client.world.getBlockState(blockPos).isIn(ModTags.HAS_GUI)) {
+            if (!ImprovedInventoryConfig.containerTabBlacklist.contains(client.world.getBlockState(blockPos).getBlock().asItem()) && ((client.world.getBlockEntity(blockPos) instanceof LockableContainerBlockEntity lockableContainerBlockEntity && lockableContainerBlockEntity.canPlayerUse(client.player)) || HAS_GUI.contains(client.world.getBlockState(blockPos).getBlock())) && !containers.contains(blockPos)) {
                 for (Vec3d blockOffsetVector : blockOffsetVectors) {
                     BlockHitResult hitResult = client.player.getEntityWorld().raycast(new RaycastContext(client.player.getEyePos(), Vec3d.of(blockPos).add(blockOffsetVector), RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, client.player));
                     if (hitResult.getBlockPos().equals(blockPos) && !containers.contains(blockPos)) {

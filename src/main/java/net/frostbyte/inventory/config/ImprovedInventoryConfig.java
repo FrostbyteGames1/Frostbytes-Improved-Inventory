@@ -70,14 +70,10 @@ public class ImprovedInventoryConfig {
     public static boolean mapTooltip = true;
     public static boolean heldItemsVisibleInBoat = true;
     public static boolean armorBarColors = true;
-    public static boolean expandedBundleTooltip = true;
-    public static boolean bundleProgressBarFraction = true;
     public static boolean compassTooltip = true;
     public static boolean clockTooltip = true;
     public static boolean foodTooltip = true;
     public static boolean statusEffectTimer = true;
-    public static boolean combineExpAndLocatorBars = true;
-    public static boolean playerHeadWaypoints = true;
 
     public static Screen createScreen(Screen parent) {
         read();
@@ -407,23 +403,6 @@ public class ImprovedInventoryConfig {
                         .controller(TickBoxControllerBuilder::create)
                         .build())
                     .build())
-
-                .group(OptionGroup.createBuilder()
-                    .name(Text.of("Locator Bar"))
-                    .collapsed(true)
-                    .option(Option.<Boolean>createBuilder()
-                        .name(Text.of("Don't Hide Experience Bar"))
-                        .description(OptionDescription.of(Text.of("Renders the locator bar on top of the experience bar, instead of replacing it.")))
-                        .binding(true, () -> combineExpAndLocatorBars, newVal -> combineExpAndLocatorBars = newVal)
-                        .controller(TickBoxControllerBuilder::create)
-                        .build())
-                    .option(Option.<Boolean>createBuilder()
-                        .name(Text.of("Players' Waypoints Use Their Skins"))
-                        .description(OptionDescription.of(Text.of("Waypoints that point to a player use that player's head as the sprite")))
-                        .binding(true, () -> playerHeadWaypoints, newVal -> playerHeadWaypoints = newVal)
-                        .controller(TickBoxControllerBuilder::create)
-                        .build())
-                    .build())
                 .build())
 
             .category(ConfigCategory.createBuilder()
@@ -481,23 +460,6 @@ public class ImprovedInventoryConfig {
                         .name(Text.of("Map Preview"))
                         .description(OptionDescription.of(Text.of("Displays a map's contents in its tooltip")))
                         .binding(true, () -> mapTooltip, newVal -> mapTooltip = newVal)
-                        .controller(TickBoxControllerBuilder::create)
-                        .build())
-                    .build())
-
-                .group(OptionGroup.createBuilder()
-                    .name(Text.of("Bundles"))
-                    .collapsed(true)
-                    .option(Option.<Boolean>createBuilder()
-                        .name(Text.of("Expanded Bundle Tooltip"))
-                        .description(OptionDescription.of(Text.of("Displays the entire contents of a bundle in its tooltip")))
-                        .binding(true, () -> expandedBundleTooltip, newVal -> expandedBundleTooltip = newVal)
-                        .controller(TickBoxControllerBuilder::create)
-                        .build())
-                    .option(Option.<Boolean>createBuilder()
-                        .name(Text.of("Bundle Progress Bar Fraction"))
-                        .description(OptionDescription.of(Text.of("Displays a bundle's fullness as a fraction of 64 on top of its progress bar")))
-                        .binding(true, () -> bundleProgressBarFraction, newVal -> bundleProgressBarFraction = newVal)
                         .controller(TickBoxControllerBuilder::create)
                         .build())
                     .build())
@@ -596,7 +558,8 @@ public class ImprovedInventoryConfig {
        for (String string : stringArray) {
            if (!string.isEmpty()) {
                try {
-                   itemArrayList.add(Registries.ITEM.get(Identifier.of(string)));
+                   String[] id = string.split(":");
+                   itemArrayList.add(Registries.ITEM.get(Identifier.of(id[0], id[1])));
                } catch (Exception ignored) {}
            }
         }
@@ -666,13 +629,9 @@ public class ImprovedInventoryConfig {
             json.addProperty("foodTooltip", foodTooltip);
             json.addProperty("shulkerBoxTooltip", shulkerBoxTooltip);
             json.addProperty("mapTooltip", mapTooltip);
-            json.addProperty("expandedBundleTooltip", expandedBundleTooltip);
-            json.addProperty("bundleProgressBarFraction", bundleProgressBarFraction);
             json.addProperty("heldItemsVisibleInBoat", heldItemsVisibleInBoat);
             json.addProperty("armorBarColors", armorBarColors);
             json.addProperty("statusEffectTimer", statusEffectTimer);
-            json.addProperty("combineExpAndLocatorBars", combineExpAndLocatorBars);
-            json.addProperty("playerHeadWaypoints", playerHeadWaypoints);
             Files.writeString(configFile, gson.toJson(json));
         } catch (Exception ignored) {}
     }
@@ -821,12 +780,6 @@ public class ImprovedInventoryConfig {
             if (json.has("mapTooltip")) {
                 mapTooltip = json.getAsJsonPrimitive("mapTooltip").getAsBoolean();
             }
-            if (json.has("expandedBundleTooltip")) {
-                expandedBundleTooltip = json.getAsJsonPrimitive("expandedBundleTooltip").getAsBoolean();
-            }
-            if (json.has("bundleProgressBarFraction")) {
-                bundleProgressBarFraction = json.getAsJsonPrimitive("bundleProgressBarFraction").getAsBoolean();
-            }
             if (json.has("heldItemsVisibleInBoat")) {
                 heldItemsVisibleInBoat = json.getAsJsonPrimitive("heldItemsVisibleInBoat").getAsBoolean();
             }
@@ -835,12 +788,6 @@ public class ImprovedInventoryConfig {
             }
             if (json.has("statusEffectTimer")) {
                 statusEffectTimer = json.getAsJsonPrimitive("statusEffectTimer").getAsBoolean();
-            }
-            if (json.has("combineExpAndLocatorBars")) {
-                combineExpAndLocatorBars = json.getAsJsonPrimitive("combineExpAndLocatorBars").getAsBoolean();
-            }
-            if (json.has("playerHeadWaypoints")) {
-                playerHeadWaypoints = json.getAsJsonPrimitive("playerHeadWaypoints").getAsBoolean();
             }
         } catch (Exception ignored) {}
     }

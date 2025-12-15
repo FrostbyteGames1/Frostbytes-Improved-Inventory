@@ -4,20 +4,10 @@ accessible class net/minecraft/client/option/SimpleOption$Callbacks
 accessible method net/minecraft/client/option/SimpleOption$Callbacks validate (Ljava/lang/Object;)Ljava/util/Optional;
 
 accessible field net/minecraft/client/gui/screen/ingame/HandledScreen backgroundHeight I
+accessible field net/minecraft/client/gui/screen/ingame/HandledScreen backgroundWidth I
 accessible field net/minecraft/client/gui/screen/ingame/HandledScreen focusedSlot Lnet/minecraft/screen/slot/Slot;
-accessible field net/minecraft/client/gui/screen/ingame/HandledScreen SLOT_HIGHLIGHT_BACK_TEXTURE Lnet/minecraft/util/Identifier;
-accessible field net/minecraft/client/gui/screen/ingame/HandledScreen SLOT_HIGHLIGHT_FRONT_TEXTURE Lnet/minecraft/util/Identifier;
-
-accessible method net/minecraft/client/gui/tooltip/BundleTooltipComponent getXMargin (I)I
-accessible method net/minecraft/client/gui/tooltip/BundleTooltipComponent getRows ()I
-accessible method net/minecraft/client/gui/tooltip/BundleTooltipComponent getProgressBarFill ()I
-accessible method net/minecraft/client/gui/tooltip/BundleTooltipComponent getProgressBarLabel ()Lnet/minecraft/text/Text;
-
-accessible class net/minecraft/client/gui/hud/InGameHud$BarType
 
 accessible field net/minecraft/client/option/KeyBinding timesPressed I
-
-accessible field net/minecraft/client/render/MapRenderer textureManager Lnet/minecraft/client/texture/MapTextureManager;
 
 accessible class net/minecraft/client/gl/GlDebug$DebugMessage
 accessible field net/minecraft/client/gl/GlDebug$DebugMessage count I

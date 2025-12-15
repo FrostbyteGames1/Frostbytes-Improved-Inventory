@@ -4,8 +4,8 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.*;
-import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.text.Text;
 
@@ -87,7 +87,7 @@ public class ContainerSearch {
 
             // If the operator is "#", search by tooltip
             else if (term.startsWith("#")) {
-                return negate != stack.getTooltip(Item.TooltipContext.DEFAULT, client == null ? null : client.player, TooltipType.ADVANCED).stream().anyMatch(text -> text.getString().toLowerCase().contains(searchTerm));
+                return negate != stack.getTooltip(client.player, TooltipContext.ADVANCED).stream().anyMatch(text -> text.getString().toLowerCase().contains(searchTerm));
             }
 
             // If the operator is "&", search by item ID

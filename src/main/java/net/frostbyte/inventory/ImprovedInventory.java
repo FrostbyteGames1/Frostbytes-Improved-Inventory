@@ -3,25 +3,17 @@ package net.frostbyte.inventory;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
-import net.frostbyte.inventory.tags.ModTags;
-import net.minecraft.client.option.KeyBinding;
 import net.minecraft.util.Identifier;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ImprovedInventory implements ModInitializer {
 	public static final String MOD_ID = "inventory";
-	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-	public static KeyBinding.Category KEYBIND_CATEGORY;
+	public static Identifier KEYBIND_CATEGORY;
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onInitialize() {
-		ModTags.registerModTags();
-
 		ImprovedInventoryConfig.read();
 
-		KEYBIND_CATEGORY = KeyBinding.Category.create(Identifier.of(ImprovedInventory.MOD_ID, "key.categories.improved_inventory"));
+		KEYBIND_CATEGORY = Identifier.of(ImprovedInventory.MOD_ID, "key.categories.improved_inventory");
 
 		SlotCycler slotCycler = new SlotCycler();
 		slotCycler.setKeyBindings();

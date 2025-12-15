@@ -1,6 +1,5 @@
 package net.frostbyte.inventory.mixin;
 
-import net.frostbyte.inventory.ImprovedInventory;
 import net.frostbyte.inventory.SlotCycler;
 import net.frostbyte.inventory.Zoom;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
@@ -18,8 +17,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Mouse.class)
 public abstract class MouseMixin {
     @Shadow @Final private MinecraftClient client;
-    @Shadow public double x;
-    @Shadow public double y;
+    @Shadow
+    private double x;
+    @Shadow
+    private double y;
     @Shadow private boolean hasResolutionChanged;
     @Shadow private boolean cursorLocked;
 
@@ -30,7 +31,7 @@ public abstract class MouseMixin {
                 if (!this.cursorLocked) {
                     KeyBinding.updatePressedStates();
                     this.cursorLocked = true;
-                    InputUtil.setCursorParameters(this.client.getWindow(), 212995, this.x, this.y);
+                    InputUtil.setCursorParameters(this.client.getWindow().getHandle(), 212995, this.x, this.y);
                     this.client.setScreen(null);
                     this.client.attackCooldown = 10000;
                     this.hasResolutionChanged = true;
@@ -45,7 +46,7 @@ public abstract class MouseMixin {
         if (ImprovedInventoryConfig.containerTab && ImprovedInventoryConfig.containerTabFreeCursor) {
             if (this.cursorLocked) {
                 this.cursorLocked = false;
-                InputUtil.setCursorParameters(this.client.getWindow(), 212993, this.x, this.y);
+                InputUtil.setCursorParameters(this.client.getWindow().getHandle(), 212993, this.x, this.y);
             }
             ci.cancel();
         }
@@ -56,7 +57,7 @@ public abstract class MouseMixin {
         if (window == this.client.getWindow().getHandle()) {
             if (Zoom.zoomKey.isPressed()) {
                 if (ImprovedInventoryConfig.zoomScrollRequiresControl) {
-                    if (InputUtil.isKeyPressed(this.client.getWindow(), InputUtil.GLFW_KEY_LEFT_CONTROL) || InputUtil.isKeyPressed(this.client.getWindow(), InputUtil.GLFW_KEY_RIGHT_CONTROL)) {
+                    if (InputUtil.isKeyPressed(this.client.getWindow().getHandle(), InputUtil.GLFW_KEY_LEFT_CONTROL) || InputUtil.isKeyPressed(this.client.getWindow().getHandle(), InputUtil.GLFW_KEY_RIGHT_CONTROL)) {
                         Zoom.scrollAmount = (int) Math.clamp(Zoom.scrollAmount + Math.signum(vertical), 0, ImprovedInventoryConfig.zoomFOV - 2);
                         ci.cancel();
                     }
@@ -66,7 +67,7 @@ public abstract class MouseMixin {
                 }
             }
             if (ImprovedInventoryConfig.slotCycle && ImprovedInventoryConfig.slotCycleAltScroll) {
-                if (InputUtil.isKeyPressed(this.client.getWindow(), InputUtil.GLFW_KEY_LEFT_ALT) || InputUtil.isKeyPressed(this.client.getWindow(), InputUtil.GLFW_KEY_RIGHT_ALT)) {
+                if (InputUtil.isKeyPressed(this.client.getWindow().getHandle(), InputUtil.GLFW_KEY_LEFT_ALT) || InputUtil.isKeyPressed(this.client.getWindow().getHandle(), InputUtil.GLFW_KEY_RIGHT_ALT)) {
                     if (Math.signum(vertical) > 0) {
                         assert client.player != null;
                         SlotCycler.cycleUp(client, client.player);

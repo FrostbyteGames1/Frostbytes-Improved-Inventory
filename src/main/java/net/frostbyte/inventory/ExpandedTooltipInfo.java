@@ -1,18 +1,14 @@
 package net.frostbyte.inventory;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.MapRenderState;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.ContainerComponent;
-import net.minecraft.component.type.FoodComponent;
-import net.minecraft.component.type.MapIdComponent;
+import net.minecraft.item.CompassItem;
 import net.minecraft.item.FilledMapItem;
+import net.minecraft.item.FoodComponent;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.map.MapDecoration;
-import net.minecraft.item.map.MapDecorationTypes;
 import net.minecraft.item.map.MapState;
+import net.minecraft.nbt.*;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
@@ -22,36 +18,53 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.GlobalPos;
+import net.minecraft.world.World;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 public class ExpandedTooltipInfo {
 
+    public static List<ItemStack> getShulkerInventory(ItemStack stack) {
+        List<ItemStack> shulkerInventory = new ArrayList<>(27);
+        NbtCompound nbt = stack.getNbt();
+        if (nbt != null) {
+            if (nbt.contains("BlockEntityTag")) {
+                NbtCompound blockEntityTag = nbt.getCompound("BlockEntityTag");
+                if (blockEntityTag.contains("Items")) {
+                    NbtList items = blockEntityTag.getList("Items", 10);
+                    for (NbtElement item : items) {
+                        shulkerInventory.add(((NbtCompound) item).getByte("Slot"), ItemStack.fromNbt((NbtCompound) item));
+                    }
+                }
+            }
+        }
+        return shulkerInventory;
+    }
+
     public static void shulkerBoxTooltipHandler(DrawContext context, int x, int y, Slot focusedSlot, int backgroundWidth) {
         DefaultedList<ItemStack> items = DefaultedList.of();
-        List<ItemStack> inventory = focusedSlot.getStack().getOrDefault(DataComponentTypes.CONTAINER, ContainerComponent.DEFAULT).stream().toList();
+        List<ItemStack> inventory = getShulkerInventory(focusedSlot.getStack());
         for (int i = 0; i < inventory.size(); i++) {
             items.add(i, inventory.get(i));
         }
         if (!items.isEmpty()) {
-            context.getMatrices().pushMatrix();
+            context.getMatrices().push();
+            context.getMatrices().translate(0, 0, 1000);
             int startX = x + 8;
             int startY = y - 16;
             context.drawTexture(
-                RenderPipelines.GUI_TEXTURED,
-                Identifier.of("textures/gui/container/generic_54.png"),
+                Identifier.of(Identifier.DEFAULT_NAMESPACE, "textures/gui/container/generic_54.png"),
                 startX, startY,
                 0, 0,
                 backgroundWidth, 3 * 18 + 17,
                 256, 256
             );
             context.drawTexture(
-                RenderPipelines.GUI_TEXTURED,
-                Identifier.of("textures/gui/container/generic_54.png"),
+                Identifier.of(Identifier.DEFAULT_NAMESPACE, "textures/gui/container/generic_54.png"),
                 startX, startY + 3 * 18 + 17,
                 0, 215,
                 backgroundWidth, 7,
@@ -65,98 +78,81 @@ public class ExpandedTooltipInfo {
             for (int i = 0; i < items.size(); i++) {
                 if (i < 9) {
                     context.drawItem(items.get(i), startX + 8 + i * 18, startY + 18, 0);
-                    context.drawStackOverlay(MinecraftClient.getInstance().textRenderer, items.get(i), startX + 8 + i * 18, startY + 18);
+                    context.drawItemInSlot(MinecraftClient.getInstance().textRenderer, items.get(i), startX + 8 + i * 18, startY + 18);
                 } else if (i < 18) {
                     context.drawItem(items.get(i), startX + 8 + (i - 9) * 18, startY + 18 + 18, 0);
-                    context.drawStackOverlay(MinecraftClient.getInstance().textRenderer, items.get(i), startX + 8 + (i - 9) * 18, startY + 18 + 18);
+                    context.drawItemInSlot(MinecraftClient.getInstance().textRenderer, items.get(i), startX + 8 + (i - 9) * 18, startY + 18 + 18);
                 } else {
                     context.drawItem(items.get(i), startX + 8 + (i - 18) * 18, startY + 18 + 36, 0);
-                    context.drawStackOverlay(MinecraftClient.getInstance().textRenderer, items.get(i), startX + 8 + (i - 18) * 18, startY + 18 + 36);
+                    context.drawItemInSlot(MinecraftClient.getInstance().textRenderer, items.get(i), startX + 8 + (i - 18) * 18, startY + 18 + 36);
                 }
             }
-            context.getMatrices().popMatrix();
+            context.getMatrices().pop();
         }
     }
 
+    @SuppressWarnings("DataFlowIssue")
     public static void mapTooltipHandler(DrawContext context, int x, int y, Slot focusedSlot) {
-        context.getMatrices().pushMatrix();
+        context.getMatrices().push();
+        context.getMatrices().translate(0, 0, 1000);
         context.drawTexture(
-            RenderPipelines.GUI_TEXTURED,
-            Identifier.of("textures/map/map_background_checkerboard.png"),
+            Identifier.of(Identifier.DEFAULT_NAMESPACE, "textures/map/map_background_checkerboard.png"),
             x - 78, y - 16,
             0, 0,
             70, 70,
             70, 70
         );
-        context.getMatrices().popMatrix();
-
-        MapRenderState mapRenderState = new MapRenderState();
-        MapIdComponent mapIdComponent = focusedSlot.getStack().get(DataComponentTypes.MAP_ID);
-        MapState mapState = null;
-        if (mapIdComponent != null) {
-            mapState = FilledMapItem.getMapState(mapIdComponent, MinecraftClient.getInstance().world);
-        }
-        if (mapState != null) {
-            context.getMatrices().pushMatrix();
-            context.getMatrices().translate(x - 78 + 3, y - 16 + 3);
-            context.getMatrices().scale(0.5f);
-            MinecraftClient.getInstance().getMapRenderer().update(mapIdComponent, mapState, mapRenderState);
-            context.drawMap(mapRenderState);
-            context.getMatrices().popMatrix();
-
-            for (MapDecoration decoration : mapState.getDecorations()) {
-                if (decoration.type() == MapDecorationTypes.PLAYER) {
-                    context.getMatrices().pushMatrix();
-                    context.getMatrices().translate(x - 78 + 3 + decoration.x() / 4F + 32F, y - 16 + 3 + decoration.z() / 4F + 32F);
-                    context.getMatrices().scale(0.5f);
-                    context.drawTexture(
-                        RenderPipelines.GUI_TEXTURED,
-                        Identifier.of("textures/map/decorations/player_off_map.png"),
-                        0, 0,
-                        0, 0,
-                        8, 8,
-                        8, 8
-                    );
-                    context.getMatrices().popMatrix();
-                }
-            }
-        }
+        context.getMatrices().translate(x - 78 + 3, y - 16 + 3, 1);
+        context.getMatrices().scale(0.5F, 0.5F, 1.0F);
+        int mapId = FilledMapItem.getMapId(focusedSlot.getStack());
+        MapState mapState = FilledMapItem.getMapState(mapId, MinecraftClient.getInstance().world);
+        MinecraftClient.getInstance().gameRenderer.getMapRenderer().draw(
+            context.getMatrices(),
+            context.getVertexConsumers(),
+            mapId,
+            mapState,
+            true,
+            15728880
+        );
+        context.getMatrices().pop();
     }
 
-    public static void compassTooltipHandler(ItemStack stack, Consumer<Text> textConsumer) {
+    @SuppressWarnings("DataFlowIssue")
+    public static void compassTooltipHandler(ItemStack stack, List<Text> tooltip) {
         MutableText text;
-        if (stack.getComponents().contains(DataComponentTypes.LODESTONE_TRACKER)) {
-            Optional<GlobalPos> optional = Objects.requireNonNull(stack.getComponents().get(DataComponentTypes.LODESTONE_TRACKER)).target();
-            if (optional.isPresent() && Objects.requireNonNull(MinecraftClient.getInstance().world).getDimensionEntry().getIdAsString().contains(optional.get().dimension().getValue().toShortTranslationKey())) {
-                text = MutableText.of(Text.of(optional.get().pos().toShortString()).getContent());
+        if (stack.getNbt() != null && CompassItem.hasLodestone(stack)) {
+            Optional<RegistryKey<World>> dimension = World.CODEC.parse(NbtOps.INSTANCE, stack.getNbt().get("LodestoneDimension")).result();
+            if (dimension.isPresent() && MinecraftClient.getInstance().world.getRegistryKey() == dimension.get()) {
+                text = MutableText.of(Text.of(NbtHelper.toBlockPos(stack.getNbt().getCompound("LodestonePos")).toShortString()).getContent());
             } else {
                 text = MutableText.of(Text.translatable("compass.target.none").getContent());
             }
-        } else if (Objects.requireNonNull(MinecraftClient.getInstance().world).getDimensionEntry().getIdAsString().contains("overworld")) {
-            text = MutableText.of(Text.of(MinecraftClient.getInstance().world.getSpawnPoint().getPos().toShortString()).getContent());
+        } else if (MinecraftClient.getInstance().world.getRegistryKey() == World.OVERWORLD) {
+            text = MutableText.of(Text.of(MinecraftClient.getInstance().world.getSpawnPos().toShortString()).getContent());
         } else {
             text = MutableText.of(Text.translatable("compass.target.none").getContent());
         }
         Texts.setStyleIfAbsent(text, Style.EMPTY.withColor(Formatting.GRAY));
-        textConsumer.accept(text);
+        tooltip.add(text);
     }
 
-    public static void recoveryCompassTooltipHandler(Consumer<Text> textConsumer) {
+    @SuppressWarnings("DataFlowIssue")
+    public static void recoveryCompassTooltipHandler(List<Text> tooltip) {
         MutableText text;
-        Optional<GlobalPos> optional = Objects.requireNonNull(MinecraftClient.getInstance().player).getLastDeathPos();
-        if (optional.isPresent() && Objects.requireNonNull(MinecraftClient.getInstance().world).getDimensionEntry().getIdAsString().contains(optional.get().dimension().getValue().toShortTranslationKey())) {
-            text = MutableText.of(Text.of(optional.get().pos().toShortString()).getContent());
+        Optional<GlobalPos> lastDeathPos = MinecraftClient.getInstance().player.getLastDeathPos();
+        if (lastDeathPos.isPresent() && lastDeathPos.get().getDimension() == MinecraftClient.getInstance().world.getRegistryKey()) {
+            text = MutableText.of(Text.of(lastDeathPos.get().getPos().toShortString()).getContent());
         } else {
             text = MutableText.of(Text.translatable("compass.target.none").getContent());
         }
         Texts.setStyleIfAbsent(text, Style.EMPTY.withColor(Formatting.GRAY));
-        textConsumer.accept(text);
+        tooltip.add(text);
     }
 
-    public static void clockTooltipHandler(Consumer<Text> textConsumer) {
+    public static void clockTooltipHandler(List<Text> tooltip) {
         MutableText text = getTimeOfDayText();
         Texts.setStyleIfAbsent(text, Style.EMPTY.withColor(Formatting.GRAY));
-        textConsumer.accept(text);
+        tooltip.add(text);
     }
 
     private static MutableText getTimeOfDayText() {
@@ -176,16 +172,17 @@ public class ExpandedTooltipInfo {
         return text;
     }
 
-    public static void foodTooltipHandler(ItemStack stack, Consumer<Text> textConsumer) {
+    public static void foodTooltipHandler(ItemStack stack, List<Text> tooltip) {
         MutableText text;
-        FoodComponent food = stack.getComponents().get(DataComponentTypes.FOOD);
+        FoodComponent food = stack.getItem().getFoodComponent();
+        if (food != null) {
+            text = MutableText.of(Text.of(Text.translatable("food.tooltip_nutrition").getString() + food.getHunger()).getContent());
+            Texts.setStyleIfAbsent(text, Style.EMPTY.withColor(Formatting.GRAY));
+            tooltip.add(text);
 
-        text = MutableText.of(Text.of(Text.translatable("food.tooltip_nutrition").getString() + Objects.requireNonNull(food).nutrition()).getContent());
-        Texts.setStyleIfAbsent(text, Style.EMPTY.withColor(Formatting.GRAY));
-        textConsumer.accept(text);
-
-        text = MutableText.of(Text.of(Text.translatable("food.tooltip_saturation").getString() + String.format("%.1f", food.saturation())).getContent());
-        Texts.setStyleIfAbsent(text, Style.EMPTY.withColor(Formatting.GRAY));
-        textConsumer.accept(text);
+            text = MutableText.of(Text.of(Text.translatable("food.tooltip_saturation").getString() + String.format("%.1f", food.getSaturationModifier())).getContent());
+            Texts.setStyleIfAbsent(text, Style.EMPTY.withColor(Formatting.GRAY));
+            tooltip.add(text);
+        }
     }
 }

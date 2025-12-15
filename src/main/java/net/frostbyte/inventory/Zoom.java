@@ -16,7 +16,7 @@ public class Zoom {
     public static KeyBinding zoomKey;
 
     public void setKeyBindings() {
-        KeyBindingHelper.registerKeyBinding(zoomKey = new KeyBinding("key.zoom", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_C, ImprovedInventory.KEYBIND_CATEGORY));
+        KeyBindingHelper.registerKeyBinding(zoomKey = new KeyBinding("key.zoom", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_C, ImprovedInventory.KEYBIND_CATEGORY.toString()));
     }
 
     public static void zoomHandler(MinecraftClient client) {

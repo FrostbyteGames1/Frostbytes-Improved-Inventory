@@ -7,17 +7,12 @@ import net.frostbyte.inventory.NearbyContainerViewer;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
 import net.frostbyte.inventory.gui.widget.HoverableIconWidget;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
-import net.minecraft.client.input.KeyInput;
-import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.resource.featuretoggle.FeatureFlags;
@@ -45,11 +40,12 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     @Final
     protected T handler;
     @Shadow
-    protected int backgroundWidth;
+    public int backgroundWidth;
     @Shadow
     protected int x;
     @Shadow
     protected int y;
+
     @Unique
     private static TextFieldWidget searchField;
     @Unique
@@ -57,10 +53,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     @Unique
     private static final Identifier BUTTON_WIDGET_TEXTURE = Identifier.of(ImprovedInventory.MOD_ID, "textures/gui/sprites/widget/button.png");
     @Unique
-    private static final ButtonTextures SEARCH_BUTTON_TEXTURES = new ButtonTextures(
-        Identifier.of("icon/search"),
-        Identifier.of("icon/search")
-    );
+    private static final Identifier SEARCH_BUTTON_TEXTURE = Identifier.of(ImprovedInventory.MOD_ID, "textures/gui/sprites/icon/search.png");
     @Unique
     private static HoverableIconWidget searchInfoHoverableIcon;
     @Unique
@@ -74,11 +67,11 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     @Inject(method = "drawMouseoverTooltip", at = @At("TAIL"))
     protected void drawMouseoverTooltip(DrawContext context, int x, int y, CallbackInfo ci) {
         if (handler.getCursorStack().isEmpty() && focusedSlot != null ) {
-            if (ImprovedInventoryConfig.shulkerBoxTooltip && focusedSlot.getStack().getComponents().contains(DataComponentTypes.CONTAINER)) {
+            if (ImprovedInventoryConfig.shulkerBoxTooltip && !ExpandedTooltipInfo.getShulkerInventory(focusedSlot.getStack()).isEmpty()) {
                 ExpandedTooltipInfo.shulkerBoxTooltipHandler(context, x, y, focusedSlot, this.backgroundWidth);
             }
             if (ImprovedInventoryConfig.mapTooltip && focusedSlot.getStack().getItem() instanceof FilledMapItem) {
-                if (MinecraftClient.getInstance().world != null && MinecraftClient.getInstance().world.getMapState(focusedSlot.getStack().get(DataComponentTypes.MAP_ID)) != null) {
+                if (MinecraftClient.getInstance().world != null && FilledMapItem.getMapState(focusedSlot.getStack(), MinecraftClient.getInstance().world) != null) {
                     ExpandedTooltipInfo.mapTooltipHandler(context, x, y, focusedSlot);
                 }
             }
@@ -103,7 +96,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             searchInfoHoverableIcon.setTooltip(Tooltip.of(ContainerSearch.searchInfoTooltipText));
             searchInfoHoverableIcon.visible = false;
             searchInfoHoverableIcon.active = false;
-            searchButton = new TexturedButtonWidget(this.x + this.backgroundWidth - 17, this.y + 6, 8, 8, SEARCH_BUTTON_TEXTURES, button -> {
+            searchButton = new TexturedButtonWidget(this.x + this.backgroundWidth - 17, this.y + 6, 8, 8, 0, 0, 0, SEARCH_BUTTON_TEXTURE, 8, 8, button -> {
                 searchField.setVisible(true);
                 searchInfoHoverableIcon.visible = true;
                 searchInfoHoverableIcon.active = true;
@@ -115,7 +108,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     @Inject(method = "render", at = @At("RETURN"))
     private void render(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (ImprovedInventoryConfig.containerSearch && (this.handler instanceof GenericContainerScreenHandler || this.handler instanceof ShulkerBoxScreenHandler)) {
-            context.drawTexture(RenderPipelines.GUI_TEXTURED, BUTTON_WIDGET_TEXTURE, this.x + this.backgroundWidth - 19, this.y + 4, 0, 0, 12, 12, 12, 12);
+            context.drawTexture(BUTTON_WIDGET_TEXTURE, this.x + this.backgroundWidth - 19, this.y + 4, 0, 0, 12, 12, 12, 12);
             searchButton.render(context, mouseX, mouseY, delta);
             searchField.render(context, mouseX, mouseY, delta);
             searchInfoHoverableIcon.render(context, mouseX, mouseY, delta);
@@ -123,19 +116,19 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     }
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
-    public void keyPressed(KeyInput input, CallbackInfoReturnable<Boolean> cir) {
-        if (super.keyPressed(input)) {
+    public void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+        if (super.keyPressed(keyCode, scanCode, modifiers)) {
             cir.setReturnValue(true);
         } else if (ImprovedInventoryConfig.containerSearch && (this.handler instanceof GenericContainerScreenHandler || this.handler instanceof ShulkerBoxScreenHandler)) {
             if (searchField.isActive()) {
-                searchField.keyPressed(input);
+                searchField.keyPressed(keyCode, scanCode, modifiers);
                 cir.setReturnValue(true);
             }
         }
     }
 
     @Inject(method = "mouseClicked", at = @At("HEAD"))
-    public void mouseClicked(Click click, boolean doubled, CallbackInfoReturnable<Boolean> cir) {
+    public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
         if (ImprovedInventoryConfig.containerSearch && (this.handler instanceof GenericContainerScreenHandler || this.handler instanceof ShulkerBoxScreenHandler)) {
             if (!searchField.isHovered()) {
                 searchField.setFocused(false);
@@ -144,9 +137,9 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                     searchInfoHoverableIcon.visible = false;
                     searchInfoHoverableIcon.active = false;
                 }
-            } else if (searchField.isHovered() && click.button() == GLFW.GLFW_MOUSE_BUTTON_2) {
+            } else if (searchField.isHovered() && button == GLFW.GLFW_MOUSE_BUTTON_2) {
                 searchField.setText("");
-            } else if (searchField.isHovered() && click.button() == GLFW.GLFW_MOUSE_BUTTON_1) {
+            } else if (searchField.isHovered() && button == GLFW.GLFW_MOUSE_BUTTON_1) {
                 searchField.setFocused(true);
             }
         }
@@ -156,8 +149,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     protected void drawSlot(DrawContext context, Slot slot, CallbackInfo ci) {
         if (ImprovedInventoryConfig.containerSearch && (this.handler instanceof GenericContainerScreenHandler || this.handler instanceof ShulkerBoxScreenHandler)) {
             if (ContainerSearch.doesStackContainString(MinecraftClient.getInstance(), searchField.getText(), slot.getStack())) {
-                context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, HandledScreen.SLOT_HIGHLIGHT_BACK_TEXTURE, slot.x - 4, slot.y - 4, 24, 24);
-                context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, HandledScreen.SLOT_HIGHLIGHT_FRONT_TEXTURE, slot.x - 4, slot.y - 4, 24, 24);
+                HandledScreen.drawSlotHighlight(context, slot.x, slot.y, 0);
             }
         }
     }

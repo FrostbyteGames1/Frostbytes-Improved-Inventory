@@ -4,12 +4,11 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.navigation.GuiNavigation;
 import net.minecraft.client.gui.navigation.GuiNavigationPath;
-import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.tooltip.TooltipState;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.tooltip.*;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.sound.PositionedSoundInstance;
@@ -21,7 +20,6 @@ import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
 
-import java.time.Duration;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -37,7 +35,11 @@ public class HoverableIconWidget implements Drawable, Element, Widget {
     protected float alpha = 1.0F;
     private int navigationOrder;
     private boolean focused;
-    private final TooltipState tooltip = new TooltipState();
+    @Nullable
+    private Tooltip tooltip;
+    private int tooltipDelay;
+    private long lastHoveredTime;
+    private boolean wasHovered;
 
     public HoverableIconWidget(int x, int y, int width, int height) {
         this.x = x;
@@ -46,37 +48,54 @@ public class HoverableIconWidget implements Drawable, Element, Widget {
         this.height = height;
     }
 
-    public static HoverableIconWidget create(int width, int height, Identifier texture, int textureWidth, int textureHeight) {
-        return new HoverableIconWidget.Texture(0, 0, width, height, texture, textureWidth, textureHeight);
-    }
-
-    public static HoverableIconWidget create(int width, int height, Identifier texture) {
-        return new HoverableIconWidget.Simple(0, 0, width, height, texture);
-    }
-
     public int getHeight() {
         return this.height;
     }
 
     public final void render(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
         if (this.visible) {
-            this.hovered = context.scissorContains(mouseX, mouseY) && mouseX >= this.getX() && mouseY >= this.getY() && mouseX < this.getX() + this.width && mouseY < this.getY() + this.height;
+            this.hovered = mouseX >= this.getX() && mouseY >= this.getY() && mouseX < this.getX() + this.width && mouseY < this.getY() + this.height;
             this.renderWidget(context, mouseX, mouseY, deltaTicks);
-            this.tooltip.render(context, mouseX, mouseY, this.isHovered(), this.isFocused(), this.getNavigationFocus());
+            this.applyTooltip();
+        }
+    }
+
+    private void applyTooltip() {
+        if (this.tooltip != null) {
+            boolean bl = this.hovered || this.isFocused() && MinecraftClient.getInstance().getNavigationType().isKeyboard();
+            if (bl != this.wasHovered) {
+                if (bl) {
+                    this.lastHoveredTime = Util.getMeasuringTimeMs();
+                }
+
+                this.wasHovered = bl;
+            }
+
+            if (bl && Util.getMeasuringTimeMs() - this.lastHoveredTime > (long)this.tooltipDelay) {
+                Screen screen = MinecraftClient.getInstance().currentScreen;
+                if (screen != null) {
+                    screen.setTooltip(this.tooltip, HoveredTooltipPositioner.INSTANCE, this.isFocused());
+                }
+            }
+
         }
     }
 
     public void setTooltip(@Nullable Tooltip tooltip) {
-        this.tooltip.setTooltip(tooltip);
+        this.tooltip = tooltip;
+    }
+
+    public static HoverableIconWidget create(int width, int height, Identifier texture, int textureWidth, int textureHeight) {
+        return new HoverableIconWidget.Texture(0, 0, width, height, texture, textureWidth, textureHeight);
     }
 
     @Nullable
     public Tooltip getTooltip() {
-        return this.tooltip.getTooltip();
+        return this.tooltip;
     }
 
-    public void setTooltipDelay(Duration tooltipDelay) {
-        this.tooltip.setDelay(tooltipDelay);
+    public void setTooltipDelay(int delay) {
+        this.tooltipDelay = delay;
     }
 
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
@@ -107,7 +126,6 @@ public class HoverableIconWidget implements Drawable, Element, Widget {
             l = MathHelper.clamp(centerX, startX + i / 2, endX - i / 2);
             context.drawCenteredTextWithShadow(textRenderer, text, l, j, color);
         }
-
     }
 
     public void onClick(double mouseX, double mouseY) {
@@ -130,10 +148,8 @@ public class HoverableIconWidget implements Drawable, Element, Widget {
                 }
             }
 
-            return false;
-        } else {
-            return false;
         }
+        return false;
     }
 
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
@@ -278,7 +294,7 @@ public class HoverableIconWidget implements Drawable, Element, Widget {
         }
 
         protected void renderWidget(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
-            context.drawTexture(RenderPipelines.GUI_TEXTURED, this.texture, this.getX(), this.getY(), 0.0F, 0.0F, this.getWidth(), this.getHeight(), this.textureWidth, this.textureHeight);
+            context.drawTexture(this.texture, this.getX(), this.getY(), 0.0F, 0.0F, this.getWidth(), this.getHeight(), this.textureWidth, this.textureHeight);
         }
     }
 
@@ -292,7 +308,7 @@ public class HoverableIconWidget implements Drawable, Element, Widget {
         }
 
         public void renderWidget(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
-            context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, this.texture, this.getX(), this.getY(), this.getWidth(), this.getHeight());
+            context.drawTexture(this.texture, this.getX(), this.getY(), 0, 0, this.getWidth(), this.getHeight(), this.getWidth(), this.getHeight());
         }
     }
 }
