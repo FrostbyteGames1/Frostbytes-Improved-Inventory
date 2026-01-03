@@ -5,6 +5,7 @@ import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.AttributeModifiersComponent;
+import net.minecraft.component.type.EquippableComponent;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -31,7 +32,8 @@ public class ColoredArmorBar {
                     break;
                 }
             }
-            Optional<RegistryKey<EquipmentAsset>> equipmentAssetRegistryKey = armorItem.getComponents().getOrDefault(DataComponentTypes.EQUIPPABLE, null).assetId();
+            EquippableComponent equippableComponent = armorItem.getComponents().getOrDefault(DataComponentTypes.EQUIPPABLE, null);
+            Optional<RegistryKey<EquipmentAsset>> equipmentAssetRegistryKey = equippableComponent != null ? equippableComponent.assetId() : Optional.empty();
             if (equipmentAssetRegistryKey.isPresent()) {
                 footMaterial =  equipmentAssetRegistryKey.get().getValue();
             }
@@ -47,7 +49,8 @@ public class ColoredArmorBar {
                     break;
                 }
             }
-            Optional<RegistryKey<EquipmentAsset>> equipmentAssetRegistryKey = armorItem.getComponents().getOrDefault(DataComponentTypes.EQUIPPABLE, null).assetId();
+            EquippableComponent equippableComponent = armorItem.getComponents().getOrDefault(DataComponentTypes.EQUIPPABLE, null);
+            Optional<RegistryKey<EquipmentAsset>> equipmentAssetRegistryKey = equippableComponent != null ? equippableComponent.assetId() : Optional.empty();
             if (equipmentAssetRegistryKey.isPresent()) {
                 legMaterial =  equipmentAssetRegistryKey.get().getValue();
             }
@@ -63,7 +66,8 @@ public class ColoredArmorBar {
                     break;
                 }
             }
-            Optional<RegistryKey<EquipmentAsset>> equipmentAssetRegistryKey = armorItem.getComponents().getOrDefault(DataComponentTypes.EQUIPPABLE, null).assetId();
+            EquippableComponent equippableComponent = armorItem.getComponents().getOrDefault(DataComponentTypes.EQUIPPABLE, null);
+            Optional<RegistryKey<EquipmentAsset>> equipmentAssetRegistryKey = equippableComponent != null ? equippableComponent.assetId() : Optional.empty();
             if (equipmentAssetRegistryKey.isPresent()) {
                 chestMaterial =  equipmentAssetRegistryKey.get().getValue();
             }
@@ -79,7 +83,8 @@ public class ColoredArmorBar {
                     break;
                 }
             }
-            Optional<RegistryKey<EquipmentAsset>> equipmentAssetRegistryKey = armorItem.getComponents().getOrDefault(DataComponentTypes.EQUIPPABLE, null).assetId();
+            EquippableComponent equippableComponent = armorItem.getComponents().getOrDefault(DataComponentTypes.EQUIPPABLE, null);
+            Optional<RegistryKey<EquipmentAsset>> equipmentAssetRegistryKey = equippableComponent != null ? equippableComponent.assetId() : Optional.empty();
             if (equipmentAssetRegistryKey.isPresent()) {
                 headMaterial =  equipmentAssetRegistryKey.get().getValue();
             }
@@ -93,53 +98,59 @@ public class ColoredArmorBar {
                 context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, ARMOR_EMPTY_TEXTURE, o, m, 9, 9);
 
                 if (n * 2 + 1 < footArmor) {
-                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(footMaterial, "full"), o, m, 9, 9);
+                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(footMaterial, ICON_SHAPE.FULL), o, m, 9, 9);
                 } else if (n * 2 + 1 == footArmor) {
-                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(footMaterial, "half1"), o, m, 9, 9);
+                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(footMaterial, ICON_SHAPE.HALF1), o, m, 9, 9);
                     if (legArmor > 0) {
-                        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(legMaterial, "half2"), o, m, 9, 9);
+                        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(legMaterial, ICON_SHAPE.HALF2), o, m, 9, 9);
                     } else if (chestArmor > 0) {
-                        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(chestMaterial, "half2"), o, m, 9, 9);
+                        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(chestMaterial, ICON_SHAPE.HALF2), o, m, 9, 9);
                     } else if (headArmor > 0) {
-                        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(headMaterial, "half2"), o, m, 9, 9);
+                        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(headMaterial, ICON_SHAPE.HALF2), o, m, 9, 9);
                     }
                 }
 
                 else if (n * 2 + 1 < (footArmor + legArmor)) {
-                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(legMaterial, "full"), o, m, 9, 9);
+                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(legMaterial, ICON_SHAPE.FULL), o, m, 9, 9);
                 } else if (n * 2 + 1 == (footArmor + legArmor)) {
-                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(legMaterial, "half1"), o, m, 9, 9);
+                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(legMaterial, ICON_SHAPE.HALF1), o, m, 9, 9);
                     if (chestArmor > 0) {
-                        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(chestMaterial, "half2"), o, m, 9, 9);
+                        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(chestMaterial, ICON_SHAPE.HALF2), o, m, 9, 9);
                     } else if (headArmor > 0) {
-                        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(headMaterial, "half2"), o, m, 9, 9);
+                        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(headMaterial, ICON_SHAPE.HALF2), o, m, 9, 9);
                     }
                 }
 
                 else if (n * 2 + 1 < (footArmor + legArmor + chestArmor)) {
-                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(chestMaterial, "full"), o, m, 9, 9);
+                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(chestMaterial, ICON_SHAPE.FULL), o, m, 9, 9);
                 } else if (n * 2 + 1 == (footArmor + legArmor + chestArmor)) {
-                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(chestMaterial, "half1"), o, m, 9, 9);
+                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(chestMaterial, ICON_SHAPE.HALF1), o, m, 9, 9);
                     if (headArmor > 0) {
-                        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(headMaterial, "half2"), o, m, 9, 9);
+                        context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(headMaterial, ICON_SHAPE.HALF2), o, m, 9, 9);
                     }
                 }
 
                 else if (n * 2 + 1 < totalArmor ) {
-                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(headMaterial, "full"), o, m, 9, 9);
+                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(headMaterial, ICON_SHAPE.FULL), o, m, 9, 9);
                 } else if (n * 2 + 1 == totalArmor) {
-                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(headMaterial, "half1"), o, m, 9, 9);
+                    context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, getTexture(headMaterial, ICON_SHAPE.HALF1), o, m, 9, 9);
                 }
 
             }
         }
     }
 
-    private static Identifier getTexture(Identifier material, String shape) {
-        Identifier texture = Identifier.of(ImprovedInventory.MOD_ID, "hud/" + material.getPath() + "_armor_" + shape);
+    private static Identifier getTexture(Identifier material, ICON_SHAPE shape) {
+        Identifier texture = Identifier.of(ImprovedInventory.MOD_ID, "hud/" + material.getPath() + "_armor_" + shape.name().toLowerCase());
         if (MinecraftClient.getInstance().getResourceManager().getResource(Identifier.of(ImprovedInventory.MOD_ID, "textures/gui/sprites/" + texture.getPath() + ".png")).isPresent()) {
             return texture;
         }
         return Identifier.of(ImprovedInventory.MOD_ID, "hud/iron_armor_" + shape);
+    }
+    
+    enum ICON_SHAPE {
+        FULL,
+        HALF1,
+        HALF2
     }
 }

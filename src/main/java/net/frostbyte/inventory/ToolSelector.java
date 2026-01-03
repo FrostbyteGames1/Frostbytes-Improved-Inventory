@@ -67,7 +67,6 @@ public class ToolSelector {
         return toolComponent != null && toolComponent.isCorrectForDrops(state);
     }
 
-    @SuppressWarnings("DataFlowIssue")
     public static void toolSelectHandler(MinecraftClient client) {
         ClientPlayerEntity player = client.player;
         if (player == null) {
@@ -129,6 +128,7 @@ public class ToolSelector {
                 if (ticksSinceMiningStarted < 2) {
                     ticksSinceMiningStarted++;
                 } else {
+                    //noinspection DataFlowIssue
                     BlockState blockState = client.world.getBlockState(((BlockHitResult) target).getBlockPos());
                     if (!currentlyMiningBlock.equals(blockState.getBlock())) {
                         currentlyMiningBlock = blockState.getBlock();

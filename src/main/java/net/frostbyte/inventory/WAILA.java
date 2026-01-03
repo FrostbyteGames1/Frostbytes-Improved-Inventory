@@ -26,7 +26,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.util.Colors;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
@@ -36,7 +35,7 @@ import net.minecraft.util.hit.HitResult;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings({"DataFlowIssue", "deprecation"})
+@SuppressWarnings("deprecation")
 @Environment(EnvType.CLIENT)
 public class WAILA implements HudRenderCallback {
     int x, y;
@@ -92,6 +91,7 @@ public class WAILA implements HudRenderCallback {
         Items.NETHERITE_SWORD
     ));
 
+    @SuppressWarnings({"DataFlowIssue", "NullableProblems"})
     @Override
     public void onHudRender(DrawContext drawContext, RenderTickCounter tickCounter) {
         MinecraftClient mc = MinecraftClient.getInstance();
@@ -147,7 +147,6 @@ public class WAILA implements HudRenderCallback {
                     }
                     drawBox(drawContext, textWidth);
                     if (entity instanceof LivingEntity livingEntity) {
-                        //drawEntity(drawContext, x, y, x + 32, y + 32, getScaleFromHeight(livingEntity.getHeight()), 0.0625F, x + 64, y + 16, livingEntity);
                         if (entity instanceof PlayerEntity player) {
                             PlayerSkinDrawer.draw(drawContext, mc.getNetworkHandler().getPlayerListEntry(player.getUuid()).getSkinTextures().body().texturePath(), x + 8, y + 8, 16, true, false, -1);
                         } else {
@@ -180,11 +179,6 @@ public class WAILA implements HudRenderCallback {
                 }
             }
         }
-    }
-
-    @SuppressWarnings("unused")
-    int getScaleFromHeight(float height) {
-        return (int) (26.835890 * Math.pow(Math.E, height / -1.6296130) + 2.0259996);
     }
 
     void drawBox(DrawContext drawContext, int textWidth) {
