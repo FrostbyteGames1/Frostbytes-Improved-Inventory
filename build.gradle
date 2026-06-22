@@ -1,7 +1,7 @@
 //file:noinspection GroovyUnusedAssignment
 //file:noinspection GroovyAssignabilityCheck
 plugins {
-	id 'fabric-loom' version '1.14-SNAPSHOT'
+	id 'net.fabricmc.fabric-loom-remap' version "${loom_version}"
 	id 'maven-publish'
 }
 
@@ -26,7 +26,7 @@ dependencies {
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
 	modCompileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
 	modImplementation "dev.isxander:yet-another-config-lib:${project.yacl_version}"
@@ -41,12 +41,12 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release.set(21)
+	it.options.release.set(25)
 }
 
 java {
-	sourceCompatibility = JavaVersion.VERSION_21
-	targetCompatibility = JavaVersion.VERSION_21
+	sourceCompatibility = JavaVersion.VERSION_25
+	targetCompatibility = JavaVersion.VERSION_25
 }
 
 jar {

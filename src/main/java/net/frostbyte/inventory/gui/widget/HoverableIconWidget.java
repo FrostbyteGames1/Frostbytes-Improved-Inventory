@@ -96,7 +96,7 @@ public class HoverableIconWidget implements Drawable, Element, Widget {
         int l;
         if (i > k) {
             l = i - k;
-            double d = (double)Util.getMeasuringTimeMs() / 1000.0;
+            double d = (double) Util.getMeasuringTimeMs() / 1000.0;
             double e = Math.max((double)l * 0.5, 3.0);
             double f = Math.sin(1.5707963267948966 * Math.cos(6.283185307179586 * d / e)) / 2.0 + 0.5;
             double g = MathHelper.lerp(f, 0.0, l);
@@ -129,11 +129,8 @@ public class HoverableIconWidget implements Drawable, Element, Widget {
                     return true;
                 }
             }
-
-            return false;
-        } else {
-            return false;
         }
+        return false;
     }
 
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
@@ -176,7 +173,7 @@ public class HoverableIconWidget implements Drawable, Element, Widget {
     }
 
     public static void playClickSound(SoundManager soundManager) {
-        soundManager.play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+        soundManager.play(PositionedSoundInstance.ui(SoundEvents.UI_BUTTON_CLICK, 1.0F));
     }
 
     public int getWidth() {
