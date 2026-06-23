@@ -1,11 +1,10 @@
 package net.frostbyte.inventory.mixin;
 
+import net.frostbyte.inventory.config.ImprovedInventoryConfig;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Click;
-import net.minecraft.client.input.KeyInput;
-import net.minecraft.client.input.MouseInput;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.screen.slot.SlotActionType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -16,21 +15,30 @@ public abstract class KeyBindingMixin {
 
     @Inject(method = "onKeyPressed", at = @At("HEAD"), cancellable = true)
     private static void onKeyPressed(InputUtil.Key key, CallbackInfo ci) {
-        for (KeyBinding binding : MinecraftClient.getInstance().options.allKeys) {
-            if (binding.matchesKey(new KeyInput(key.getCode(), -1, -1)) || binding.matchesMouse(new Click(MinecraftClient.getInstance().mouse.getX(), MinecraftClient.getInstance().mouse.getY(), new MouseInput(key.getCode(), -1)))) {
-                ++binding.timesPressed;
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (ImprovedInventoryConfig.slotCycleAltNum && client.player != null && client.interactionManager != null) {
+            int slot = client.player.getInventory().getSelectedSlot();
+            if (key.getCode() == InputUtil.GLFW_KEY_1) {
+                if (InputUtil.isKeyPressed(client.getWindow(), InputUtil.GLFW_KEY_LEFT_ALT) || InputUtil.isKeyPressed(client.getWindow(), InputUtil.GLFW_KEY_RIGHT_ALT)) {
+                    client.interactionManager.clickSlot(client.player.playerScreenHandler.syncId, 27 + slot, slot, SlotActionType.SWAP, client.player);
+                    client.player.getInventory().markDirty();
+                    ci.cancel();
+                }
+            }
+            if (key.getCode() == InputUtil.GLFW_KEY_2) {
+                if (InputUtil.isKeyPressed(client.getWindow(), InputUtil.GLFW_KEY_LEFT_ALT) || InputUtil.isKeyPressed(client.getWindow(), InputUtil.GLFW_KEY_RIGHT_ALT)) {
+                    client.interactionManager.clickSlot(client.player.playerScreenHandler.syncId, 18 + slot, slot, SlotActionType.SWAP, client.player);
+                    client.player.getInventory().markDirty();
+                    ci.cancel();
+                }
+            }
+            if (key.getCode() == InputUtil.GLFW_KEY_3) {
+                if (InputUtil.isKeyPressed(client.getWindow(), InputUtil.GLFW_KEY_LEFT_ALT) || InputUtil.isKeyPressed(client.getWindow(), InputUtil.GLFW_KEY_RIGHT_ALT)) {
+                    client.interactionManager.clickSlot(client.player.playerScreenHandler.syncId, 9 + slot, slot, SlotActionType.SWAP, client.player);
+                    client.player.getInventory().markDirty();
+                    ci.cancel();
+                }
             }
         }
-        ci.cancel();
-    }
-
-    @Inject(method = "setKeyPressed", at = @At("HEAD"), cancellable = true)
-    private static void setKeyPressed(InputUtil.Key key, boolean pressed, CallbackInfo ci) {
-        for (KeyBinding binding : MinecraftClient.getInstance().options.allKeys) {
-            if (binding.matchesKey(new KeyInput(key.getCode(), -1, -1)) || binding.matchesMouse(new Click(MinecraftClient.getInstance().mouse.getX(), MinecraftClient.getInstance().mouse.getY(), new MouseInput(key.getCode(), -1)))) {
-               binding.setPressed(pressed);
-            }
-        }
-        ci.cancel();
     }
 }

@@ -62,6 +62,23 @@ public abstract class LocatorBarMixin implements Bar {
         }
     }
 
+    @Unique
+    public int getSizeForDistance(WaypointStyleAsset waypointStyleAsset, float distance) {
+        if (distance < (float) waypointStyleAsset.nearDistance()) {
+            return 8;
+        } else if (distance >= (float) waypointStyleAsset.farDistance()) {
+            return 3;
+        } else {
+            int i = MathHelper.lerp((distance - (float) waypointStyleAsset.nearDistance()) / (float)(waypointStyleAsset.farDistance() - waypointStyleAsset.nearDistance()), 1, 3);
+            return switch (i) {
+                case 1 -> 7;
+                case 2 -> 5;
+                case 3 -> 3;
+                default -> 8;
+            };
+        }
+    }
+
     @SuppressWarnings("DataFlowIssue")
     @Inject(method = "renderAddons", at = @At("HEAD"), cancellable = true)
     public void renderAddons(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
@@ -73,16 +90,17 @@ public abstract class LocatorBarMixin implements Bar {
                 TickManager tickManager = world.getTickManager();
                 EntityTickProgress entityTickProgress = (entityx) -> tickCounter.getTickProgress(!tickManager.shouldSkipTick(entityx));
                 this.client.player.networkHandler.getWaypointHandler().forEachWaypoint(entity, (waypoint) -> {
+                    WaypointStyleAsset waypointStyleAsset = this.client.getWaypointStyleAssetManager().get(waypoint.getConfig().style);
                     if (!(Boolean) waypoint.getSource().left().map((uuid) -> uuid.equals(entity.getUuid())).orElse(false)) {
                         double d = waypoint.getRelativeYaw(world, this.client.gameRenderer.getCamera(), entityTickProgress);
                         if (!(d <= -60.0) && !(d > 60.0)) {
                             int j = MathHelper.ceil((float) (context.getScaledWindowWidth() - 9) / 2.0F);
                             int l = MathHelper.floor(d * 173.0 / 2.0 / 60.0);
                             if (waypoint.getSource().left().isPresent() && this.client.getNetworkHandler().getPlayerListEntry(waypoint.getSource().left().get()) != null) {
-                                PlayerSkinDrawer.draw(context, this.client.getNetworkHandler().getPlayerListEntry(waypoint.getSource().left().get()).getSkinTextures().body().texturePath(), j + l, i - 2, 8, true, false, -1);
+                                int size = getSizeForDistance(waypointStyleAsset, MathHelper.sqrt((float)waypoint.squaredDistanceTo(entity)));
+                                PlayerSkinDrawer.draw(context, this.client.getNetworkHandler().getPlayerListEntry(waypoint.getSource().left().get()).getSkinTextures().body().texturePath(), j + l, i - 2 + (9 - size) / 2, size, true, false, -1);
                             } else {
                                 Waypoint.Config config = waypoint.getConfig();
-                                WaypointStyleAsset waypointStyleAsset = this.client.getWaypointStyleAssetManager().get(config.style);
                                 float f = MathHelper.sqrt((float)waypoint.squaredDistanceTo(entity));
                                 Identifier identifier = waypointStyleAsset.getSpriteForDistance(f);
                                 int k = config.color.orElseGet(() -> waypoint.getSource().map((uuid) -> ColorHelper.withBrightness(ColorHelper.withAlpha(255, uuid.hashCode()), 0.9F), (name) -> ColorHelper.withBrightness(ColorHelper.withAlpha(255, name.hashCode()), 0.9F)));

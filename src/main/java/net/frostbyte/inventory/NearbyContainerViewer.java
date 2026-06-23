@@ -77,7 +77,7 @@ public class NearbyContainerViewer {
             updateContainerList();
             current = 0;
             if (!containers.isEmpty() && client.options.useKey.isPressed() && client.crosshairTarget != null && client.crosshairTarget.getType() == HitResult.Type.BLOCK) {
-                double d = client.crosshairTarget.getPos().distanceTo(new BlockPos(containers.get(0)).toCenterPos());
+                double d = client.crosshairTarget.getPos().distanceTo(new BlockPos(containers.getFirst()).toCenterPos());
                 int closest = 0;
                 for (int i = 0; i < containers.size(); i++) {
                     if (client.crosshairTarget.getPos().distanceTo(new BlockPos(containers.get(i)).toCenterPos()) < d) {
@@ -122,14 +122,14 @@ public class NearbyContainerViewer {
         // Get text from sign
         List<SignBlockEntity> signs = getAttachedBlocks(client.world, new BlockPos(blockPos), (w, p) -> w.getBlockEntity(p) instanceof SignBlockEntity sbe ? sbe : null);
         if (!signs.isEmpty()) {
-            name = Arrays.stream(signs.get(0).getFrontText().getMessages(false)).map(Text::getString).filter(s -> !s.isBlank()).collect(Collectors.joining("\n")).isBlank() ? name : Text.of(Arrays.stream(signs.get(0).getFrontText().getMessages(false)).map(Text::getString).filter(s -> !s.isBlank()).collect(Collectors.joining("\n")));
+            name = Arrays.stream(signs.getFirst().getFrontText().getMessages(false)).map(Text::getString).filter(s -> !s.isBlank()).collect(Collectors.joining("\n")).isBlank() ? name : Text.of(Arrays.stream(signs.getFirst().getFrontText().getMessages(false)).map(Text::getString).filter(s -> !s.isBlank()).collect(Collectors.joining("\n")));
         }
 
         // Get name of item in item frame
         List<ItemFrameEntity> itemFrames = client.world.getNonSpectatingEntities(ItemFrameEntity.class, new Box(new BlockPos(blockPos).toCenterPos(), new BlockPos(blockPos).toCenterPos()).expand(0.55, 0.55, 0.55));
-        if (!itemFrames.isEmpty() && itemFrames.get(0).getHeldItemStack() != null) {
-            if (itemFrames.get(0).getHeldItemStack().getComponents().contains(DataComponentTypes.CUSTOM_NAME)) {
-                name = itemFrames.get(0).getHeldItemStack().getName();
+        if (!itemFrames.isEmpty() && itemFrames.getFirst().getHeldItemStack() != null) {
+            if (itemFrames.getFirst().getHeldItemStack().getComponents().contains(DataComponentTypes.CUSTOM_NAME)) {
+                name = itemFrames.getFirst().getHeldItemStack().getName();
             }
         }
 
@@ -149,9 +149,9 @@ public class NearbyContainerViewer {
 
         // Get item in item frame
         List<ItemFrameEntity> itemFrames = client.world.getNonSpectatingEntities(ItemFrameEntity.class, new Box(new BlockPos(blockPos).toCenterPos(), new BlockPos(blockPos).toCenterPos()).expand(0.55, 0.55, 0.55));
-        if (!itemFrames.isEmpty() && itemFrames.get(0).getHeldItemStack() != null) {
-            if (!itemFrames.get(0).getHeldItemStack().isEmpty()) {
-                stack = itemFrames.get(0).getHeldItemStack();
+        if (!itemFrames.isEmpty() && itemFrames.getFirst().getHeldItemStack() != null) {
+            if (!itemFrames.getFirst().getHeldItemStack().isEmpty()) {
+                stack = itemFrames.getFirst().getHeldItemStack();
             }
         }
 
@@ -178,59 +178,41 @@ public class NearbyContainerViewer {
         for (BlockPos blockPos : BlockPos.iterate((int) (client.player.getX() - reach), (int) (client.player.getY() - reach), (int) (client.player.getZ() - reach), (int) (client.player.getX() + reach), (int) (client.player.getY() + reach), (int) (client.player.getZ() + reach))) {
             boolean blacklisted = ImprovedInventoryConfig.containerTabBlacklist.contains(client.world.getBlockState(blockPos).getBlock().asItem());
             if (!blacklisted && client.world.getBlockEntity(blockPos) instanceof LockableContainerBlockEntity lockableContainerBlockEntity && lockableContainerBlockEntity.canPlayerUse(client.player) && !containers.contains(blockPos)) {
-                for (Vec3d blockOffsetVector : blockOffsetVectors) {
-                    BlockHitResult hitResult = client.player.getEntityWorld().raycast(new RaycastContext(client.player.getEyePos(), Vec3d.of(blockPos).add(blockOffsetVector), RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, client.player));
-                    if (hitResult.getBlockPos().equals(blockPos) && !containers.contains(blockPos)) {
-                        if (client.world.getBlockState(blockPos).contains(Properties.CHEST_TYPE)) {
-                            if (client.world.getBlockState(blockPos).get(Properties.CHEST_TYPE).equals(ChestType.LEFT)) {
-                                if (!containers.contains(blockPos.offset(client.world.getBlockState(blockPos).get(ChestBlock.FACING).rotateYClockwise()))) {
-                                    containers.add(new Vec3i(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
-                                    break;
-                                }
-                            } else if (client.world.getBlockState(blockPos).get(Properties.CHEST_TYPE).equals(ChestType.RIGHT)) {
-                                if (!containers.contains(blockPos.offset(client.world.getBlockState(blockPos).get(ChestBlock.FACING).rotateYCounterclockwise()))) {
-                                    containers.add(new Vec3i(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
-                                    break;
-                                }
-                            } else {
-                                containers.add(new Vec3i(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
-                                break;
-                            }
-                        } else {
-                            containers.add(new Vec3i(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
-                            break;
-                        }
-                    }
-                }
+                findContainers(client, blockOffsetVectors, blockPos);
             }
             if (!blacklisted && client.world.getBlockState(blockPos).isIn(ModTags.HAS_GUI)) {
-                for (Vec3d blockOffsetVector : blockOffsetVectors) {
-                    BlockHitResult hitResult = client.player.getEntityWorld().raycast(new RaycastContext(client.player.getEyePos(), Vec3d.of(blockPos).add(blockOffsetVector), RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, client.player));
-                    if (hitResult.getBlockPos().equals(blockPos) && !containers.contains(blockPos)) {
-                        if (client.world.getBlockState(blockPos).contains(Properties.CHEST_TYPE)) {
-                            if (client.world.getBlockState(blockPos).get(Properties.CHEST_TYPE).equals(ChestType.LEFT)) {
-                                if (!containers.contains(blockPos.offset(client.world.getBlockState(blockPos).get(ChestBlock.FACING).rotateYClockwise()))) {
-                                    containers.add(new Vec3i(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
-                                    break;
-                                }
-                            } else if (client.world.getBlockState(blockPos).get(Properties.CHEST_TYPE).equals(ChestType.RIGHT)) {
-                                if (!containers.contains(blockPos.offset(client.world.getBlockState(blockPos).get(ChestBlock.FACING).rotateYCounterclockwise()))) {
-                                    containers.add(new Vec3i(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
-                                    break;
-                                }
-                            } else {
-                                containers.add(new Vec3i(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
-                                break;
-                            }
-                        } else {
-                            containers.add(new Vec3i(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
-                            break;
-                        }
-                    }
-                }
+                findContainers(client, blockOffsetVectors, blockPos);
             }
         }
         containers.sort(Comparator.comparingDouble(a -> a.getSquaredDistance(client.player.getX(), client.player.getY(), client.player.getZ())));
+    }
+
+    @SuppressWarnings("DataFlowIssue")
+    private static void findContainers(MinecraftClient client, List<Vec3d> blockOffsetVectors, BlockPos blockPos) {
+        for (Vec3d blockOffsetVector : blockOffsetVectors) {
+            BlockHitResult hitResult = client.player.getEntityWorld().raycast(new RaycastContext(client.player.getEyePos(), Vec3d.of(blockPos).add(blockOffsetVector), RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, client.player));
+            if (hitResult.getBlockPos().equals(blockPos) && !containers.contains(blockPos)) {
+                if (client.world.getBlockState(blockPos).contains(Properties.CHEST_TYPE)) {
+                    if (client.world.getBlockState(blockPos).get(Properties.CHEST_TYPE).equals(ChestType.LEFT)) {
+                        if (!containers.contains(blockPos.offset(client.world.getBlockState(blockPos).get(ChestBlock.FACING).rotateYClockwise()))) {
+                            containers.add(new Vec3i(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
+                            break;
+                        }
+                    } else if (client.world.getBlockState(blockPos).get(Properties.CHEST_TYPE).equals(ChestType.RIGHT)) {
+                        if (!containers.contains(blockPos.offset(client.world.getBlockState(blockPos).get(ChestBlock.FACING).rotateYCounterclockwise()))) {
+                            containers.add(new Vec3i(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
+                            break;
+                        }
+                    } else {
+                        containers.add(new Vec3i(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
+                        break;
+                    }
+                } else {
+                    containers.add(new Vec3i(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
+                    break;
+                }
+            }
+        }
     }
 
     public static void openContainer(int container) {

@@ -13,11 +13,12 @@ import static net.minecraft.client.gui.screen.ingame.InventoryScreen.drawEntity;
 @SuppressWarnings("deprecation")
 @Environment(EnvType.CLIENT)
 public class Paperdoll implements HudRenderCallback {
+    @SuppressWarnings("NullableProblems")
     @Override
     public void onHudRender(DrawContext drawContext, RenderTickCounter tickCounter) {
         MinecraftClient mc = MinecraftClient.getInstance();
         assert mc.player != null;
-        if (!mc.player.isSpectator() && ImprovedInventoryConfig.paperdoll && !mc.options.hudHidden && mc.currentScreen == null && !mc.inGameHud.getDebugHud().shouldShowDebugHud()) {
+        if (!mc.player.isSpectator() && ImprovedInventoryConfig.paperdoll && !mc.options.hudHidden && mc.currentScreen == null) {
             if (ImprovedInventoryConfig.paperdollVerticalAnchor) {
                 if (ImprovedInventoryConfig.paperdollHorizontalAnchor) {
                     drawEntity(

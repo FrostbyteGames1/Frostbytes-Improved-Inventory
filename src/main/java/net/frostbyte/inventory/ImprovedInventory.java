@@ -21,7 +21,7 @@ public class ImprovedInventory implements ModInitializer {
 
 		ImprovedInventoryConfig.read();
 
-		KEYBIND_CATEGORY = KeyBinding.Category.create(Identifier.of(ImprovedInventory.MOD_ID, "key.categories.improved_inventory"));
+		KEYBIND_CATEGORY = KeyBinding.Category.create(Identifier.of(ImprovedInventory.MOD_ID, "improved_inventory"));
 
 		SlotCycler slotCycler = new SlotCycler();
 		slotCycler.setKeyBindings();

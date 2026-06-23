@@ -145,7 +145,7 @@ public class ColoredArmorBar {
         if (MinecraftClient.getInstance().getResourceManager().getResource(Identifier.of(ImprovedInventory.MOD_ID, "textures/gui/sprites/" + texture.getPath() + ".png")).isPresent()) {
             return texture;
         }
-        return Identifier.of(ImprovedInventory.MOD_ID, "hud/iron_armor_" + shape);
+        return Identifier.of(ImprovedInventory.MOD_ID, "hud/iron_armor_" + shape.name().toLowerCase());
     }
     
     enum ICON_SHAPE {

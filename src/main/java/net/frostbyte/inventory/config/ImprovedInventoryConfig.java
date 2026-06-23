@@ -32,6 +32,7 @@ public class ImprovedInventoryConfig {
     public static int duraDisplayOffsetY = 0;
     public static boolean slotCycle = true;
     public static boolean slotCycleAltScroll = true;
+    public static boolean slotCycleAltNum = true;
     public static int slotCycleOffsetX = 0;
     public static int slotCycleOffsetY = 0;
     public static boolean stackRefill = true;
@@ -244,6 +245,12 @@ public class ImprovedInventoryConfig {
                         .name(Text.of("Use Scroll Wheel for Slot Cycling"))
                         .description(OptionDescription.of(Text.of("Holding Alt while scrolling activates slot cycling")))
                         .binding(true, () -> slotCycleAltScroll, newVal -> slotCycleAltScroll = newVal)
+                        .controller(TickBoxControllerBuilder::create)
+                        .build())
+                    .option(Option.<Boolean>createBuilder()
+                        .name(Text.of("Use Number Keys for Slot Cycling"))
+                        .description(OptionDescription.of(Text.of("Holding Alt while pressing 1, 2, or 3 swaps the current stack with the stack in the first, second, or third row (from the bottom of the screen)")))
+                        .binding(true, () -> slotCycleAltNum, newVal -> slotCycleAltNum = newVal)
                         .controller(TickBoxControllerBuilder::create)
                         .build())
                     .option(Option.<Boolean>createBuilder()
@@ -627,6 +634,7 @@ public class ImprovedInventoryConfig {
             json.addProperty("duraDisplayOffsetY", duraDisplayOffsetY);
             json.addProperty("slotCycle", slotCycle);
             json.addProperty("slotCycleAltScroll", slotCycleAltScroll);
+            json.addProperty("slotCycleAltNum", slotCycleAltNum);
             json.addProperty("slotCycleOffsetX", slotCycleOffsetX);
             json.addProperty("slotCycleOffsetY", slotCycleOffsetY);
             json.addProperty("stackRefill", stackRefill);
@@ -703,6 +711,9 @@ public class ImprovedInventoryConfig {
             }
             if (json.has("slotCycleAltScroll")) {
                 slotCycleAltScroll = json.getAsJsonPrimitive("slotCycleAltScroll").getAsBoolean();
+            }
+            if (json.has("slotCycleAltNum")) {
+                slotCycleAltNum = json.getAsJsonPrimitive("slotCycleAltNum").getAsBoolean();
             }
             if (json.has("slotCycleOffsetX")) {
                 slotCycleOffsetX = json.getAsJsonPrimitive("slotCycleOffsetX").getAsInt();

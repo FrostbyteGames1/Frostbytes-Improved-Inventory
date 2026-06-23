@@ -42,6 +42,7 @@ public class SlotCycler implements HudRenderCallback {
     }
 
     public static void cycleDown(MinecraftClient client, ClientPlayerEntity player) {
+        //noinspection DuplicatedCode
         int current = player.getInventory().getSelectedSlot();
         int target = current;
         int top = 9 + current;
@@ -75,6 +76,7 @@ public class SlotCycler implements HudRenderCallback {
     }
 
     public static void cycleUp(MinecraftClient client, ClientPlayerEntity player) {
+        //noinspection DuplicatedCode
         int current = player.getInventory().getSelectedSlot();
         int target = current;
         int top = 9 + current;
@@ -107,6 +109,7 @@ public class SlotCycler implements HudRenderCallback {
         }
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public void onHudRender(DrawContext drawContext, RenderTickCounter tickCounter) {
         mc = MinecraftClient.getInstance();

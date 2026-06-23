@@ -18,7 +18,7 @@
   "food.tooltip_nutrition": "Nutrition: ",
   "food.tooltip_saturation": "Saturation: ",
 
-  "key.categories.improved_inventory": "Frostbyte's Improved Inventory",
+  "key.category.inventory.improved_inventory": "Frostbyte's Improved Inventory",
   "key.toggle_gamma": "Toggle Gamma",
   "key.sort_container": "Sort Container",
   "key.next_container": "Next Container (+SHIFT for Previous)",

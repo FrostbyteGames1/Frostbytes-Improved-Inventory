@@ -84,7 +84,7 @@ public class WAILA implements HudRenderCallback {
     ArrayList<Item> SWORDS = new ArrayList<>(List.of(
         Items.WOODEN_SWORD,
         Items.STONE_SWORD,
-        Items.STONE_SWORD,
+        Items.COPPER_SWORD,
         Items.GOLDEN_SWORD,
         Items.IRON_SWORD,
         Items.DIAMOND_SWORD,
@@ -95,7 +95,7 @@ public class WAILA implements HudRenderCallback {
     @Override
     public void onHudRender(DrawContext drawContext, RenderTickCounter tickCounter) {
         MinecraftClient mc = MinecraftClient.getInstance();
-        if (ImprovedInventoryConfig.waila && !mc.player.isSpectator() && !mc.options.hudHidden && mc.currentScreen == null && !mc.inGameHud.getDebugHud().shouldShowDebugHud()) {
+        if (ImprovedInventoryConfig.waila && !mc.player.isSpectator() && !mc.options.hudHidden && mc.currentScreen == null) {
             x = ImprovedInventoryConfig.wailaHorizontalAnchor ? ImprovedInventoryConfig.wailaOffsetX : mc.getWindow().getScaledWidth() - 130 - ImprovedInventoryConfig.wailaOffsetX;
             y = ImprovedInventoryConfig.wailaVerticalAnchor ? ImprovedInventoryConfig.wailaOffsetY : mc.getWindow().getScaledHeight() - 32 - ImprovedInventoryConfig.wailaOffsetY;
             if (mc.crosshairTarget != null) {

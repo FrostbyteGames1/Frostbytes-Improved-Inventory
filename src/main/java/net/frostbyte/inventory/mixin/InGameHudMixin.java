@@ -34,12 +34,10 @@ public abstract class InGameHudMixin {
         }
     }
 
-    @Inject(method = "tick", at = @At("TAIL"))
+    @Inject(method = "tick*", at = @At("TAIL"))
     private void tick(CallbackInfo ci) {
         // Slot Cycle
-        if (!SlotCycler.cycleUpKey.isUnbound() && !SlotCycler.cycleDownKey.isUnbound()) {
-            SlotCycler.slotCycleHandler(client);
-        }
+        SlotCycler.slotCycleHandler(client);
 
         // Tool Select
         if (ImprovedInventoryConfig.toolSelect) {
@@ -49,6 +47,11 @@ public abstract class InGameHudMixin {
         // Stack Refill
         if (ImprovedInventoryConfig.stackRefill) {
             StackRefiller.tryRefillStack(client);
+        }
+
+        // Stack Refill Preview
+        if (ImprovedInventoryConfig.stackRefillPreview) {
+            StackRefiller.updateRefillPreview(client);
         }
 
         // Zoom
