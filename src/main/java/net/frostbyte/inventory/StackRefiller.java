@@ -86,6 +86,8 @@ public class StackRefiller implements HudElement {
                     client.player.getInventory().getItem(i).has(DataComponents.SUSPICIOUS_STEW_EFFECTS) &&
                     Objects.equals(components.get(DataComponents.SUSPICIOUS_STEW_EFFECTS), client.player.getInventory().getItem(i).get(DataComponents.SUSPICIOUS_STEW_EFFECTS))
                 )) {
+                    if (!Objects.equals(components.get(DataComponents.ITEM_MODEL), client.player.getInventory().getItem(i).get(DataComponents.ITEM_MODEL))
+                            || !Objects.equals(components.get(DataComponents.ITEM_NAME), client.player.getInventory().getItem(i).get(DataComponents.ITEM_NAME))) continue;
                     client.gameMode.handleContainerInput(client.player.inventoryMenu.containerId, i, slot, ContainerInput.SWAP, client.player);
                     return;
                 }
@@ -96,6 +98,8 @@ public class StackRefiller implements HudElement {
         // Refill all other items
         for (int i = 35; i > 8; i--) {
             if (item == client.player.getInventory().getItem(i).getItem()) {
+                if (!Objects.equals(components.get(DataComponents.ITEM_MODEL), client.player.getInventory().getItem(i).get(DataComponents.ITEM_MODEL))
+                        || !Objects.equals(components.get(DataComponents.ITEM_NAME), client.player.getInventory().getItem(i).get(DataComponents.ITEM_NAME))) continue;
                 client.gameMode.handleContainerInput(client.player.inventoryMenu.containerId, i, slot, ContainerInput.SWAP, client.player);
                 return;
             }
@@ -146,6 +150,8 @@ public class StackRefiller implements HudElement {
         updateCurrentStack(client);
         mainHandStackSize = 0;
         for (int i = 35; i > 8; i--) {
+            if (!Objects.equals(client.player.getInventory().getSelectedItem().getComponents().get(DataComponents.ITEM_MODEL), client.player.getInventory().getItem(i).get(DataComponents.ITEM_MODEL))
+                    || !Objects.equals(client.player.getInventory().getSelectedItem().getComponents().get(DataComponents.ITEM_NAME), client.player.getInventory().getItem(i).get(DataComponents.ITEM_NAME))) continue;
             if (mainHandItem instanceof PotionItem || mainHandItem == Items.SUSPICIOUS_STEW) {
                 if (client.player.getInventory().getSelectedItem().getComponents().equals(client.player.getInventory().getItem(i).getComponents())) {
                     mainHandStackSize += client.player.getInventory().getItem(i).getCount();
@@ -156,6 +162,8 @@ public class StackRefiller implements HudElement {
         }
         offHandStackSize = 0;
         for (int i = 35; i > 8; i--) {
+            if (!Objects.equals(client.player.getInventory().getSelectedItem().getComponents().get(DataComponents.ITEM_MODEL), client.player.getInventory().getItem(i).get(DataComponents.ITEM_MODEL))
+                    || !Objects.equals(client.player.getInventory().getSelectedItem().getComponents().get(DataComponents.ITEM_NAME), client.player.getInventory().getItem(i).get(DataComponents.ITEM_NAME))) continue;
             if (offHandItem instanceof PotionItem || offHandItem == Items.SUSPICIOUS_STEW) {
                 if (client.player.getInventory().getSelectedItem().getComponents().equals(client.player.getInventory().getItem(i).getComponents())) {
                     offHandStackSize += client.player.getInventory().getItem(i).getCount();
