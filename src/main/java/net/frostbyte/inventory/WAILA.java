@@ -2,49 +2,48 @@ package net.frostbyte.inventory;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
 import net.frostbyte.inventory.tags.ModTags;
-import net.minecraft.block.Block;
-import net.minecraft.block.EndGatewayBlock;
-import net.minecraft.block.EndPortalBlock;
-import net.minecraft.block.NetherPortalBlock;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.PlayerSkinDrawer;
-import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.FallingBlockEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.passive.AbstractHorseEntity;
-import net.minecraft.entity.passive.LlamaEntity;
-import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.Colors;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.PlayerFaceExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.OwnableEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.animal.equine.AbstractHorse;
+import net.minecraft.world.entity.animal.equine.Llama;
+import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EndGatewayBlock;
+import net.minecraft.world.level.block.EndPortalBlock;
+import net.minecraft.world.level.block.NetherPortalBlock;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import org.jspecify.annotations.NonNull;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("deprecation")
 @Environment(EnvType.CLIENT)
-public class WAILA implements HudRenderCallback {
+public class WAILA implements HudElement {
     int x, y;
-    Identifier BOX = Identifier.ofVanilla("textures/gui/sprites/toast/advancement.png");
-    Identifier HEART = Identifier.ofVanilla("textures/mob_effect/regeneration.png");
-    Identifier ARMOR = Identifier.ofVanilla("textures/mob_effect/resistance.png");
-    Identifier LLAMA_STRENGTH = Identifier.of(ImprovedInventory.MOD_ID, "textures/chest_icon.png");
-    Identifier HORSE_SPEED = Identifier.ofVanilla("textures/mob_effect/speed.png");
-    Identifier HORSE_JUMP = Identifier.ofVanilla("textures/mob_effect/jump_boost.png");
+    Identifier BOX = Identifier.withDefaultNamespace("textures/gui/sprites/toast/advancement.png");
+    Identifier HEART = Identifier.withDefaultNamespace("textures/mob_effect/regeneration.png");
+    Identifier ARMOR = Identifier.withDefaultNamespace("textures/mob_effect/resistance.png");
+    Identifier LLAMA_STRENGTH = Identifier.fromNamespaceAndPath(ImprovedInventory.MOD_ID, "textures/chest_icon.png");
+    Identifier HORSE_SPEED = Identifier.withDefaultNamespace("textures/mob_effect/speed.png");
+    Identifier HORSE_JUMP = Identifier.withDefaultNamespace("textures/mob_effect/jump_boost.png");
     ArrayList<Item> AXES = new ArrayList<>(List.of(
         Items.WOODEN_AXE,
         Items.STONE_AXE,
@@ -75,7 +74,7 @@ public class WAILA implements HudRenderCallback {
     ArrayList<Item> SHOVELS = new ArrayList<>(List.of(
         Items.WOODEN_SHOVEL,
         Items.STONE_SHOVEL,
-        Items.COPPER_PICKAXE,
+        Items.COPPER_SHOVEL,
         Items.GOLDEN_SHOVEL,
         Items.IRON_SHOVEL,
         Items.DIAMOND_SHOVEL,
@@ -91,151 +90,151 @@ public class WAILA implements HudRenderCallback {
         Items.NETHERITE_SWORD
     ));
 
-    @SuppressWarnings({"DataFlowIssue", "NullableProblems"})
+    @SuppressWarnings("DataFlowIssue")
     @Override
-    public void onHudRender(DrawContext drawContext, RenderTickCounter tickCounter) {
-        MinecraftClient mc = MinecraftClient.getInstance();
-        if (ImprovedInventoryConfig.waila && !mc.player.isSpectator() && !mc.options.hudHidden && mc.currentScreen == null) {
-            x = ImprovedInventoryConfig.wailaHorizontalAnchor ? ImprovedInventoryConfig.wailaOffsetX : mc.getWindow().getScaledWidth() - 130 - ImprovedInventoryConfig.wailaOffsetX;
-            y = ImprovedInventoryConfig.wailaVerticalAnchor ? ImprovedInventoryConfig.wailaOffsetY : mc.getWindow().getScaledHeight() - 32 - ImprovedInventoryConfig.wailaOffsetY;
-            if (mc.crosshairTarget != null) {
-                if (mc.crosshairTarget.getType() == HitResult.Type.BLOCK) {
-                    Block block = mc.world.getBlockState(((BlockHitResult) mc.crosshairTarget).getBlockPos()).getBlock();
-                    String name = block.getName().getString();
-                    drawBox(drawContext, Math.max(mc.textRenderer.getWidth(name), (getToolsForBlock(block).size() - 1) * 16));
-                    int i = 0;
-                    for (ItemStack stack : getToolsForBlock(block)) {
-                        i++;
-                        drawContext.getMatrices().pushMatrix();
-                        drawContext.getMatrices().scale(0.8f, 0.8f);
-                        drawContext.drawItem(mc.player, stack, (int) (1.25 * (x + 16 + i * 12)), (int) (1.25 * (y + 16)), 0);
-                        drawContext.getMatrices().popMatrix();
-                    }
-                    if (block instanceof EndPortalBlock || block instanceof EndGatewayBlock) {
-                        ItemStack stack = Items.BARRIER.getDefaultStack();
-                        stack.set(DataComponentTypes.ITEM_MODEL, Identifier.of(ImprovedInventory.MOD_ID, "end_portal"));
-                        drawContext.drawItem(stack, x + 8, y + 8);
-                    } else if (block instanceof NetherPortalBlock) {
-                        ItemStack stack = Items.BARRIER.getDefaultStack();
-                        stack.set(DataComponentTypes.ITEM_MODEL, Identifier.of(ImprovedInventory.MOD_ID, "nether_portal"));
-                        drawContext.drawItem(stack, x + 8, y + 8);
-                    } else if (block.asItem() != null) {
-                        drawContext.drawItem(new ItemStack(block.asItem()), x + 8, y + 8);
-                    }
-                    drawContext.drawTextWithShadow(mc.textRenderer, name, x + 30, y + 8, Colors.WHITE);
-                } else if (mc.crosshairTarget.getType() == HitResult.Type.ENTITY) {
-                    Entity entity = ((EntityHitResult) mc.crosshairTarget).getEntity();
-                    String name = entity.getType().getName().getString();
-                    int textWidth = mc.textRenderer.getWidth(name);
+    public void extractRenderState(@NonNull GuiGraphicsExtractor graphics, @NonNull DeltaTracker deltaTracker) {
+        Minecraft client = Minecraft.getInstance();
+        if (ImprovedInventoryConfig.waila && client.player != null && !client.player.isSpectator() && !client.options.hideGui && client.screen == null) {
+            x = ImprovedInventoryConfig.wailaHorizontalAnchor ? ImprovedInventoryConfig.wailaOffsetX : client.getWindow().getGuiScaledWidth() - 130 - ImprovedInventoryConfig.wailaOffsetX;
+            y = ImprovedInventoryConfig.wailaVerticalAnchor ? ImprovedInventoryConfig.wailaOffsetY : client.getWindow().getGuiScaledHeight() - 32 - ImprovedInventoryConfig.wailaOffsetY;
+            if (client.getCameraEntity() != null) {
+                if (client.crosshairPickEntity != null) {
+                    Entity entity = client.crosshairPickEntity;
+                    String name = entity.getName().getString();
+                    int textWidth = client.font.width(name);
                     if (entity instanceof LivingEntity livingEntity) {
-                        if (entity instanceof TameableEntity tameableEntity && tameableEntity.isTamed()) {
+                        if (entity instanceof OwnableEntity tameableEntity) {
                             if (tameableEntity.getOwner() != null) {
                                 name = tameableEntity.getOwner().getName().getString() + "'s " + name;
                             }
-                            textWidth = mc.textRenderer.getWidth(name);
+                            textWidth = client.font.width(name);
                         }
-                        if (entity instanceof LlamaEntity llamaEntity) {
-                            textWidth = Math.max(textWidth, mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", (float) livingEntity.getArmor() / 2)) + 16 + mc.textRenderer.getWidth(String.valueOf(3 * llamaEntity.getStrength())) + 9);
-                        } else if (entity instanceof AbstractHorseEntity horseEntity) {
-                            textWidth = Math.max(textWidth, mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", (float) livingEntity.getArmor() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", 42.16 * horseEntity.getAttributeValue(EntityAttributes.MOVEMENT_SPEED))) + 16 + mc.textRenderer.getWidth(String.format("%.1f", 7.375 * horseEntity.getAttributeValue(EntityAttributes.JUMP_STRENGTH) - 2.125)) + 9);
+                        if (entity instanceof Llama llamaEntity) {
+                            textWidth = Math.max(textWidth, client.font.width(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + client.font.width(String.format("%.1f", (float) livingEntity.getArmorValue() / 2)) + 16 + client.font.width(String.valueOf(3 * llamaEntity.getStrength())) + 9);
+                        } else if (entity instanceof AbstractHorse horseEntity) {
+                            textWidth = Math.max(textWidth, client.font.width(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + client.font.width(String.format("%.1f", (float) livingEntity.getArmorValue() / 2)) + 16 + client.font.width(String.format("%.1f", 42.16 * horseEntity.getAttributeValue(Attributes.MOVEMENT_SPEED))) + 16 + client.font.width(String.format("%.1f", 7.375 * horseEntity.getAttributeValue(Attributes.JUMP_STRENGTH) - 2.125)) + 9);
                         } else {
-                            textWidth = Math.max(textWidth, mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", (float) livingEntity.getArmor() / 2)) + 9);
+                            textWidth = Math.max(textWidth, client.font.width(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + client.font.width(String.format("%.1f", (float) livingEntity.getArmorValue() / 2)) + 9);
                         }
                     } else if (entity instanceof FallingBlockEntity fallingBlockEntity) {
                         name = "Falling " + fallingBlockEntity.getBlockState().getBlock().getName().getString();
-                        textWidth = mc.textRenderer.getWidth(name);
+                        textWidth = client.font.width(name);
                     }
-                    drawBox(drawContext, textWidth);
+                    drawBox(graphics, textWidth);
                     if (entity instanceof LivingEntity livingEntity) {
-                        if (entity instanceof PlayerEntity player) {
-                            PlayerSkinDrawer.draw(drawContext, mc.getNetworkHandler().getPlayerListEntry(player.getUuid()).getSkinTextures().body().texturePath(), x + 8, y + 8, 16, true, false, -1);
+                        if (entity instanceof Player player && client.getConnection() != null) {
+                            PlayerFaceExtractor.extractRenderState(graphics, client.getConnection().getPlayerInfo(player.getUUID()).getSkin(), x + 8, x + 8, 8, Color.WHITE.getRGB());
                         } else {
-                            drawContext.drawItem(livingEntity.getPickBlockStack() != null ? livingEntity.getPickBlockStack() : ItemStack.EMPTY, x + 8, y + 8);
+                            graphics.item(livingEntity.isPickable() && livingEntity.getPickResult() != null ? livingEntity.getPickResult() : ItemStack.EMPTY, x + 8, y + 8);
                         }
-                        drawContext.drawTextWithShadow(mc.textRenderer, name, x + 30, y + 8, Colors.WHITE);
-                        drawContext.drawTextWithShadow(mc.textRenderer, String.format("%.1f", livingEntity.getHealth() / 2), x + 30, y + 18, Colors.WHITE);
-                        drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, HEART, x + 30 + mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)), y + 17, 0, 0, 9, 9, 9, 9);
-                        drawContext.drawTextWithShadow(mc.textRenderer, String.format("%.1f", (float) livingEntity.getArmor() / 2), x + 30 + mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16, y + 18, Colors.WHITE);
-                        drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, ARMOR, x + 30 + mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", (float) livingEntity.getArmor() / 2)), y + 17, 0, 0, 9, 9, 9, 9);
-                        if (livingEntity instanceof LlamaEntity llamaEntity) {
-                            drawContext.drawTextWithShadow(mc.textRenderer, String.valueOf(3 * llamaEntity.getStrength()), x + 30 + mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", (float) livingEntity.getArmor() / 2)) + 16, y + 18, Colors.WHITE);
-                            drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, LLAMA_STRENGTH, x + 30 + mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", (float) livingEntity.getArmor() / 2)) + 16 + mc.textRenderer.getWidth(String.valueOf(3 * llamaEntity.getStrength())), y + 17, 0, 0, 9, 9, 9, 9);
-                        } else if (livingEntity instanceof AbstractHorseEntity horseEntity) {
-                            drawContext.drawTextWithShadow(mc.textRenderer, String.format("%.1f", 42.16 * horseEntity.getAttributeValue(EntityAttributes.MOVEMENT_SPEED)), x + 30 + mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", (float) livingEntity.getArmor() / 2)) + 16, y + 18, Colors.WHITE);
-                            drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, HORSE_SPEED, x + 30 + mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", (float) livingEntity.getArmor() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", 42.16 * horseEntity.getAttributeValue(EntityAttributes.MOVEMENT_SPEED))), y + 17, 0, 0, 9, 9, 9, 9);
-                            drawContext.drawTextWithShadow(mc.textRenderer, String.format("%.1f", 7.375 * horseEntity.getAttributeValue(EntityAttributes.JUMP_STRENGTH) - 2.125), x + 30 + mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", (float) livingEntity.getArmor() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", 42.16 * horseEntity.getAttributeValue(EntityAttributes.MOVEMENT_SPEED))) + 16, y + 18, Colors.WHITE);
-                            drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, HORSE_JUMP, x + 30 + mc.textRenderer.getWidth(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", (float) livingEntity.getArmor() / 2)) + 16 + mc.textRenderer.getWidth(String.format("%.1f", 42.16 * horseEntity.getAttributeValue(EntityAttributes.MOVEMENT_SPEED))) + 16 + mc.textRenderer.getWidth(String.format("%.1f", 7.375 * horseEntity.getAttributeValue(EntityAttributes.JUMP_STRENGTH) - 2.125)), y + 17, 0, 0, 9, 9, 9, 9);
+                        graphics.text(client.font, name, x + 30, y + 8, Color.WHITE.getRGB());
+                        graphics.text(client.font, String.format("%.1f", livingEntity.getHealth() / 2), x + 30, y + 18, Color.WHITE.getRGB());
+                        graphics.blit(RenderPipelines.GUI_TEXTURED, HEART, x + 30 + client.font.width(String.format("%.1f", livingEntity.getHealth() / 2)), y + 17, 0, 0, 9, 9, 9, 9);
+                        graphics.text(client.font, String.format("%.1f", (float) livingEntity.getArmorValue() / 2), x + 30 + client.font.width(String.format("%.1f", livingEntity.getHealth() / 2)) + 16, y + 18, Color.WHITE.getRGB());
+                        graphics.blit(RenderPipelines.GUI_TEXTURED, ARMOR, x + 30 + client.font.width(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + client.font.width(String.format("%.1f", (float) livingEntity.getArmorValue() / 2)), y + 17, 0, 0, 9, 9, 9, 9);
+                        if (livingEntity instanceof Llama llamaEntity) {
+                            graphics.text(client.font, String.valueOf(3 * llamaEntity.getStrength()), x + 30 + client.font.width(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + client.font.width(String.format("%.1f", (float) livingEntity.getArmorValue() / 2)) + 16, y + 18, Color.WHITE.getRGB());
+                            graphics.blit(RenderPipelines.GUI_TEXTURED, LLAMA_STRENGTH, x + 30 + client.font.width(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + client.font.width(String.format("%.1f", (float) livingEntity.getArmorValue() / 2)) + 16 + client.font.width(String.valueOf(3 * llamaEntity.getStrength())), y + 17, 0, 0, 9, 9, 9, 9);
+                        } else if (livingEntity instanceof AbstractHorse horseEntity) {
+                            graphics.text(client.font, String.format("%.1f", 42.16 * horseEntity.getAttributeValue(Attributes.MOVEMENT_SPEED)), x + 30 + client.font.width(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + client.font.width(String.format("%.1f", (float) livingEntity.getArmorValue() / 2)) + 16, y + 18, Color.WHITE.getRGB());
+                            graphics.blit(RenderPipelines.GUI_TEXTURED, HORSE_SPEED, x + 30 + client.font.width(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + client.font.width(String.format("%.1f", (float) livingEntity.getArmorValue() / 2)) + 16 + client.font.width(String.format("%.1f", 42.16 * horseEntity.getAttributeValue(Attributes.MOVEMENT_SPEED))), y + 17, 0, 0, 9, 9, 9, 9);
+                            graphics.text(client.font, String.format("%.1f", 7.375 * horseEntity.getAttributeValue(Attributes.JUMP_STRENGTH) - 2.125), x + 30 + client.font.width(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + client.font.width(String.format("%.1f", (float) livingEntity.getArmorValue() / 2)) + 16 + client.font.width(String.format("%.1f", 42.16 * horseEntity.getAttributeValue(Attributes.MOVEMENT_SPEED))) + 16, y + 18, Color.WHITE.getRGB());
+                            graphics.blit(RenderPipelines.GUI_TEXTURED, HORSE_JUMP, x + 30 + client.font.width(String.format("%.1f", livingEntity.getHealth() / 2)) + 16 + client.font.width(String.format("%.1f", (float) livingEntity.getArmorValue() / 2)) + 16 + client.font.width(String.format("%.1f", 42.16 * horseEntity.getAttributeValue(Attributes.MOVEMENT_SPEED))) + 16 + client.font.width(String.format("%.1f", 7.375 * horseEntity.getAttributeValue(Attributes.JUMP_STRENGTH) - 2.125)), y + 17, 0, 0, 9, 9, 9, 9);
                         }
 
                     } else if (entity instanceof FallingBlockEntity fallingBlockEntity) {
-                        drawContext.drawItem(fallingBlockEntity.getBlockState().getBlock().asItem().getDefaultStack(), x + 8, y + 8);
-                        drawContext.drawTextWithShadow(mc.textRenderer, name, x + 30, y + 8, Colors.WHITE);
+                        graphics.item(fallingBlockEntity.getBlockState().getBlock().asItem().getDefaultInstance(), x + 8, y + 8);
+                        graphics.text(client.font, name, x + 30, y + 8, Color.WHITE.getRGB());
                     } else {
-                        if (entity.getPickBlockStack() != null) {
-                            drawContext.drawItem(entity.getPickBlockStack(), x + 8, y + 8);
+                        if (entity.isPickable() && entity.getPickResult() != null) {
+                            graphics.item(entity.getPickResult(), x + 8, y + 8);
                         }
-                        drawContext.drawTextWithShadow(mc.textRenderer, name, x + 30, y + 8, Colors.WHITE);
+                        graphics.text(client.font, name, x + 30, y + 8, Color.WHITE.getRGB());
                     }
+                } else if (client.getCameraEntity() != null && client.level != null && client.getCameraEntity().pick(client.player.getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE), 0, false).getType() == HitResult.Type.BLOCK) {
+                    Block block = client.level.getBlockState(((BlockHitResult) client.getCameraEntity().pick(client.player.getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE), 0, false)).getBlockPos()).getBlock();
+                    String name = block.getName().getString();
+                    drawBox(graphics, Math.max(client.font.width(name), (getToolsForBlock(block).size() - 1) * 16));
+                    int i = 0;
+                    for (ItemStack stack : getToolsForBlock(block)) {
+                        i++;
+                        graphics.pose().pushMatrix();
+                        graphics.pose().scale(0.8f, 0.8f);
+                        graphics.item(client.player, stack, (int) (1.25 * (x + 16 + i * 12)), (int) (1.25 * (y + 16)), 0);
+                        graphics.pose().popMatrix();
+                    }
+                    if (block instanceof EndPortalBlock || block instanceof EndGatewayBlock) {
+                        ItemStack stack = Items.BARRIER.getDefaultInstance();
+                        stack.set(DataComponents.ITEM_MODEL, Identifier.fromNamespaceAndPath(ImprovedInventory.MOD_ID, "end_portal"));
+                        graphics.item(stack, x + 8, y + 8);
+                    } else if (block instanceof NetherPortalBlock) {
+                        ItemStack stack = Items.BARRIER.getDefaultInstance();
+                        stack.set(DataComponents.ITEM_MODEL, Identifier.fromNamespaceAndPath(ImprovedInventory.MOD_ID, "nether_portal"));
+                        graphics.item(stack, x + 8, y + 8);
+                    } else {
+                        graphics.item(new ItemStack(block.asItem()), x + 8, y + 8);
+                    }
+                    graphics.text(client.font, name, x + 30, y + 8, Color.WHITE.getRGB());
                 }
             }
         }
     }
 
-    void drawBox(DrawContext drawContext, int textWidth) {
+    void drawBox(GuiGraphicsExtractor graphics, int textWidth) {
         if (!ImprovedInventoryConfig.wailaHorizontalAnchor) {
-            x = MinecraftClient.getInstance().getWindow().getScaledWidth() - textWidth - 38 - ImprovedInventoryConfig.wailaOffsetX;
+            x = Minecraft.getInstance().getWindow().getGuiScaledWidth() - textWidth - 38 - ImprovedInventoryConfig.wailaOffsetX;
         }
         if (textWidth <= 130) {
-            drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, BOX, x + 4, y, 4, 0, 26 + textWidth, 32, 160, 32);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, BOX, x + 4, y, 4, 0, 26 + textWidth, 32, 160, 32);
         } else {
             int temp = textWidth;
             int i = 0;
             while (temp > 130) {
-                drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, BOX, x + 4 + i * 130, y, 4, 0, 152, 32, 160, 32);
+                graphics.blit(RenderPipelines.GUI_TEXTURED, BOX, x + 4 + i * 130, y, 4, 0, 152, 32, 160, 32);
                 temp -= 130;
                 i++;
             }
-            drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, BOX, x + 26 + i * 130, y, 4, 0, temp + 4, 32, 160, 32);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, BOX, x + 26 + i * 130, y, 4, 0, temp + 4, 32, 160, 32);
         }
-        drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, BOX, x + 30 + textWidth, y, 152, 0, 8, 32, 160, 32);
-        drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, BOX, x, y, 0, 0, 4, 32, 160, 32);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BOX, x + 30 + textWidth, y, 152, 0, 8, 32, 160, 32);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BOX, x, y, 0, 0, 4, 32, 160, 32);
     }
 
     ArrayList<ItemStack> getToolsForBlock(Block block) {
         ArrayList<ItemStack> tools = new ArrayList<>();
 
         for (Item item : AXES) {
-            if (ToolSelector.isCorrectForDrops(item.getDefaultStack(), block.getDefaultState())) {
-                tools.add(item.getDefaultStack());
+            if (ToolSelector.isCorrectForDrops(item.getDefaultInstance(), block.defaultBlockState())) {
+                tools.add(item.getDefaultInstance());
                 break;
             }
         }
         for (Item item : HOES) {
-            if (ToolSelector.isCorrectForDrops(item.getDefaultStack(), block.getDefaultState())) {
-                tools.add(item.getDefaultStack());
+            if (ToolSelector.isCorrectForDrops(item.getDefaultInstance(), block.defaultBlockState())) {
+                tools.add(item.getDefaultInstance());
                 break;
             }
         }
         for (Item item : PICKAXES) {
-            if (ToolSelector.isCorrectForDrops(item.getDefaultStack(), block.getDefaultState())) {
-                tools.add(item.getDefaultStack());
+            if (ToolSelector.isCorrectForDrops(item.getDefaultInstance(), block.defaultBlockState())) {
+                tools.add(item.getDefaultInstance());
                 break;
             }
         }
         for (Item item : SHOVELS) {
-            if (ToolSelector.isCorrectForDrops(item.getDefaultStack(), block.getDefaultState())) {
-                tools.add(item.getDefaultStack());
+            if (ToolSelector.isCorrectForDrops(item.getDefaultInstance(), block.defaultBlockState())) {
+                tools.add(item.getDefaultInstance());
                 break;
             }
         }
         for (Item item : SWORDS) {
-            if (ToolSelector.isCorrectForDrops(item.getDefaultStack(), block.getDefaultState())) {
-                tools.add(item.getDefaultStack());
+            if (ToolSelector.isCorrectForDrops(item.getDefaultInstance(), block.defaultBlockState())) {
+                tools.add(item.getDefaultInstance());
                 break;
             }
         }
-        if (block.getDefaultState().isIn(ModTags.SHEARS_MINEABLE)) {
-            tools.add(Items.SHEARS.getDefaultStack());
+        if (block.defaultBlockState().is(ModTags.SHEARS_MINEABLE)) {
+            tools.add(Items.SHEARS.getDefaultInstance());
         }
 
         return tools;

@@ -5,23 +5,29 @@
   "compatibilityLevel": "JAVA_25",
   "plugin": "net.frostbyte.inventory.compat.MixinConfigPlugin",
   "mixins": [
-    "BundleContentsComponentMixin",
-    "BundleTooltipComponentMixin",
-    "GlDebugMixin",
-    "HandledScreenMixin",
+    "AbstractContainerScreenMixin",
+    "BundleContentsMixin",
+    "ClientBundleTooltipMixin",
+    "DebugScreenDislayer_DebugScreenOverlayMixin",
+    "GuiMixin",
     "HeldItemRendererMixin",
-    "InGameHudMixin",
     "ItemMixin",
-    "ItemStackMixin",
-    "KeyBindingMixin",
+    "KeyMappingMixin",
     "LivingEntityMixin",
-    "LocatorBarMixin",
-    "MouseMixin",
+    "LocatorBarRendererMixin",
+    "MobEffectInstanceMixin",
+    "MouseHandlerMixin",
+    "OptionInstanceMixin",
     "ScreenMixin",
-    "SimpleOptionMixin",
-    "StatusEffectInstanceMixin"
+    "TooltipDisplayMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "client": [
+    "DebugOptionsScreen_OptionEntryMixin",
+    "DebugScreenEntryListMixin",
+    "DebugScreenOverlayMixin",
+    "WindowMixin"
+  ]
 }

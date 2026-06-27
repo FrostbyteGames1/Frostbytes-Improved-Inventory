@@ -1,127 +1,78 @@
 package net.frostbyte.inventory;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.*;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.slot.SlotActionType;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerInput;
+import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 
 @Environment(EnvType.CLIENT)
 public class InventorySorter {
-    public static KeyBinding sortKey;
-    private static int interactions = 0;
+    public static KeyMapping sortKey;
+    public static int interactions = 0;
 
-    public void setKeyBindings() {
-        KeyBindingHelper.registerKeyBinding(sortKey = new KeyBinding("key.sort_container", InputUtil.Type.MOUSE, InputUtil.GLFW_MOUSE_BUTTON_MIDDLE, ImprovedInventory.KEYBIND_CATEGORY));
+    public void setKeyMappings() {
+        KeyMappingHelper.registerKeyMapping(sortKey = new KeyMapping("key.sort_container", InputConstants.Type.MOUSE, InputConstants.MOUSE_BUTTON_MIDDLE, ImprovedInventory.KEYBIND_CATEGORY));
     }
 
-    public static void inventorySortHandler(MinecraftClient mc) {
-        if (mc.currentScreen instanceof GenericContainerScreen || mc.currentScreen instanceof ShulkerBoxScreen || mc.currentScreen instanceof HopperScreen || mc.currentScreen instanceof Generic3x3ContainerScreen || mc.currentScreen instanceof InventoryScreen) {
-            if (shouldSort(mc)) {
-                long windowCode = MinecraftClient.getInstance().getWindow().getHandle();
-                int keyCode = InputUtil.fromTranslationKey(sortKey.getBoundKeyTranslationKey()).getCode();
-                if (keyCode >= 32 && keyCode <= 348 && GLFW.glfwGetKey(windowCode, keyCode) == 1) {
+    public static void inventorySortHandler(Minecraft client) {
+        if (client.screen instanceof AbstractContainerScreen<?> containerScreen) {
+            int keyCode = KeyMappingHelper.getBoundKeyOf(sortKey).getValue();
+            if ((keyCode >= 0 && keyCode <= 8 && GLFW.glfwGetMouseButton(client.getWindow().handle(), keyCode) == 1) || GLFW.glfwGetKey(client.getWindow().handle(), keyCode) == 1) {
+                if (shouldSort(client, containerScreen)) {
                     interactions = 0;
-                    sortStacks(mc, ((HandledScreen<?>) mc.currentScreen).getScreenHandler());
-                }
-                if (keyCode >= 0 && keyCode <= 7 && GLFW.glfwGetMouseButton(windowCode, keyCode) == 1) {
-                    interactions = 0;
-                    sortStacks(mc, ((HandledScreen<?>) mc.currentScreen).getScreenHandler());
+                    sortStacks(client, containerScreen.getMenu());
                 }
             }
+
         }
     }
 
     // Prioritizes pick stack over sort if player is in creative mode and both actions have the same keybind
-    static boolean shouldSort(MinecraftClient mc) {
-        if (mc.player == null) {
-            // False if player doesn't exist
-            return false;
+    static boolean shouldSort(Minecraft client, AbstractContainerScreen<?> screen) {
+        if (client.options.keyPickItem.same(sortKey) && client.player != null && client.player.isCreative()) {
+            return screen.hoveredSlot == null || screen.hoveredSlot.getItem().isEmpty();
         }
-        if (!mc.player.currentScreenHandler.getCursorStack().isEmpty()) {
-            // False if cursor isn't empty
-            return false;
-        }
-        if (!mc.player.isSpectator() && !mc.player.isCreative()) {
-            // True if player is in survival mode
-            return true;
-        }
-        if (mc.currentScreen instanceof HandledScreen<?> handledScreen && handledScreen.focusedSlot != null && !handledScreen.focusedSlot.getStack().isEmpty()) {
-            // False if focused slot isn't empty
-            return false;
-        }
-        // True otherwise
         return true;
     }
 
     // Returns the number of non-player inventory slots on screen
-    static int getNumSlots(ScreenHandler screenHandler) {
-        int num = 0;
-        for (int i = 0; i < screenHandler.slots.size(); i++) {
-            if (!(screenHandler.getSlot(i).inventory instanceof PlayerInventory)) {
-                num++;
-            }
-        }
-        return num;
+    static int getNumSlots(AbstractContainerMenu menu) {
+        return menu.slots.size() - 36;
     }
 
     // Combines stacks of the same item
     @SuppressWarnings("DataFlowIssue")
-    static void combineStacks(MinecraftClient mc, ScreenHandler screenHandler) {
-        ItemStack stack;
-        if (mc.currentScreen instanceof InventoryScreen) {
-            for (int i = 9; i < 36; i++) {
-                stack = screenHandler.getSlot(i).getStack();
-                if (!stack.isEmpty() && stack.getMaxCount() > stack.getCount()) {
-                    for (int j = i + 1; j < 36; j++) {
-                        if (screenHandler.getSlot(j).getStack().getItem().equals(stack.getItem()) && screenHandler.getSlot(j).getStack().getComponents().equals(stack.getComponents())) {
-                            mc.interactionManager.clickSlot(screenHandler.syncId, j, 0, SlotActionType.PICKUP, mc.player);
-                            mc.interactionManager.clickSlot(screenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player);
+    static void combineStacks(Minecraft client, AbstractContainerMenu menu) {
+        ItemStack stack1;
+        ItemStack stack2;
+        for (int i = 0; i < getNumSlots(menu) - 1; i++) {
+            if (menu.getSlot(i).hasItem()) {
+                stack1 = menu.getSlot(i).getItem();
+                for (int j = i + 1; j < getNumSlots(menu); j++) {
+                    if (menu.getSlot(j).hasItem()) {
+                        stack2 = menu.getSlot(j).getItem();
+                        if (ItemStack.isSameItemSameComponents(stack1, stack2) && stack1.getCount() < stack1.getMaxStackSize()) {
+                            client.gameMode.handleContainerInput(menu.containerId, j, 0, ContainerInput.PICKUP, client.player);
+                            client.gameMode.handleContainerInput(menu.containerId, i, 0, ContainerInput.PICKUP, client.player);
                             interactions += 2;
-                            if (!screenHandler.getCursorStack().isEmpty()) {
-                                mc.interactionManager.clickSlot(screenHandler.syncId, j, 0, SlotActionType.PICKUP, mc.player);
-                                interactions ++;
+                            if (!menu.getCarried().isEmpty()) {
+                                client.gameMode.handleContainerInput(menu.containerId, j, 0, ContainerInput.PICKUP, client.player);
+                                interactions += 1;
+                            }
+                            if (ImprovedInventoryConfig.maxInteractions > 0 && interactions > ImprovedInventoryConfig.maxInteractions) {
+                                return;
                             }
                         }
-                        if (interactions >= ImprovedInventoryConfig.maxInteractions && ImprovedInventoryConfig.maxInteractions != 0) {
-                            break;
-                        }
-                    }
-                    if (interactions >= ImprovedInventoryConfig.maxInteractions && ImprovedInventoryConfig.maxInteractions != 0) {
-                        break;
-                    }
-                }
-            }
-        } else {
-            for (int i = 0; i < getNumSlots(screenHandler); i++) {
-                stack = screenHandler.getSlot(i).getStack();
-                if (!stack.isEmpty() && stack.getMaxCount() > stack.getCount()) {
-                    for (int j = i + 1; j < getNumSlots(screenHandler); j++) {
-                        if (screenHandler.getSlot(j).getStack().getItem().equals(stack.getItem()) && screenHandler.getSlot(j).getStack().getComponents().equals(stack.getComponents())) {
-                            mc.interactionManager.clickSlot(screenHandler.syncId, j, 0, SlotActionType.PICKUP, mc.player);
-                            mc.interactionManager.clickSlot(screenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player);
-                            interactions += 2;
-                            if (!screenHandler.getCursorStack().isEmpty()) {
-                                mc.interactionManager.clickSlot(screenHandler.syncId, j, 0, SlotActionType.PICKUP, mc.player);
-                                interactions ++;
-                            }
-                        }
-                        if (interactions >= ImprovedInventoryConfig.maxInteractions && ImprovedInventoryConfig.maxInteractions != 0) {
-                            break;
-                        }
-                    }
-                    if (interactions >= ImprovedInventoryConfig.maxInteractions && ImprovedInventoryConfig.maxInteractions != 0) {
-                        break;
                     }
                 }
             }
@@ -139,7 +90,7 @@ public class InventorySorter {
         if (b.isEmpty()) {
             return -1;
         }
-        int temp = a.getItem().getName().getString().compareTo(b.getItem().getName().getString());
+        int temp = a.getItem().getName(a).getString().compareTo(b.getItem().getName(b).getString());
         if (temp == 0) {
             return Integer.compare(b.getCount(), a.getCount());
         } else {
@@ -148,73 +99,32 @@ public class InventorySorter {
     }
 
     // Collects combined stacks into an ArrayList and sorts the array
-    static ArrayList<ItemStack> getSortedStackArray(MinecraftClient mc, ScreenHandler screenHandler) {
+    static ArrayList<ItemStack> getSortedStackArray(AbstractContainerMenu menu) {
         ArrayList<ItemStack> stacks = new ArrayList<>();
-        if (mc.currentScreen instanceof InventoryScreen) {
-            for (int i = 9; i < 36; i++) {
-                stacks.add(screenHandler.getSlot(i).getStack());
-            }
-        } else {
-            for (int i = 0; i < getNumSlots(screenHandler); i++) {
-                stacks.add(screenHandler.getSlot(i).getStack());
+        for (int i = 0; i < getNumSlots(menu); i++) {
+            if (menu.getSlot(i).hasItem()) {
+                stacks.add(menu.getSlot(i).getItem());
             }
         }
         stacks.sort(InventorySorter::compareStacks);
-        if (mc.currentScreen instanceof InventoryScreen) {
-            for (int i = 9; i > 0; i--) {
-                stacks.addFirst(screenHandler.getSlot(i - 1).getStack());
-            }
-        }
         return stacks;
     }
 
     // Sorts container
     @SuppressWarnings("DataFlowIssue")
-    static void sortStacks(MinecraftClient mc, ScreenHandler screenHandler) {
-        screenHandler.enableSyncing();
-        combineStacks(mc, screenHandler);
-        ArrayList<ItemStack> sortedStacks = getSortedStackArray(mc, screenHandler);
+    public static void sortStacks(Minecraft client, AbstractContainerMenu menu) {
+        combineStacks(client, menu);
+        ArrayList<ItemStack> sortedStacks = getSortedStackArray(menu);
         for (int i = 0; i < sortedStacks.size(); i++) {
-            if (!screenHandler.getSlot(i).getStack().equals(sortedStacks.get(i))) {
-                int slot = screenHandler.getStacks().indexOf(sortedStacks.get(i));
-                mc.interactionManager.clickSlot(screenHandler.syncId, slot, 0, SlotActionType.PICKUP, mc.player);
-                mc.interactionManager.clickSlot(screenHandler.syncId, i, 0, SlotActionType.PICKUP, mc.player);
+            if (i != menu.getItems().indexOf(sortedStacks.get(i))) {
+                client.gameMode.handleContainerInput(menu.containerId, menu.getItems().indexOf(sortedStacks.get(i)), 0, ContainerInput.PICKUP, client.player);
+                client.gameMode.handleContainerInput(menu.containerId, i, 0, ContainerInput.PICKUP, client.player);
                 interactions += 2;
-                if (!screenHandler.getCursorStack().isEmpty()) {
-                    if (!screenHandler.getCursorStack().isEmpty()) {
-                        if (mc.currentScreen instanceof InventoryScreen) {
-                            for (int j = 9; j < 36; j++) {
-                                if (screenHandler.slots.get(j).getStack().isEmpty()) {
-                                    mc.interactionManager.clickSlot(screenHandler.syncId, j, 0, SlotActionType.PICKUP, mc.player);
-                                    break;
-                                }
-                            }
-                        } else {
-                            mc.interactionManager.clickSlot(screenHandler.syncId, screenHandler.getStacks().indexOf(ItemStack.EMPTY), 0, SlotActionType.PICKUP, mc.player);
-                        }
-                    }
-                    interactions ++;
-                }
-            }
-            if (interactions >= ImprovedInventoryConfig.maxInteractions && ImprovedInventoryConfig.maxInteractions != 0) {
-                break;
-            }
-        }
-        if (!screenHandler.getCursorStack().isEmpty()) {
-            if (!screenHandler.getCursorStack().isEmpty()) {
-                if (mc.currentScreen instanceof InventoryScreen) {
-                    for (int j = 9; j < 36; j++) {
-                        if (screenHandler.slots.get(j).getStack().isEmpty()) {
-                            mc.interactionManager.clickSlot(screenHandler.syncId, j, 0, SlotActionType.PICKUP, mc.player);
-                            break;
-                        }
-                    }
-                } else {
-                    mc.interactionManager.clickSlot(screenHandler.syncId, screenHandler.getStacks().indexOf(ItemStack.EMPTY), 0, SlotActionType.PICKUP, mc.player);
+                if (ImprovedInventoryConfig.maxInteractions > 0 && interactions > ImprovedInventoryConfig.maxInteractions) {
+                    return;
                 }
             }
         }
-        screenHandler.sendContentUpdates();
     }
 
 }

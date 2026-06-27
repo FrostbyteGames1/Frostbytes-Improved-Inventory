@@ -1,49 +1,57 @@
 package net.frostbyte.inventory;
 
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
+import net.frostbyte.inventory.gui.components.debug.*;
 import net.frostbyte.inventory.tags.ModTags;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.gui.components.debug.DebugScreenEntries;
+import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ImprovedInventory implements ModInitializer {
 	public static final String MOD_ID = "inventory";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-	public static KeyBinding.Category KEYBIND_CATEGORY;
+	public static KeyMapping.Category KEYBIND_CATEGORY;
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onInitialize() {
 		ModTags.registerModTags();
 
 		ImprovedInventoryConfig.read();
 
-		KEYBIND_CATEGORY = KeyBinding.Category.create(Identifier.of(ImprovedInventory.MOD_ID, "improved_inventory"));
+		KEYBIND_CATEGORY = KeyMapping.Category.register(Identifier.fromNamespaceAndPath(ImprovedInventory.MOD_ID, "improved_inventory"));
 
 		SlotCycler slotCycler = new SlotCycler();
-		slotCycler.setKeyBindings();
-		HudRenderCallback.EVENT.register(slotCycler);
+		slotCycler.setKeyMappings();
+		HudElementRegistry.addFirst(Identifier.fromNamespaceAndPath(MOD_ID, "slot_cycle"), slotCycler);
 
-		HudRenderCallback.EVENT.register(new StackRefiller());
+		HudElementRegistry.addLast(Identifier.fromNamespaceAndPath(MOD_ID, "stack_refill"), new StackRefiller());
 
-		HudRenderCallback.EVENT.register(new DurabilityDisplayer());
+		HudElementRegistry.addFirst(Identifier.fromNamespaceAndPath(MOD_ID, "durability_display"), new DurabilityDisplayer());
 
-		new InventorySorter().setKeyBindings();
+		new InventorySorter().setKeyMappings();
 
-		new Zoom().setKeyBindings();
+		new Zoom().setKeyMappings();
 
-		new Gamma().setKeyBindings();
+		new Gamma().setKeyMappings();
 
-		HudRenderCallback.EVENT.register(new Paperdoll());
+		HudElementRegistry.addFirst(Identifier.fromNamespaceAndPath(MOD_ID, "paperdoll"), new Paperdoll());
 
-		new NearbyContainerViewer().setKeybindings();
+		new NearbyContainerViewer().setKeyMappings();
 
-		HudRenderCallback.EVENT.register(new TextDisplayer());
+		DebugScreenEntries.register(DebugEntryCoordinates.GROUP, new DebugEntryCoordinates());
+		DebugScreenEntries.register(DebugEntryDimension.GROUP, new DebugEntryDimension());
+		DebugScreenEntries.register(DebugEntryFacing.GROUP, new DebugEntryFacing());
+		DebugScreenEntries.register(DebugEntrySlimeChunk.GROUP, new DebugEntrySlimeChunk());
+		DebugScreenEntries.register(DebugEntrySpeed.GROUP, new DebugEntrySpeed());
+		DebugScreenEntries.register(DebugEntrySprinting.GROUP, new DebugEntrySprinting());
+		DebugScreenEntries.register(DebugEntryGameTime.GROUP, new DebugEntryGameTime());
+		DebugScreenEntries.register(DebugEntryRealTime.GROUP, new DebugEntryRealTime());
 
-		HudRenderCallback.EVENT.register(new WAILA());
+		HudElementRegistry.addLast(Identifier.fromNamespaceAndPath(MOD_ID, "waila"), new WAILA());
 	}
 
 }

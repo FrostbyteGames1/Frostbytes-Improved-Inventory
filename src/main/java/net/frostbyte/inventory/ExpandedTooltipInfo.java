@@ -1,29 +1,27 @@
 package net.frostbyte.inventory;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.MapRenderState;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.ContainerComponent;
-import net.minecraft.component.type.FoodComponent;
-import net.minecraft.component.type.MapIdComponent;
-import net.minecraft.item.FilledMapItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.map.MapDecoration;
-import net.minecraft.item.map.MapDecorationTypes;
-import net.minecraft.item.map.MapState;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.Texts;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.GlobalPos;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.state.MapRenderState;
+import net.minecraft.core.GlobalPos;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.MapItem;
+import net.minecraft.world.item.component.ItemContainerContents;
+import net.minecraft.world.level.saveddata.maps.MapDecoration;
+import net.minecraft.world.level.saveddata.maps.MapDecorationTypes;
+import net.minecraft.world.level.saveddata.maps.MapId;
+import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -31,161 +29,201 @@ import java.util.function.Consumer;
 
 public class ExpandedTooltipInfo {
 
-    public static void shulkerBoxTooltipHandler(DrawContext context, int x, int y, Slot focusedSlot, int backgroundWidth) {
-        DefaultedList<ItemStack> items = DefaultedList.of();
-        List<ItemStack> inventory = focusedSlot.getStack().getOrDefault(DataComponentTypes.CONTAINER, ContainerComponent.DEFAULT).stream().toList();
+    @SuppressWarnings("DataFlowIssue")
+    public static void shulkerBoxTooltipHandler(GuiGraphicsExtractor graphics, int x, int y, Slot focusedSlot, int backgroundWidth, int color) {
+        List<ItemStack> items = new ArrayList<>();
+        List<ItemStack> inventory = focusedSlot.getItem().getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY).allItemsCopyStream().toList();
         for (int i = 0; i < inventory.size(); i++) {
             items.add(i, inventory.get(i));
         }
         if (!items.isEmpty()) {
-            context.getMatrices().pushMatrix();
             int startX = x + 8;
             int startY = y - 16;
-            context.drawTexture(
+            graphics.blit(
                 RenderPipelines.GUI_TEXTURED,
-                Identifier.of("textures/gui/container/generic_54.png"),
+                Identifier.withDefaultNamespace("textures/gui/container/generic_54.png"),
                 startX, startY,
                 0, 0,
                 backgroundWidth, 3 * 18 + 17,
-                256, 256
+                256, 256,
+                color
             );
-            context.drawTexture(
+            graphics.blit(
                 RenderPipelines.GUI_TEXTURED,
-                Identifier.of("textures/gui/container/generic_54.png"),
+                Identifier.withDefaultNamespace("textures/gui/container/generic_54.png"),
                 startX, startY + 3 * 18 + 17,
                 0, 215,
                 backgroundWidth, 7,
-                256, 256
+                256, 256,
+                color
             );
             int nameColor = new Color(63, 63, 63).getRGB();
-            if (focusedSlot.getStack().getItem().getName().getStyle().getColor() != null) {
-                nameColor = focusedSlot.getStack().getItem().getName().getStyle().getColor().getRgb();
+            if (focusedSlot.getItem().has(DataComponents.CUSTOM_NAME)) {
+                nameColor = focusedSlot.getItem().getOrDefault(DataComponents.CUSTOM_NAME, CommonComponents.EMPTY).getStyle().getColor().getValue();
             }
-            context.drawText(MinecraftClient.getInstance().textRenderer, focusedSlot.getStack().getName(), startX + 8, startY + 6, nameColor, false);
+            nameColor = adjustTextColor(color, nameColor);
+            graphics.text(Minecraft.getInstance().font, focusedSlot.getItem().getOrDefault(DataComponents.ITEM_NAME, CommonComponents.EMPTY), startX + 8, startY + 6, nameColor, false);
             for (int i = 0; i < items.size(); i++) {
                 if (i < 9) {
-                    context.drawItem(items.get(i), startX + 8 + i * 18, startY + 18, 0);
-                    context.drawStackOverlay(MinecraftClient.getInstance().textRenderer, items.get(i), startX + 8 + i * 18, startY + 18);
+                    graphics.item(items.get(i), startX + 8 + i * 18, startY + 18, 0);
+                    graphics.itemDecorations(Minecraft.getInstance().font, items.get(i), startX + 8 + i * 18, startY + 18);
                 } else if (i < 18) {
-                    context.drawItem(items.get(i), startX + 8 + (i - 9) * 18, startY + 18 + 18, 0);
-                    context.drawStackOverlay(MinecraftClient.getInstance().textRenderer, items.get(i), startX + 8 + (i - 9) * 18, startY + 18 + 18);
+                    graphics.item(items.get(i), startX + 8 + (i - 9) * 18, startY + 18 + 18, 0);
+                    graphics.itemDecorations(Minecraft.getInstance().font, items.get(i), startX + 8 + (i - 9) * 18, startY + 18 + 18);
                 } else {
-                    context.drawItem(items.get(i), startX + 8 + (i - 18) * 18, startY + 18 + 36, 0);
-                    context.drawStackOverlay(MinecraftClient.getInstance().textRenderer, items.get(i), startX + 8 + (i - 18) * 18, startY + 18 + 36);
+                    graphics.item(items.get(i), startX + 8 + (i - 18) * 18, startY + 18 + 36, 0);
+                    graphics.itemDecorations(Minecraft.getInstance().font, items.get(i), startX + 8 + (i - 18) * 18, startY + 18 + 36);
                 }
             }
-            context.getMatrices().popMatrix();
         }
     }
 
-    public static void mapTooltipHandler(DrawContext context, int x, int y, Slot focusedSlot) {
-        context.getMatrices().pushMatrix();
-        context.drawTexture(
+    public static int adjustTextColor(int background, int text) {
+        final int CONTRAST = 125;
+
+        // Preserve alpha
+        int alpha = text & 0xFF000000;
+
+        // Background RGB
+        int br = (background >> 16) & 0xFF;
+        int bg = (background >> 8) & 0xFF;
+        int bb = background & 0xFF;
+
+        // Text RGB
+        int tr = (text >> 16) & 0xFF;
+        int tg = (text >> 8) & 0xFF;
+        int tb = text & 0xFF;
+
+        // Perceived luminance
+        int bgLum = (int)(0.299 * br + 0.587 * bg + 0.114 * bb);
+        int textLum = (int)(0.299 * tr + 0.587 * tg + 0.114 * tb);
+
+        // Target luminance based on background brightness
+        int targetLum = (bgLum < 128)
+                ? Math.min(255, bgLum + CONTRAST)
+                : Math.max(0, bgLum - CONTRAST);
+
+        // Shift the text by the required amount
+        int delta = targetLum - textLum;
+
+        tr = Math.clamp(tr + delta, 0, 255);
+        tg = Math.clamp(tg + delta, 0, 255);
+        tb = Math.clamp(tb + delta, 0, 255);
+
+        return alpha | (tr << 16) | (tg << 8) | tb;
+    }
+
+    public static void mapTooltipHandler(GuiGraphicsExtractor graphics, int x, int y, Slot focusedSlot) {
+        graphics.blit(
             RenderPipelines.GUI_TEXTURED,
-            Identifier.of("textures/map/map_background_checkerboard.png"),
+            Identifier.withDefaultNamespace("textures/map/map_background_checkerboard.png"),
             x - 78, y - 16,
             0, 0,
             70, 70,
             70, 70
         );
-        context.getMatrices().popMatrix();
 
         MapRenderState mapRenderState = new MapRenderState();
-        MapIdComponent mapIdComponent = focusedSlot.getStack().get(DataComponentTypes.MAP_ID);
-        MapState mapState = null;
-        if (mapIdComponent != null) {
-            mapState = FilledMapItem.getMapState(mapIdComponent, MinecraftClient.getInstance().world);
+        MapId mapId = focusedSlot.getItem().get(DataComponents.MAP_ID);
+        MapItemSavedData mapData = null;
+        if (mapId != null && Minecraft.getInstance().level != null) {
+            mapData = MapItem.getSavedData(mapId, Minecraft.getInstance().level);
         }
-        if (mapState != null) {
-            context.getMatrices().pushMatrix();
-            context.getMatrices().translate(x - 78 + 3, y - 16 + 3);
-            context.getMatrices().scale(0.5f);
-            MinecraftClient.getInstance().getMapRenderer().update(mapIdComponent, mapState, mapRenderState);
-            context.drawMap(mapRenderState);
-            context.getMatrices().popMatrix();
+        if (mapData != null) {
+            graphics.pose().pushMatrix();
+            graphics.pose().translate(x - 78 + 3, y - 16 + 3);
+            graphics.pose().scale(0.5f);
+            Minecraft.getInstance().getMapRenderer().extractRenderState(mapId, mapData, mapRenderState);
+            graphics.map(mapRenderState);
+            graphics.pose().popMatrix();
 
-            for (MapDecoration decoration : mapState.getDecorations()) {
+            for (MapDecoration decoration : mapData.getDecorations()) {
                 if (decoration.type() == MapDecorationTypes.PLAYER) {
-                    context.getMatrices().pushMatrix();
-                    context.getMatrices().translate(x - 78 + 3 + decoration.x() / 4F + 32F, y - 16 + 3 + decoration.z() / 4F + 32F);
-                    context.getMatrices().scale(0.5f);
-                    context.drawTexture(
+                    graphics.pose().pushMatrix();
+                    graphics.pose().translate(x - 78 + 3 + decoration.x() / 4F + 32F, y - 16 + 3 + decoration.y() / 4F + 32F);
+                    graphics.pose().scale(0.5f);
+                    graphics.blit(
                         RenderPipelines.GUI_TEXTURED,
-                        Identifier.of("textures/map/decorations/player_off_map.png"),
+                        Identifier.withDefaultNamespace("textures/map/decorations/player_off_map.png"),
                         0, 0,
                         0, 0,
                         8, 8,
                         8, 8
                     );
-                    context.getMatrices().popMatrix();
+                    graphics.pose().popMatrix();
                 }
             }
         }
     }
 
-    public static void compassTooltipHandler(ItemStack stack, Consumer<Text> textConsumer) {
-        MutableText text;
-        if (stack.getComponents().contains(DataComponentTypes.LODESTONE_TRACKER)) {
-            Optional<GlobalPos> optional = Objects.requireNonNull(stack.getComponents().get(DataComponentTypes.LODESTONE_TRACKER)).target();
-            if (optional.isPresent() && Objects.requireNonNull(MinecraftClient.getInstance().world).getDimensionEntry().getIdAsString().contains(optional.get().dimension().getValue().toShortTranslationKey())) {
-                text = MutableText.of(Text.of(optional.get().pos().toShortString()).getContent());
+    @SuppressWarnings("DataFlowIssue")
+    public static void compassTooltipHandler(ItemStack stack, Consumer<Component> textConsumer) {
+        Component text;
+        if (stack.getComponents().has(DataComponents.LODESTONE_TRACKER)) {
+            Optional<GlobalPos> optional = stack.getComponents().get(DataComponents.LODESTONE_TRACKER).target();
+            if (optional.isPresent() && Minecraft.getInstance().level != null && Minecraft.getInstance().level.dimension().equals(optional.get().dimension())) {
+                text = Component.literal(optional.get().pos().toShortString());
             } else {
-                text = MutableText.of(Text.translatable("compass.target.none").getContent());
+                text = Component.translatable("compass.target.none");
             }
-        } else if (Objects.requireNonNull(MinecraftClient.getInstance().world).getDimensionEntry().getIdAsString().contains("overworld")) {
-            text = MutableText.of(Text.of(MinecraftClient.getInstance().world.getSpawnPoint().getPos().toShortString()).getContent());
+        } else if (Objects.requireNonNull(Minecraft.getInstance().level).dimension().identifier().toShortString().contains("overworld")) {
+            text = Component.literal(Minecraft.getInstance().level.getRespawnData().pos().toShortString());
         } else {
-            text = MutableText.of(Text.translatable("compass.target.none").getContent());
+            text = Component.translatable("compass.target.none");
         }
-        Texts.setStyleIfAbsent(text, Style.EMPTY.withColor(Formatting.GRAY));
+        text.getStyle().applyFormat(ChatFormatting.GRAY);
         textConsumer.accept(text);
     }
 
-    public static void recoveryCompassTooltipHandler(Consumer<Text> textConsumer) {
-        MutableText text;
-        Optional<GlobalPos> optional = Objects.requireNonNull(MinecraftClient.getInstance().player).getLastDeathPos();
-        if (optional.isPresent() && Objects.requireNonNull(MinecraftClient.getInstance().world).getDimensionEntry().getIdAsString().contains(optional.get().dimension().getValue().toShortTranslationKey())) {
-            text = MutableText.of(Text.of(optional.get().pos().toShortString()).getContent());
+    @SuppressWarnings("DataFlowIssue")
+    public static void recoveryCompassTooltipHandler(Consumer<Component> textConsumer) {
+        Component text;
+        Optional<GlobalPos> optional = Minecraft.getInstance().player.getLastDeathLocation();
+        if (optional.isPresent() && Minecraft.getInstance().level != null && Minecraft.getInstance().level.dimension().equals(optional.get().dimension())) {
+            text = Component.literal(optional.get().pos().toShortString());
         } else {
-            text = MutableText.of(Text.translatable("compass.target.none").getContent());
+            text = Component.translatable("compass.target.none");
         }
-        Texts.setStyleIfAbsent(text, Style.EMPTY.withColor(Formatting.GRAY));
+        text.getStyle().applyFormat(ChatFormatting.GRAY);
         textConsumer.accept(text);
     }
 
-    public static void clockTooltipHandler(Consumer<Text> textConsumer) {
-        MutableText text = getTimeOfDayText();
-        Texts.setStyleIfAbsent(text, Style.EMPTY.withColor(Formatting.GRAY));
+    public static void clockTooltipHandler(Consumer<Component> textConsumer) {
+        Component text = getTimeOfDayText();
+        text.getStyle().applyFormat(ChatFormatting.GRAY);
         textConsumer.accept(text);
     }
 
-    private static MutableText getTimeOfDayText() {
-        MutableText text;
-        if (!Objects.requireNonNull(MinecraftClient.getInstance().world).getDimension().hasFixedTime()) {
-            long time = MinecraftClient.getInstance().world.getTimeOfDay() % 24000L;
+    private static Component getTimeOfDayText() {
+        Component text;
+        if (!Objects.requireNonNull(Minecraft.getInstance().level).dimensionType().hasFixedTime()) {
+            long time = Minecraft.getInstance().level.getOverworldClockTime() % 24000L;
             text = switch ((int) time) {
-                case 1000 -> MutableText.of(Text.translatable("clock.time.day").getContent());
-                case 6000 -> MutableText.of(Text.translatable("clock.time.noon").getContent());
-                case 13000 -> MutableText.of(Text.translatable("clock.time.night").getContent());
-                case 18000 -> MutableText.of(Text.translatable("clock.time.midnight").getContent());
-                default -> MutableText.of(Text.of(String.valueOf(time)).getContent());
+                case 1000 -> Component.translatable("clock.time.day");
+                case 6000 -> Component.translatable("clock.time.noon");
+                case 13000 -> Component.translatable("clock.time.night");
+                case 18000 -> Component.translatable("clock.time.midnight");
+                default -> Component.literal(String.valueOf(time));
             };
         } else {
-            text = MutableText.of(Text.translatable("clock.time.none").getContent());
+            text = Component.translatable("clock.time.none");
         }
         return text;
     }
 
-    public static void foodTooltipHandler(ItemStack stack, Consumer<Text> textConsumer) {
-        MutableText text;
-        FoodComponent food = stack.getComponents().get(DataComponentTypes.FOOD);
+    @SuppressWarnings("DataFlowIssue")
+    public static void foodTooltipHandler(ItemStack stack, Consumer<Component> textConsumer) {
+        if (stack.getComponents().has(DataComponents.FOOD)) {
+            Component text;
+            FoodProperties food = stack.getComponents().get(DataComponents.FOOD);
 
-        text = MutableText.of(Text.of(Text.translatable("food.tooltip_nutrition").getString() + Objects.requireNonNull(food).nutrition()).getContent());
-        Texts.setStyleIfAbsent(text, Style.EMPTY.withColor(Formatting.GRAY));
-        textConsumer.accept(text);
+            text = Component.translatable("food.tooltip_nutrition").append(String.valueOf(food.nutrition()));
+            text.getStyle().applyFormat(ChatFormatting.GRAY);
+            textConsumer.accept(text);
 
-        text = MutableText.of(Text.of(Text.translatable("food.tooltip_saturation").getString() + String.format("%.1f", food.saturation())).getContent());
-        Texts.setStyleIfAbsent(text, Style.EMPTY.withColor(Formatting.GRAY));
-        textConsumer.accept(text);
+            text = Component.translatable("food.tooltip_saturation").append(String.format("%.1f", food.saturation()));
+            text.getStyle().applyFormat(ChatFormatting.GRAY);
+            textConsumer.accept(text);
+        }
     }
 }

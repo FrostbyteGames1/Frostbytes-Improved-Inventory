@@ -4,105 +4,96 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
 import net.frostbyte.inventory.tags.ModTags;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.AttributeModifiersComponent;
-import net.minecraft.component.type.ToolComponent;
-import net.minecraft.entity.FallingBlockEntity;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.decoration.ItemFrameEntity;
-import net.minecraft.entity.vehicle.AbstractMinecartEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.registry.tag.ItemTags;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.decoration.ItemFrame;
+import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.item.component.Tool;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 
 @Environment(EnvType.CLIENT)
 public class ToolSelector {
     static int ticksSinceMiningStarted = 0;
     static Block currentlyMiningBlock = Blocks.AIR;
 
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
     static double getAttackDamageOfItemInSlot(int itemSlot) {
-        MinecraftClient mc = MinecraftClient.getInstance();
-        assert mc.player != null;
-        AttributeModifiersComponent component = mc.player.getInventory().getStack(itemSlot).getComponents().get(DataComponentTypes.ATTRIBUTE_MODIFIERS);
-        double modifier = 0.0F;
-        if (component != null && component.modifiers() != null && !component.modifiers().isEmpty()) {
-            for (AttributeModifiersComponent.Entry entry : component.modifiers()) {
-                if (entry.attribute().getKey().get().getValue().toString().equals("minecraft:attack_damage")) {
-                    modifier = entry.modifier().value();
-                    break;
-                }
-            }
+        Minecraft client = Minecraft.getInstance();
+        if (client.player == null) {
+            return 0;
         }
-        return mc.player.getAttributeBaseValue(EntityAttributes.ATTACK_DAMAGE) + modifier;
+        ItemAttributeModifiers component = client.player.getInventory().getItem(itemSlot).getComponents().get(DataComponents.ATTRIBUTE_MODIFIERS);
+        if (component != null) {
+            return component.compute(Attributes.ATTACK_DAMAGE, client.player.getAttributeBaseValue(Attributes.ATTACK_DAMAGE), EquipmentSlot.MAINHAND);
+        }
+        return client.player.getAttributeBaseValue(Attributes.ATTACK_DAMAGE);
     }
 
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
     static double getAttackSpeedOfItemInSlot(int itemSlot) {
-        MinecraftClient mc = MinecraftClient.getInstance();
-        assert mc.player != null;
-        AttributeModifiersComponent component = mc.player.getInventory().getStack(itemSlot).getComponents().get(DataComponentTypes.ATTRIBUTE_MODIFIERS);
-        double modifier = 0.0F;
-        if (component != null && component.modifiers() != null && !component.modifiers().isEmpty()) {
-            for (AttributeModifiersComponent.Entry entry : component.modifiers()) {
-                if (entry.attribute().getKey().get().getValue().toString().equals("minecraft:attack_speed")) {
-                    modifier = entry.modifier().value();
-                    break;
-                }
-            }
+        Minecraft client = Minecraft.getInstance();
+        if (client.player == null) {
+            return 0;
         }
-        return mc.player.getAttributeBaseValue(EntityAttributes.ATTACK_SPEED) + modifier;
+        ItemAttributeModifiers component = client.player.getInventory().getItem(itemSlot).getComponents().get(DataComponents.ATTRIBUTE_MODIFIERS);
+        if (component != null) {
+            return component.compute(Attributes.ATTACK_SPEED, client.player.getAttributeBaseValue(Attributes.ATTACK_SPEED), EquipmentSlot.MAINHAND);
+        }
+        return client.player.getAttributeBaseValue(Attributes.ATTACK_SPEED);
     }
 
     public static boolean isCorrectForDrops(ItemStack stack, BlockState state) {
-        ToolComponent toolComponent = stack.get(DataComponentTypes.TOOL);
-        return toolComponent != null && toolComponent.isCorrectForDrops(state);
+        Tool tool = stack.get(DataComponents.TOOL);
+        return tool != null && tool.isCorrectForDrops(state);
     }
 
-    public static void toolSelectHandler(MinecraftClient client) {
-        ClientPlayerEntity player = client.player;
-        if (player == null) {
+    public static void toolSelectHandler(Minecraft client) {
+        LocalPlayer player = client.player;
+        if (player == null || client.getCameraEntity() == null || client.level == null) {
             return;
         }
-        if (client.options.attackKey.isPressed() && !ImprovedInventoryConfig.toolSelectBlacklist.contains(player.getMainHandStack().getItem().getDefaultStack().getItem()) && !player.isSpectator() && !player.isCreative() && ImprovedInventoryConfig.toolSelect) {
-            HitResult target = client.crosshairTarget;
-            assert target != null;
-            if (target.getType() == HitResult.Type.ENTITY) {
-                if (((EntityHitResult) target).getEntity() instanceof ItemFrameEntity || player.getMainHandStack().isOf(Items.MACE)) {
+        if (client.options.keyAttack.isDown() && !ImprovedInventoryConfig.toolSelectBlacklist.contains(player.getInventory().getSelectedItem().getItem().getDefaultInstance().getItem()) && !player.isSpectator() && !player.isCreative() && ImprovedInventoryConfig.toolSelect) {
+            BlockHitResult target = (BlockHitResult) client.getCameraEntity().pick(client.player.getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE), 0, false);
+            if (client.crosshairPickEntity != null) {
+                if (client.crosshairPickEntity instanceof ItemFrame || player.getInventory().getSelectedItem().is(Items.MACE)) {
                     return;
                 }
-                if (((EntityHitResult) target).getEntity() instanceof AbstractMinecartEntity) {
-                    float fastestBreak = player.getInventory().getStack(player.getInventory().getSelectedSlot()).getItem().getMiningSpeed(player.getInventory().getStack(player.getInventory().getSelectedSlot()), Blocks.STONE.getDefaultState());
+                if (client.crosshairPickEntity instanceof AbstractMinecart) {
+                    float fastestBreak = player.getInventory().getItem(player.getInventory().getSelectedSlot()).getItem().getDestroySpeed(player.getInventory().getItem(player.getInventory().getSelectedSlot()), Blocks.STONE.defaultBlockState());
                     int fastestBreakSlot = player.getInventory().getSelectedSlot();
                     for (int i = 0; i < 9; i++) {
-                        if (player.getInventory().getStack(i).isIn(ItemTags.PICKAXES) && player.getInventory().getStack(i).getItem().getMiningSpeed(player.getInventory().getStack(i), Blocks.STONE.getDefaultState()) > fastestBreak) {
-                            fastestBreak = player.getInventory().getStack(i).getItem().getMiningSpeed(player.getInventory().getStack(i), Blocks.STONE.getDefaultState());
+                        if (player.getInventory().getItem(i).is(ItemTags.PICKAXES) && player.getInventory().getItem(i).getItem().getDestroySpeed(player.getInventory().getItem(i), Blocks.STONE.defaultBlockState()) > fastestBreak) {
+                            fastestBreak = player.getInventory().getItem(i).getItem().getDestroySpeed(player.getInventory().getItem(i), Blocks.STONE.defaultBlockState());
                             fastestBreakSlot = i;
                         }
                     }
                     client.player.getInventory().setSelectedSlot(fastestBreakSlot);
-                    player.getInventory().markDirty();
+            client.player.getInventory().setChanged();
+            client.player.inventoryMenu.broadcastChanges();
                     return;
                 }
-                if (((EntityHitResult) target).getEntity() instanceof FallingBlockEntity fallingBlock) {
-                    float fastestBreak = player.getInventory().getStack(player.getInventory().getSelectedSlot()).getItem().getMiningSpeed(player.getInventory().getStack(player.getInventory().getSelectedSlot()), fallingBlock.getBlockState());
+                if (client.crosshairPickEntity instanceof FallingBlockEntity fallingBlock) {
+                    float fastestBreak = player.getInventory().getItem(player.getInventory().getSelectedSlot()).getItem().getDestroySpeed(player.getInventory().getItem(player.getInventory().getSelectedSlot()), fallingBlock.getBlockState());
                     int fastestBreakSlot = player.getInventory().getSelectedSlot();
                     for (int i = 0; i < 9; i++) {
-                        if (isCorrectForDrops(player.getInventory().getStack(i), fallingBlock.getBlockState()) && player.getInventory().getStack(i).getItem().getMiningSpeed(player.getInventory().getStack(i), fallingBlock.getBlockState()) > fastestBreak) {
-                            fastestBreak = player.getInventory().getStack(i).getItem().getMiningSpeed(player.getInventory().getStack(i), fallingBlock.getBlockState());
+                        if (isCorrectForDrops(player.getInventory().getItem(i), fallingBlock.getBlockState()) && player.getInventory().getItem(i).getItem().getDestroySpeed(player.getInventory().getItem(i), fallingBlock.getBlockState()) > fastestBreak) {
+                            fastestBreak = player.getInventory().getItem(i).getItem().getDestroySpeed(player.getInventory().getItem(i), fallingBlock.getBlockState());
                             fastestBreakSlot = i;
                         }
                     }
                     client.player.getInventory().setSelectedSlot(fastestBreakSlot);
-                    player.getInventory().markDirty();
+            client.player.getInventory().setChanged();
+            client.player.inventoryMenu.broadcastChanges();
                     return;
                 }
                 double maxDPS = getAttackDamageOfItemInSlot(player.getInventory().getSelectedSlot());
@@ -128,31 +119,32 @@ public class ToolSelector {
                 if (ticksSinceMiningStarted < 2) {
                     ticksSinceMiningStarted++;
                 } else {
-                    //noinspection DataFlowIssue
-                    BlockState blockState = client.world.getBlockState(((BlockHitResult) target).getBlockPos());
+                    BlockState blockState = client.level.getBlockState(target.getBlockPos());
                     if (!currentlyMiningBlock.equals(blockState.getBlock())) {
                         currentlyMiningBlock = blockState.getBlock();
                         ticksSinceMiningStarted = 0;
                     } else {
-                        if (blockState.isIn(ModTags.SHEARS_MINEABLE)) {
+                        if (blockState.is(ModTags.SHEARS_MINEABLE)) {
                             for (int i = 0; i < 9; i++) {
-                                if (player.getInventory().getStack(i).isOf(Items.SHEARS)) {
+                                if (player.getInventory().getItem(i).is(Items.SHEARS)) {
                                     client.player.getInventory().setSelectedSlot(i);
-                                    player.getInventory().markDirty();
+                                    client.player.getInventory().setChanged();
+                                    client.player.inventoryMenu.broadcastChanges();
                                     return;
                                 }
                             }
                         }
-                        float fastestBreak = player.getInventory().getStack(player.getInventory().getSelectedSlot()).getItem().getMiningSpeed(player.getInventory().getStack(player.getInventory().getSelectedSlot()), blockState);
+                        float fastestBreak = player.getInventory().getItem(player.getInventory().getSelectedSlot()).getItem().getDestroySpeed(player.getInventory().getItem(player.getInventory().getSelectedSlot()), blockState);
                         int fastestBreakSlot = player.getInventory().getSelectedSlot();
                         for (int i = 0; i < 9; i++) {
-                            if (isCorrectForDrops(player.getInventory().getStack(i), blockState) && player.getInventory().getStack(i).getItem().getMiningSpeed(player.getInventory().getStack(i), blockState) > fastestBreak) {
-                                fastestBreak = player.getInventory().getStack(i).getItem().getMiningSpeed(player.getInventory().getStack(i), blockState);
+                            if (isCorrectForDrops(player.getInventory().getItem(i), blockState) && player.getInventory().getItem(i).getItem().getDestroySpeed(player.getInventory().getItem(i), blockState) > fastestBreak) {
+                                fastestBreak = player.getInventory().getItem(i).getItem().getDestroySpeed(player.getInventory().getItem(i), blockState);
                                 fastestBreakSlot = i;
                             }
                         }
                         client.player.getInventory().setSelectedSlot(fastestBreakSlot);
-                        player.getInventory().markDirty();
+                        client.player.getInventory().setChanged();
+                        client.player.inventoryMenu.broadcastChanges();
                     }
                 }
             }

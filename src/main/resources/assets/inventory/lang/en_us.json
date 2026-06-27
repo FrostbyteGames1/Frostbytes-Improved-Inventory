@@ -27,14 +27,19 @@
   "key.zoom": "Zoom (Scroll to Adjust)",
 
   "info.gamma_changed": "Gamma set to ",
-  "info.block_light": "Block Light: ",
-  "info.day_number": "Day: ",
-  "info.entity_count": "Entity Count: ",
-  "info.facing_direction": "Facing: ",
-  "info.local_difficulty": "Local Difficulty",
   "info.slime_chunk": "Slime Chunk",
   "info.sprint_indicator": "Sprinting",
-  "info.crosshair_target": "Targeted: ",
-  "info.in_game_time": "Game Time: ",
-  "info.local_time": "Real Time: "
+  "info.game_time": "Game Time: ",
+  "info.real_time": "Real Time: ",
+
+  "options.gamma.boosted": "Fullbright",
+
+  "debug.entry.status": "Visibility",
+  "debug.entry.status.alwaysOn" : "Always",
+  "debug.entry.status.inOverlay" : "In F3",
+  "debug.entry.status.never" : "Never",
+  "debug.entry.side": "Position",
+  "debug.entry.side.auto" : "Auto",
+  "debug.entry.side.left" : "Left",
+  "debug.entry.side.right" : "Right"
 }

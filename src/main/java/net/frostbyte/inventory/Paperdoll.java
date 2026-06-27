@@ -2,27 +2,26 @@ package net.frostbyte.inventory;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderTickCounter;
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import org.jspecify.annotations.NonNull;
 
-import static net.minecraft.client.gui.screen.ingame.InventoryScreen.drawEntity;
+import static net.minecraft.client.gui.screens.inventory.InventoryScreen.extractEntityInInventoryFollowsMouse;
 
-@SuppressWarnings("deprecation")
 @Environment(EnvType.CLIENT)
-public class Paperdoll implements HudRenderCallback {
-    @SuppressWarnings("NullableProblems")
+public class Paperdoll implements HudElement {
     @Override
-    public void onHudRender(DrawContext drawContext, RenderTickCounter tickCounter) {
-        MinecraftClient mc = MinecraftClient.getInstance();
-        assert mc.player != null;
-        if (!mc.player.isSpectator() && ImprovedInventoryConfig.paperdoll && !mc.options.hudHidden && mc.currentScreen == null) {
+    public void extractRenderState(@NonNull GuiGraphicsExtractor graphics, @NonNull DeltaTracker deltaTracker) {
+        Minecraft client = Minecraft.getInstance();
+        assert client.player != null;
+        if (!client.player.isSpectator() && ImprovedInventoryConfig.paperdoll && !client.options.hideGui && client.screen == null) {
             if (ImprovedInventoryConfig.paperdollVerticalAnchor) {
                 if (ImprovedInventoryConfig.paperdollHorizontalAnchor) {
-                    drawEntity(
-                        drawContext,
+                    extractEntityInInventoryFollowsMouse(
+                        graphics,
                         -16 + ImprovedInventoryConfig.paperdollOffsetX,
                         ImprovedInventoryConfig.paperdollOffsetY,
                         48 + ImprovedInventoryConfig.paperdollOffsetX,
@@ -31,45 +30,45 @@ public class Paperdoll implements HudRenderCallback {
                         0.0625F,
                         64 + ImprovedInventoryConfig.paperdollOffsetX,
                         20 + ImprovedInventoryConfig.paperdollOffsetY,
-                        mc.player);
+                        client.player);
                 } else {
-                    drawEntity(
-                        drawContext,
-                        mc.getWindow().getScaledWidth() - 48 - ImprovedInventoryConfig.paperdollOffsetX,
+                    extractEntityInInventoryFollowsMouse(
+                        graphics,
+                        client.getWindow().getGuiScaledWidth() - 48 - ImprovedInventoryConfig.paperdollOffsetX,
                         ImprovedInventoryConfig.paperdollOffsetY,
-                        mc.getWindow().getScaledWidth() + 16 - ImprovedInventoryConfig.paperdollOffsetX,
+                        client.getWindow().getGuiScaledWidth() + 16 - ImprovedInventoryConfig.paperdollOffsetX,
                         64 + ImprovedInventoryConfig.paperdollOffsetY,
                         20,
                         0.0625F,
-                        mc.getWindow().getScaledWidth() - 64 - ImprovedInventoryConfig.paperdollOffsetX,
+                        client.getWindow().getGuiScaledWidth() - 64 - ImprovedInventoryConfig.paperdollOffsetX,
                         20 + ImprovedInventoryConfig.paperdollOffsetY,
-                        mc.player);
+                        client.player);
                 }
             } else {
                 if (ImprovedInventoryConfig.paperdollHorizontalAnchor) {
-                    drawEntity(
-                        drawContext,
+                    extractEntityInInventoryFollowsMouse(
+                        graphics,
                         -16 + ImprovedInventoryConfig.paperdollOffsetX,
-                        mc.getWindow().getScaledHeight() - 64 - ImprovedInventoryConfig.paperdollOffsetY,
+                        client.getWindow().getGuiScaledHeight() - 64 - ImprovedInventoryConfig.paperdollOffsetY,
                         48 + ImprovedInventoryConfig.paperdollOffsetX,
-                        mc.getWindow().getScaledHeight() - ImprovedInventoryConfig.paperdollOffsetY,
+                        client.getWindow().getGuiScaledHeight() - ImprovedInventoryConfig.paperdollOffsetY,
                         20,
                         0.0625F,
                         64 + ImprovedInventoryConfig.paperdollOffsetX,
-                        mc.getWindow().getScaledHeight() - 44 + ImprovedInventoryConfig.paperdollOffsetY,
-                        mc.player);
+                        client.getWindow().getGuiScaledHeight() - 44 + ImprovedInventoryConfig.paperdollOffsetY,
+                        client.player);
                 } else {
-                    drawEntity(
-                        drawContext,
-                        mc.getWindow().getScaledWidth() - 48 - ImprovedInventoryConfig.paperdollOffsetX,
-                        mc.getWindow().getScaledHeight() - 64 - ImprovedInventoryConfig.paperdollOffsetY,
-                        mc.getWindow().getScaledWidth() + 16 - ImprovedInventoryConfig.paperdollOffsetX,
-                        mc.getWindow().getScaledHeight() - ImprovedInventoryConfig.paperdollOffsetY,
+                    extractEntityInInventoryFollowsMouse(
+                        graphics,
+                        client.getWindow().getGuiScaledWidth() - 48 - ImprovedInventoryConfig.paperdollOffsetX,
+                        client.getWindow().getGuiScaledHeight() - 64 - ImprovedInventoryConfig.paperdollOffsetY,
+                        client.getWindow().getGuiScaledWidth() + 16 - ImprovedInventoryConfig.paperdollOffsetX,
+                        client.getWindow().getGuiScaledHeight() - ImprovedInventoryConfig.paperdollOffsetY,
                         20,
                         0.0625F,
-                        mc.getWindow().getScaledWidth() - 64 - ImprovedInventoryConfig.paperdollOffsetX,
-                        mc.getWindow().getScaledHeight() - 44 + ImprovedInventoryConfig.paperdollOffsetY,
-                        mc.player);
+                        client.getWindow().getGuiScaledWidth() - 64 - ImprovedInventoryConfig.paperdollOffsetX,
+                        client.getWindow().getGuiScaledHeight() - 44 + ImprovedInventoryConfig.paperdollOffsetY,
+                        client.player);
                 }
             }
         }

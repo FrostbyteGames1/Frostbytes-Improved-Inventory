@@ -2,12 +2,13 @@ package net.frostbyte.inventory;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.minecraft.block.Block;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.item.*;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.*;
+import net.minecraft.world.level.block.Block;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,17 +17,17 @@ import java.util.regex.Pattern;
 
 public class ContainerSearch {
 
-    public static Text searchInfoTooltipText = Text.translatable("container.search.tooltip_header").append("\n\n")
-        .append(Text.translatable("container.search.tooltip_@")).append("\n")
-        .append(Text.translatable("container.search.tooltip_#")).append("\n")
-        .append(Text.translatable("container.search.tooltip_$")).append("\n")
-        .append(Text.translatable("container.search.tooltip_%")).append("\n")
-        .append(Text.translatable("container.search.tooltip_&")).append("\n")
-        .append(Text.translatable("container.search.tooltip_-"));
+    public static Component searchInfoTooltipText = Component.translatable("container.search.tooltip_header").append("\n\n")
+        .append(Component.translatable("container.search.tooltip_@")).append("\n")
+        .append(Component.translatable("container.search.tooltip_#")).append("\n")
+        .append(Component.translatable("container.search.tooltip_$")).append("\n")
+        .append(Component.translatable("container.search.tooltip_%")).append("\n")
+        .append(Component.translatable("container.search.tooltip_&")).append("\n")
+        .append(Component.translatable("container.search.tooltip_-"));
 
-    public static boolean doesStackContainString(MinecraftClient client, String search, ItemStack stack) {
+    public static boolean doesStackContainString(Minecraft client, String search, ItemStack stack) {
         // Empty strings & stacks are ignored
-        if (search.isEmpty() || search.isBlank() || stack.isEmpty()) {
+        if (search.isBlank() || stack.isEmpty()) {
             return false;
         }
 
@@ -49,10 +50,9 @@ public class ContainerSearch {
         return true;
     }
 
-    @SuppressWarnings("deprecation")
-    private static boolean handleSearchTermsWithOperators(MinecraftClient client, String term, ItemStack stack) {
+    private static boolean handleSearchTermsWithOperators(Minecraft client, String term, ItemStack stack) {
         // Empty strings & stacks are ignored
-        if (term.isEmpty() || term.isBlank() || stack.isEmpty()) {
+        if (term.isBlank() || stack.isEmpty()) {
             return false;
         }
 
@@ -61,7 +61,7 @@ public class ContainerSearch {
         if (term.startsWith("-")) {
             negate = true;
             term = term.substring(1).toLowerCase();
-            if (term.isEmpty() || term.isBlank()) {
+            if (term.isBlank()) {
                 return false;
             }
         }
@@ -70,15 +70,14 @@ public class ContainerSearch {
         if (term.startsWith("@") || term.startsWith("#") || term.startsWith("&") || term.startsWith("$") || term.startsWith("%")) {
             // Get the term without the operator
             String searchTerm = term.substring(1).toLowerCase();
-            if (searchTerm.isEmpty() || searchTerm.isBlank()) {
+            if (searchTerm.isBlank()) {
                 return false;
             }
 
             // If the operator is "@", search by mod ID
             if (term.startsWith("@")) {
                 for (ModContainer mod : FabricLoader.getInstance().getAllMods()) {
-                    //noinspection deprecation
-                    if (mod.getMetadata().getId().contains(searchTerm) && stack.getItem().getRegistryEntry().registryKey().getRegistry().getNamespace().equalsIgnoreCase(mod.getMetadata().getId())) {
+                    if (mod.getMetadata().getId().contains(searchTerm) && stack.getItem().getCreatorNamespace(stack).equalsIgnoreCase(mod.getMetadata().getId())) {
                         return !negate;
                     }
                 }
@@ -87,19 +86,19 @@ public class ContainerSearch {
 
             // If the operator is "#", search by tooltip
             else if (term.startsWith("#")) {
-                return negate != stack.getTooltip(Item.TooltipContext.DEFAULT, client == null ? null : client.player, TooltipType.ADVANCED).stream().anyMatch(text -> text.getString().toLowerCase().contains(searchTerm));
+                return negate != stack.getTooltipLines(Item.TooltipContext.EMPTY, client == null ? null : client.player, TooltipFlag.ADVANCED).stream().anyMatch(text -> text.getString().toLowerCase().contains(searchTerm));
             }
 
             // If the operator is "&", search by item ID
             else if (term.startsWith("&")) {
-                return negate != stack.getItem().getTranslationKey().toLowerCase().contains(searchTerm);
+                return negate != stack.getItem().getDescriptionId().toLowerCase().contains(searchTerm);
             }
 
             // If the operator is "$", search by tag
             else if (term.startsWith("$")) {
                 // Search block tags
                 if (stack.getItem() instanceof BlockItem blockItem) {
-                    for (TagKey<Block> tag : blockItem.getBlock().getRegistryEntry().streamTags().toList()) {
+                    for (TagKey<Block> tag : blockItem.getBlock().defaultBlockState().tags().toList()) {
                         if (tag.toString().contains(searchTerm)) {
                             return !negate;
                         }
@@ -107,7 +106,7 @@ public class ContainerSearch {
                 }
 
                 // Search item tags
-                for (TagKey<Item> tag : stack.getRegistryEntry().streamTags().toList()) {
+                for (TagKey<Item> tag : stack.tags().toList()) {
                     if (tag.toString().contains(searchTerm)) {
                         return !negate;
                     }
@@ -118,7 +117,7 @@ public class ContainerSearch {
 
             // If the operator is "%", search by creative tab
             else if (term.startsWith("%")) {
-                for (ItemGroup group : ItemGroups.getGroups()) {
+                for (CreativeModeTab group : CreativeModeTabs.allTabs()) {
                     if (group.getDisplayName().getString().toLowerCase().contains(searchTerm) && group.contains(new ItemStack(stack.getItem()))) {
                         return !negate;
                     }
@@ -128,7 +127,7 @@ public class ContainerSearch {
         }
 
         // If the search term has no operator, search by item name and by stack name
-        return negate != (stack.getName().getString().toLowerCase().contains(term.toLowerCase()) || stack.getItem().getDefaultStack().getName().getString().toLowerCase().contains(term.toLowerCase()));
+        return negate != (stack.getOrDefault(DataComponents.ITEM_NAME, CommonComponents.EMPTY).getString().toLowerCase().contains(term.toLowerCase()) || stack.getItem().getDefaultInstance().getOrDefault(DataComponents.ITEM_NAME, CommonComponents.EMPTY).getString().toLowerCase().contains(term.toLowerCase()));
     }
 
 }

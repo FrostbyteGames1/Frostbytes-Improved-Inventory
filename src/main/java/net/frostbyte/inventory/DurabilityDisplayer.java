@@ -2,76 +2,76 @@ package net.frostbyte.inventory;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.resources.Identifier;
+import org.jspecify.annotations.NonNull;
 
 @Environment(EnvType.CLIENT)
-@SuppressWarnings("deprecation")
-public class DurabilityDisplayer implements HudRenderCallback {
-    MinecraftClient mc = MinecraftClient.getInstance();
-    Identifier duraSlot = Identifier.of(ImprovedInventory.MOD_ID, "textures/dura_slot.png");
+public class DurabilityDisplayer implements HudElement {
+    Minecraft mc = Minecraft.getInstance();
+    Identifier duraSlot = Identifier.fromNamespaceAndPath(ImprovedInventory.MOD_ID, "textures/dura_slot.png");
     @Override
-    public void onHudRender(DrawContext drawContext, RenderTickCounter tickCounter) {
+    public void extractRenderState(@NonNull GuiGraphicsExtractor graphics, @NonNull DeltaTracker deltaTracker) {
         assert mc.player != null;
-        if (!mc.player.isSpectator() && ImprovedInventoryConfig.duraDisplay && !mc.options.hudHidden) {
-            int x = mc.getWindow().getScaledWidth() - ImprovedInventoryConfig.duraDisplayOffsetX;
+        if (!mc.player.isSpectator() && ImprovedInventoryConfig.duraDisplay && !mc.options.hideGui) {
+            int x = mc.getWindow().getGuiScaledWidth() - ImprovedInventoryConfig.duraDisplayOffsetX;
             if (ImprovedInventoryConfig.duraDisplayHorizontalAnchor) {
                 x = 22 + ImprovedInventoryConfig.duraDisplayOffsetX;
             }
-            int y = mc.getWindow().getScaledHeight() - ImprovedInventoryConfig.duraDisplayOffsetY;
+            int y = mc.getWindow().getGuiScaledHeight() - ImprovedInventoryConfig.duraDisplayOffsetY;
             if (ImprovedInventoryConfig.duraDisplayVerticalAnchor) {
                 y = 22 - ImprovedInventoryConfig.duraDisplayOffsetY;
-                if (!mc.player.getInventory().getStack(39).isEmpty()) {
-                    drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, duraSlot, x - 22, y - 22, 0, 0, 22, 22, 22, 22);
-                    drawContext.drawItem(mc.player.getInventory().getStack(39), x - 19, y - 19);
-                    drawContext.drawStackOverlay(mc.textRenderer, mc.player.getInventory().getStack(39), x - 20, y - 19);
+                if (!mc.player.getInventory().getItem(39).isEmpty()) {
+                    graphics.blit(RenderPipelines.GUI_TEXTURED, duraSlot, x - 22, y - 22, 0, 0, 22, 22, 22, 22);
+                    graphics.item(mc.player.getInventory().getItem(39), x - 19, y - 19);
+                    graphics.itemDecorations(mc.font, mc.player.getInventory().getItem(39), x - 20, y - 19);
                     y += 23;
                 }
-                if (!mc.player.getInventory().getStack(38).isEmpty()) {
-                    drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, duraSlot, x - 22, y - 22, 0, 0, 22, 22, 22, 22);
-                    drawContext.drawItem(mc.player.getInventory().getStack(38), x - 19, y - 19);
-                    drawContext.drawStackOverlay(mc.textRenderer, mc.player.getInventory().getStack(38), x - 20, y - 19);
+                if (!mc.player.getInventory().getItem(38).isEmpty()) {
+                    graphics.blit(RenderPipelines.GUI_TEXTURED, duraSlot, x - 22, y - 22, 0, 0, 22, 22, 22, 22);
+                    graphics.item(mc.player.getInventory().getItem(38), x - 19, y - 19);
+                    graphics.itemDecorations(mc.font, mc.player.getInventory().getItem(38), x - 20, y - 19);
                     y += 23;
                 }
-                if (!mc.player.getInventory().getStack(37).isEmpty()) {
-                    drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, duraSlot, x - 22, y - 22, 0, 0, 22, 22, 22, 22);
-                    drawContext.drawItem(mc.player.getInventory().getStack(37), x - 19, y - 19);
-                    drawContext.drawStackOverlay(mc.textRenderer, mc.player.getInventory().getStack(37), x - 20, y - 19);
+                if (!mc.player.getInventory().getItem(37).isEmpty()) {
+                    graphics.blit(RenderPipelines.GUI_TEXTURED, duraSlot, x - 22, y - 22, 0, 0, 22, 22, 22, 22);
+                    graphics.item(mc.player.getInventory().getItem(37), x - 19, y - 19);
+                    graphics.itemDecorations(mc.font, mc.player.getInventory().getItem(37), x - 20, y - 19);
                     y += 23;
                 }
-                if (!mc.player.getInventory().getStack(36).isEmpty()) {
-                    drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, duraSlot, x - 22, y - 22, 0, 0, 22, 22, 22, 22);
-                    drawContext.drawItem(mc.player.getInventory().getStack(36), x - 19, y - 19);
-                    drawContext.drawStackOverlay(mc.textRenderer, mc.player.getInventory().getStack(36), x - 20, y - 19);
+                if (!mc.player.getInventory().getItem(36).isEmpty()) {
+                    graphics.blit(RenderPipelines.GUI_TEXTURED, duraSlot, x - 22, y - 22, 0, 0, 22, 22, 22, 22);
+                    graphics.item(mc.player.getInventory().getItem(36), x - 19, y - 19);
+                    graphics.itemDecorations(mc.font, mc.player.getInventory().getItem(36), x - 20, y - 19);
                 }
             } else {
-                if (!mc.player.getInventory().getStack(36).isEmpty()) {
-                    drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, duraSlot, x - 22, y - 22, 0, 0, 22, 22, 22, 22);
-                    drawContext.drawItem(mc.player.getInventory().getStack(36), x - 19, y - 19);
-                    drawContext.drawStackOverlay(mc.textRenderer, mc.player.getInventory().getStack(36), x - 20, y - 19);
+                if (!mc.player.getInventory().getItem(36).isEmpty()) {
+                    graphics.blit(RenderPipelines.GUI_TEXTURED, duraSlot, x - 22, y - 22, 0, 0, 22, 22, 22, 22);
+                    graphics.item(mc.player.getInventory().getItem(36), x - 19, y - 19);
+                    graphics.itemDecorations(mc.font, mc.player.getInventory().getItem(36), x - 20, y - 19);
                     y -= 23;
                 }
-                if (!mc.player.getInventory().getStack(37).isEmpty()) {
-                    drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, duraSlot, x - 22, y - 22, 0, 0, 22, 22, 22, 22);
-                    drawContext.drawItem(mc.player.getInventory().getStack(37), x - 19, y - 19);
-                    drawContext.drawStackOverlay(mc.textRenderer, mc.player.getInventory().getStack(37), x - 20, y - 19);
+                if (!mc.player.getInventory().getItem(37).isEmpty()) {
+                    graphics.blit(RenderPipelines.GUI_TEXTURED, duraSlot, x - 22, y - 22, 0, 0, 22, 22, 22, 22);
+                    graphics.item(mc.player.getInventory().getItem(37), x - 19, y - 19);
+                    graphics.itemDecorations(mc.font, mc.player.getInventory().getItem(37), x - 20, y - 19);
                     y -= 23;
                 }
-                if (!mc.player.getInventory().getStack(38).isEmpty()) {
-                    drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, duraSlot, x - 22, y - 22, 0, 0, 22, 22, 22, 22);
-                    drawContext.drawItem(mc.player.getInventory().getStack(38), x - 19, y - 19);
-                    drawContext.drawStackOverlay(mc.textRenderer, mc.player.getInventory().getStack(38), x - 20, y - 19);
+                if (!mc.player.getInventory().getItem(38).isEmpty()) {
+                    graphics.blit(RenderPipelines.GUI_TEXTURED, duraSlot, x - 22, y - 22, 0, 0, 22, 22, 22, 22);
+                    graphics.item(mc.player.getInventory().getItem(38), x - 19, y - 19);
+                    graphics.itemDecorations(mc.font, mc.player.getInventory().getItem(38), x - 20, y - 19);
                     y -= 23;
                 }
-                if (!mc.player.getInventory().getStack(39).isEmpty()) {
-                    drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, duraSlot, x - 22, y - 22, 0, 0, 22, 22, 22, 22);
-                    drawContext.drawItem(mc.player.getInventory().getStack(39), x - 19, y - 19);
-                    drawContext.drawStackOverlay(mc.textRenderer, mc.player.getInventory().getStack(39), x - 20, y - 19);
+                if (!mc.player.getInventory().getItem(39).isEmpty()) {
+                    graphics.blit(RenderPipelines.GUI_TEXTURED, duraSlot, x - 22, y - 22, 0, 0, 22, 22, 22, 22);
+                    graphics.item(mc.player.getInventory().getItem(39), x - 19, y - 19);
+                    graphics.itemDecorations(mc.font, mc.player.getInventory().getItem(39), x - 20, y - 19);
                 }
             }
         }

@@ -15,8 +15,8 @@ public class MixinConfigPlugin implements IMixinConfigPlugin {
 
     public static final Map<String, Supplier<Boolean>> CONDITIONS = ImmutableMap.of(
         // Don't mixin the bundle classes if Don't Hide My Items is loaded
-        "net.frostbyte.inventory.mixin.BundleTooltipComponentMixin", () -> !FabricLoader.getInstance().isModLoaded("dhmi"),
-        "net.frostbyte.inventory.mixin.BundleContentsComponentMixin", () -> !FabricLoader.getInstance().isModLoaded("dhmi")
+        "net.frostbyte.inventory.mixin.BundleContentsMixin", () -> !FabricLoader.getInstance().isModLoaded("dhmi"),
+        "net.frostbyte.inventory.mixin.ClientBundleTooltipMixin", () -> !FabricLoader.getInstance().isModLoaded("dhmi")
     );
 
     @Override

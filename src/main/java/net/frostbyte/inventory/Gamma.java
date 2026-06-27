@@ -1,45 +1,48 @@
 package net.frostbyte.inventory;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 
 @Environment(EnvType.CLIENT)
 public class Gamma {
     static double standardBrightness = 1;
     public static boolean enabled;
-    public static KeyBinding gammaKey;
-    public void setKeyBindings() {
-        KeyBindingHelper.registerKeyBinding(gammaKey = new KeyBinding("key.toggle_gamma", InputUtil.Type.KEYSYM, InputUtil.GLFW_KEY_G, ImprovedInventory.KEYBIND_CATEGORY));
+    public static KeyMapping gammaKey;
+    public void setKeyMappings() {
+        KeyMappingHelper.registerKeyMapping(gammaKey = new KeyMapping("key.toggle_gamma", InputConstants.Type.KEYSYM, InputConstants.KEY_G, ImprovedInventory.KEYBIND_CATEGORY));
     }
 
-    public static void gammaHandler(MinecraftClient mc) {
-        if (mc.currentScreen != null && mc.currentScreen.shouldPause() && !enabled) {
-            standardBrightness = Math.min(mc.options.getGamma().getValue(), 100);
+    public static void gammaHandler(Minecraft client) {
+        if (client.screen != null && client.screen.isPauseScreen() && !enabled) {
+            standardBrightness = Math.min(client.options.gamma().get(), 100);
         }
 
-        if (gammaKey.wasPressed()) {
+        if (gammaKey.consumeClick()) {
             enabled = !enabled;
             if (enabled) {
-                standardBrightness = mc.options.getGamma().getValue();
-                mc.options.getGamma().setValue((double) ImprovedInventoryConfig.gamma);
-                mc.inGameHud.setOverlayMessage(Text.of(Text.translatable("info.gamma_changed").getString() + ImprovedInventoryConfig.gamma + "%").getWithStyle(Style.EMPTY.withFormatting(Formatting.GREEN)).getFirst(), false);
+                standardBrightness = client.options.gamma().get();
+                client.options.gamma().set((double) ImprovedInventoryConfig.gamma);
+                Component message = Component.translatable("info.gamma_changed").append(ImprovedInventoryConfig.gamma + "%");
+                message.getStyle().applyFormat(ChatFormatting.GREEN);
+                client.gui.setOverlayMessage(message, false);
             } else {
-                mc.options.getGamma().setValue(standardBrightness);
-                mc.inGameHud.setOverlayMessage(Text.of(Text.translatable("info.gamma_changed").getString() + (int) (standardBrightness * 100) + "%").getWithStyle(Style.EMPTY.withFormatting(Formatting.RED)).getFirst(), false);
+                client.options.gamma().set(standardBrightness);
+                Component message = Component.translatable("info.gamma_changed").append((int) (standardBrightness * 100) + "%");
+                message.getStyle().applyFormat(ChatFormatting.RED);
+                client.gui.setOverlayMessage(message, false);
             }
         }
 
-        if (mc.world == null) {
+        if (client.level == null) {
             enabled = false;
-            mc.options.getGamma().setValue(Math.min(standardBrightness, 100));
+            client.options.gamma().set(Math.min(standardBrightness, 100));
         }
     }
 }

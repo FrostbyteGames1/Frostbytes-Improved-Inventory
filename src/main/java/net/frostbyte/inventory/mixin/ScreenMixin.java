@@ -2,21 +2,25 @@ package net.frostbyte.inventory.mixin;
 
 import net.frostbyte.inventory.InventorySorter;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
-import net.frostbyte.inventory.gui.widget.TexturedButtonWithItemStackWidget;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.screen.ButtonTextures;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.*;
-import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.widget.TexturedButtonWidget;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.ProfileComponent;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.frostbyte.inventory.gui.components.TexturedButtonWithItemStackWidget;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.WidgetSprites;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.*;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.animal.equine.AbstractHorse;
+import net.minecraft.world.entity.vehicle.boat.AbstractChestBoat;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ResolvableProfile;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -24,142 +28,159 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.List;
+
 import static net.frostbyte.inventory.NearbyContainerViewer.*;
 
 @Mixin(Screen.class)
 public abstract class ScreenMixin {
-    @Shadow protected abstract <T extends Element & Drawable> T addDrawableChild(T drawableElement);
-    @Shadow protected MinecraftClient client;
-    @Shadow protected abstract void clearChildren();
-    @Shadow protected abstract void init();
+
+    @Shadow
+    @Final
+    protected Minecraft minecraft;
+
+    @Shadow
+    protected abstract <T extends GuiEventListener & Renderable & NarratableEntry> T addRenderableWidget(T widget);
+
+    @Shadow
+    @Final
+    private List<GuiEventListener> children;
+
+    @Shadow
+    protected abstract void init();
+
+    @Shadow
+    protected abstract void clearWidgets();
+
     @Unique
-    private static final ButtonTextures TEXTURES_LEFT = new ButtonTextures(
-        Identifier.of("container/creative_inventory/tab_top_unselected_1"),
-        Identifier.of("container/creative_inventory/tab_top_unselected_1")
+    private static final WidgetSprites TEXTURES_LEFT = new WidgetSprites(
+        Identifier.withDefaultNamespace("container/creative_inventory/tab_top_unselected_1"),
+        Identifier.withDefaultNamespace("container/creative_inventory/tab_top_unselected_1")
     );
     @Unique
-    private static final ButtonTextures TEXTURES_LEFT_SELECTED = new ButtonTextures(
-        Identifier.of("container/creative_inventory/tab_top_selected_1"),
-        Identifier.of("container/creative_inventory/tab_top_selected_1")
+    private static final WidgetSprites TEXTURES_LEFT_SELECTED = new WidgetSprites(
+        Identifier.withDefaultNamespace("container/creative_inventory/tab_top_selected_1"),
+        Identifier.withDefaultNamespace("container/creative_inventory/tab_top_selected_1")
     );
     @Unique
-    private static final ButtonTextures TEXTURES_MID = new ButtonTextures(
-        Identifier.of("container/creative_inventory/tab_top_unselected_2"),
-        Identifier.of("container/creative_inventory/tab_top_unselected_2")
+    private static final WidgetSprites TEXTURES_MID = new WidgetSprites(
+        Identifier.withDefaultNamespace("container/creative_inventory/tab_top_unselected_2"),
+        Identifier.withDefaultNamespace("container/creative_inventory/tab_top_unselected_2")
     );
     @Unique
-    private static final ButtonTextures TEXTURES_MID_SELECTED = new ButtonTextures(
-        Identifier.of("container/creative_inventory/tab_top_selected_2"),
-        Identifier.of("container/creative_inventory/tab_top_selected_2")
+    private static final WidgetSprites TEXTURES_MID_SELECTED = new WidgetSprites(
+        Identifier.withDefaultNamespace("container/creative_inventory/tab_top_selected_2"),
+        Identifier.withDefaultNamespace("container/creative_inventory/tab_top_selected_2")
     );
     @Unique
-    private static final ButtonTextures TEXTURES_RIGHT = new ButtonTextures(
-        Identifier.of("container/creative_inventory/tab_top_unselected_7"),
-        Identifier.of("container/creative_inventory/tab_top_unselected_7")
+    private static final WidgetSprites TEXTURES_RIGHT = new WidgetSprites(
+        Identifier.withDefaultNamespace("container/creative_inventory/tab_top_unselected_7"),
+        Identifier.withDefaultNamespace("container/creative_inventory/tab_top_unselected_7")
     );
     @Unique
-    private static final ButtonTextures TEXTURES_RIGHT_SELECTED = new ButtonTextures(
-        Identifier.of("container/creative_inventory/tab_top_selected_7"),
-        Identifier.of("container/creative_inventory/tab_top_selected_7")
+    private static final WidgetSprites TEXTURES_RIGHT_SELECTED = new WidgetSprites(
+        Identifier.withDefaultNamespace("container/creative_inventory/tab_top_selected_7"),
+        Identifier.withDefaultNamespace("container/creative_inventory/tab_top_selected_7")
     );
     @Unique
-    private static final ButtonTextures TEXTURES_FORWARD = new ButtonTextures(
-        Identifier.of("transferable_list/select"),
-        Identifier.of("transferable_list/select_highlighted")
+    private static final WidgetSprites TEXTURES_BACK = new WidgetSprites(
+        Identifier.withDefaultNamespace("transferable_list/select"),
+        Identifier.withDefaultNamespace("transferable_list/select_highlighted")
     );
     @Unique
-    private static final ButtonTextures TEXTURES_BACK = new ButtonTextures(
-        Identifier.of("transferable_list/unselect"),
-        Identifier.of("transferable_list/unselect_highlighted")
+    private static final WidgetSprites TEXTURES_FORWARD = new WidgetSprites(
+        Identifier.withDefaultNamespace("transferable_list/unselect"),
+        Identifier.withDefaultNamespace("transferable_list/unselect_highlighted")
     );
     @Unique
     int screenWidth;
     @Unique
     int screenHeight;
-
-    @Inject(method = "init", at = @At("HEAD"))
+    
+    @Inject(method = "init(II)V", at = @At("HEAD"))
     public void init(int width, int height, CallbackInfo ci) {
-        if (ImprovedInventoryConfig.containerTab && !ImprovedInventoryConfig.containerTabKeybindOnly && !containers.isEmpty() && client.world != null && client.player != null && client.interactionManager != null && client.currentScreen instanceof HandledScreen<?> screen && !(client.currentScreen instanceof CreativeInventoryScreen) && !(client.currentScreen instanceof MerchantScreen)) {
-            screenWidth = screen.backgroundWidth;
-            screenHeight = screen.backgroundHeight;
-            if (screen instanceof HopperScreen) {
-                screenHeight += 2;
-            } else if (screen instanceof ShulkerBoxScreen) {
-                screenHeight += 1;
-            }
+        if (ImprovedInventoryConfig.containerTab && !ImprovedInventoryConfig.containerTabKeybindOnly && !containers.isEmpty() && minecraft.level != null && minecraft.player != null && minecraft.screen instanceof AbstractContainerScreen<?> containerScreen && !(minecraft.screen instanceof CreativeModeInventoryScreen) && !(minecraft.screen instanceof MerchantScreen)) {
+            screenWidth = containerScreen.imageWidth;
+            screenHeight = containerScreen.imageHeight;
             ItemStack playerHead = new ItemStack(Items.PLAYER_HEAD);
-            playerHead.set(DataComponentTypes.PROFILE, ProfileComponent.ofStatic(client.player.getGameProfile()));
+            playerHead.set(DataComponents.PROFILE, ResolvableProfile.createResolved(minecraft.player.getGameProfile()));
             TexturedButtonWithItemStackWidget tab;
-            if (client.currentScreen instanceof InventoryScreen) {
+            if (minecraft.screen instanceof InventoryScreen) {
                 tab = new TexturedButtonWithItemStackWidget(width / 2 - screenWidth / 2, height / 2 - screenHeight / 2 - 28, 26, 32, TEXTURES_LEFT_SELECTED, playerHead, button -> {
-                    if (client.interactionManager.hasRidingInventory()) {
-                        client.player.openRidingInventory();
+                    if (minecraft.player.getVehicle() != null && minecraft.player.getVehicle() instanceof AbstractHorse horse) {
+                        minecraft.player.openHorseInventory(horse, minecraft.player.getInventory());
+                    } else if (minecraft.player.getVehicle() != null && minecraft.player.getVehicle() instanceof AbstractChestBoat boat) {
+                        boat.interactWithContainerVehicle(minecraft.player);
                     } else {
-                        client.currentScreen.close();
-                        client.getTutorialManager().onInventoryOpened();
-                        client.setScreen(new InventoryScreen(client.player));
+                        minecraft.screen.onClose();
+                        minecraft.getTutorial().onOpenInventory();
+                        minecraft.setScreen(new InventoryScreen(minecraft.player));
                     }
                 });
             } else {
                 tab = new TexturedButtonWithItemStackWidget(width / 2 - screenWidth / 2, height / 2 - screenHeight / 2 - 28, 26, 28, TEXTURES_LEFT, playerHead, button -> {
-                    if (client.interactionManager.hasRidingInventory()) {
-                        client.player.openRidingInventory();
+                    if (minecraft.player.getVehicle() != null && minecraft.player.getVehicle() instanceof AbstractHorse horse) {
+                        minecraft.player.openHorseInventory(horse, minecraft.player.getInventory());
+                    } else if (minecraft.player.getVehicle() != null && minecraft.player.getVehicle() instanceof AbstractChestBoat boat) {
+                        boat.interactWithContainerVehicle(minecraft.player);
                     } else {
-                        client.currentScreen.close();
-                        client.getTutorialManager().onInventoryOpened();
-                        client.setScreen(new InventoryScreen(client.player));
+                        minecraft.screen.onClose();
+                        minecraft.getTutorial().onOpenInventory();
+                        minecraft.setScreen(new InventoryScreen(minecraft.player));
                     }
                 });
             }
-            tab.setTooltip(Tooltip.of(client.player.getDisplayName()));
-            addDrawableChild(tab);
+            tab.setTooltip(Tooltip.create(minecraft.player.getDisplayName()));
+            addRenderableWidget(tab);
 
             int maxTabs = screenWidth / 26;
             int numTabs = Math.min(maxTabs, containers.size());
             for (int i = 0; i < numTabs; i++) {
                 int container = i;
-                Text displayName = getDisplayName(containers.get(container));
+                Component displayName = getDisplayName(containers.get(container));
                 ItemStack displayStack = getDisplayStack(containers.get(container));
                 if (i == maxTabs - 1) {
-                    if (!(client.currentScreen instanceof InventoryScreen) && current == container) {
+                    if (!(minecraft.screen instanceof InventoryScreen) && current == container) {
                         tab = new TexturedButtonWithItemStackWidget(width / 2 + screenWidth / 2 - 26, height / 2 - screenHeight / 2 - 28, 26, 32, TEXTURES_RIGHT_SELECTED, displayStack, button -> openContainer(container));
                     } else {
                         tab = new TexturedButtonWithItemStackWidget(width / 2 + screenWidth / 2 - 26, height / 2 - screenHeight / 2 - 28, 26, 28, TEXTURES_RIGHT, displayStack, button -> openContainer(container));
                     }
                 } else {
-                    if (!(client.currentScreen instanceof InventoryScreen) && current == container) {
+                    if (!(minecraft.screen instanceof InventoryScreen) && current == container) {
                         tab = new TexturedButtonWithItemStackWidget(width / 2 - screenWidth / 2 + (i + 1) * 25, height / 2 - screenHeight / 2 - 28, 26, 32, TEXTURES_MID_SELECTED, displayStack, button -> openContainer(container));
                     } else {
                         tab = new TexturedButtonWithItemStackWidget(width / 2 - screenWidth / 2 + (i + 1) * 25, height / 2 - screenHeight / 2 - 28, 26, 28, TEXTURES_MID, displayStack, button -> openContainer(container));
                     }
                 }
-                tab.setTooltip(Tooltip.of(displayName));
-                addDrawableChild(tab);
+                tab.setTooltip(Tooltip.create(displayName));
+                addRenderableWidget(tab);
             }
 
             if (containers.size() > maxTabs - 1) {
-                TexturedButtonWidget backButton = new TexturedButtonWidget(width / 2 + screenWidth / 2 - 2, height / 2 - screenHeight / 2 - 24, 24, 24, TEXTURES_FORWARD, button -> {
+                ImageButton backButton = new ImageButton(width / 2 + screenWidth / 2 - 2, height / 2 - screenHeight / 2 - 24, 24, 24, TEXTURES_BACK, button -> {
                     containers.addLast(containers.removeFirst());
                     current--;
                     if (current < 0) {
                         current = containers.size() - 1;
                     }
-                    this.clearChildren();
+                    this.clearWidgets();
+                    this.children.clear();
                     this.init(width, height, ci);
                     this.init();
                 });
-                TexturedButtonWidget forwardButton = new TexturedButtonWidget(width / 2 - screenWidth / 2 - 17, height / 2 - screenHeight / 2 - 24, 24, 24, TEXTURES_BACK, button -> {
+                ImageButton forwardButton = new ImageButton(width / 2 - screenWidth / 2 - 17, height / 2 - screenHeight / 2 - 24, 24, 24, TEXTURES_FORWARD, button -> {
                     containers.addFirst(containers.removeLast());
                     current++;
                     if (current == containers.size()) {
                         current = 0;
                     }
-                    this.clearChildren();
+                    this.clearWidgets();
+                    this.children.clear();
                     this.init(width, height, ci);
                     this.init();
                 });
-                addDrawableChild(backButton);
-                addDrawableChild(forwardButton);
+                addRenderableWidget(backButton);
+                addRenderableWidget(forwardButton);
             }
         }
     }
@@ -174,7 +195,7 @@ public abstract class ScreenMixin {
     @Inject(method = "tick", at = @At("TAIL"))
     private void tick(CallbackInfo ci) {
         if (!InventorySorter.sortKey.isUnbound()) {
-            InventorySorter.inventorySortHandler(client);
+            InventorySorter.inventorySortHandler(minecraft);
         }
     }
 

@@ -1,26 +1,13 @@
-accessWidener v2 named
+accessWidener v2 official
 
-accessible class net/minecraft/client/option/SimpleOption$Callbacks
-accessible method net/minecraft/client/option/SimpleOption$Callbacks validate (Ljava/lang/Object;)Ljava/util/Optional;
+accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen hoveredSlot Lnet/minecraft/world/inventory/Slot;
+accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen imageWidth I
+accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen imageHeight I
+accessible field net/minecraft/world/inventory/AbstractContainerMenu menuType Lnet/minecraft/world/inventory/MenuType;
 
-accessible field net/minecraft/client/gui/screen/ingame/HandledScreen backgroundHeight I
-accessible field net/minecraft/client/gui/screen/ingame/HandledScreen backgroundWidth I
-accessible field net/minecraft/client/gui/screen/ingame/HandledScreen focusedSlot Lnet/minecraft/screen/slot/Slot;
-accessible field net/minecraft/client/gui/screen/ingame/HandledScreen SLOT_HIGHLIGHT_BACK_TEXTURE Lnet/minecraft/util/Identifier;
-accessible field net/minecraft/client/gui/screen/ingame/HandledScreen SLOT_HIGHLIGHT_FRONT_TEXTURE Lnet/minecraft/util/Identifier;
+accessible method net/minecraft/client/gui/screens/inventory/tooltip/ClientBundleTooltip getProgressBarFill (Lorg/apache/commons/lang3/math/Fraction;)I
 
-accessible method net/minecraft/client/gui/tooltip/BundleTooltipComponent getXMargin (I)I
-accessible method net/minecraft/client/gui/tooltip/BundleTooltipComponent getRows ()I
-accessible method net/minecraft/client/gui/tooltip/BundleTooltipComponent getProgressBarFill ()I
-accessible method net/minecraft/client/gui/tooltip/BundleTooltipComponent getProgressBarLabel ()Lnet/minecraft/text/Text;
-
-accessible class net/minecraft/client/gui/hud/InGameHud$BarType
-
-accessible field net/minecraft/client/option/KeyBinding timesPressed I
-
-accessible field net/minecraft/client/render/MapRenderer textureManager Lnet/minecraft/client/texture/MapTextureManager;
-
-accessible class net/minecraft/client/gl/GlDebug$DebugMessage
-accessible field net/minecraft/client/gl/GlDebug$DebugMessage count I
-accessible method net/minecraft/client/gl/GlDebug$DebugMessage <init> (IIIILjava/lang/String;)V
-accessible method net/minecraft/client/gl/GlDebug$DebugMessage equals (IIIILjava/lang/String;)Z
+accessible class net/minecraft/client/gui/screens/debug/DebugOptionsScreen$OptionEntry
+accessible field net/minecraft/client/gui/screens/debug/DebugOptionsScreen$OptionEntry location Lnet/minecraft/resources/Identifier;
+accessible method net/minecraft/client/gui/screens/debug/DebugOptionsScreen$OptionEntry setValue (Lnet/minecraft/resources/Identifier;Lnet/minecraft/client/gui/components/debug/DebugScreenEntryStatus;)V
+accessible field net/minecraft/client/gui/screens/debug/DebugOptionsScreen$OptionEntry children Ljava/util/List;

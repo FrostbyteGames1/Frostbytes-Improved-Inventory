@@ -2,32 +2,32 @@ package net.frostbyte.inventory;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.component.ComponentMap;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.item.*;
-import net.minecraft.screen.slot.SlotActionType;
-import net.minecraft.text.Text;
-import net.minecraft.util.Arm;
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.inventory.ContainerInput;
+import net.minecraft.world.item.*;
+import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
-@SuppressWarnings("deprecation")
-public class StackRefiller implements HudRenderCallback {
+public class StackRefiller implements HudElement {
     static Item mainHandItem = Items.AIR;
-    static ComponentMap mainHandComponents = ItemStack.EMPTY.getComponents();
+    static DataComponentMap mainHandComponents = ItemStack.EMPTY.getComponents();
     static int mainHandSlot = -1;
     static int mainHandStackSize = 0;
 
     static Item offHandItem = Items.AIR;
-    static ComponentMap offHandComponents = ItemStack.EMPTY.getComponents();
+    static DataComponentMap offHandComponents = ItemStack.EMPTY.getComponents();
     static int offHandSlot = 40;
     static int offHandStackSize = 0;
 
@@ -38,57 +38,55 @@ public class StackRefiller implements HudRenderCallback {
         Items.CHORUS_FRUIT
     ));
 
-    static void updateCurrentStack(MinecraftClient client) {
+    static void updateCurrentStack(Minecraft client) {
         if (client.player == null) {
             return;
         }
-        mainHandItem = client.player.getInventory().getSelectedStack().getItem();
-        mainHandComponents = client.player.getInventory().getSelectedStack().getComponents();
+        mainHandItem = client.player.getInventory().getSelectedItem().getItem();
+        mainHandComponents = client.player.getInventory().getSelectedItem().getComponents();
         mainHandSlot = client.player.getInventory().getSelectedSlot();
 
-        offHandItem = client.player.getInventory().getStack(offHandSlot).getItem();
-        offHandComponents = client.player.getInventory().getStack(offHandSlot).getComponents();
+        offHandItem = client.player.getInventory().getItem(offHandSlot).getItem();
+        offHandComponents = client.player.getInventory().getItem(offHandSlot).getComponents();
     }
     
     @SuppressWarnings("DataFlowIssue")
-    public static int slotToRefill(MinecraftClient client) {
+    public static int slotToRefill(Minecraft client) {
         if (
-            client.player.getInventory().getSelectedStack().isEmpty() && mainHandItem != Items.AIR ||
-            (client.player.getInventory().getSelectedStack().isOf(Items.GLASS_BOTTLE) && ((mainHandItem == Items.HONEY_BOTTLE) || mainHandItem == Items.POTION)) ||
-            (client.player.getInventory().getSelectedStack().isOf(Items.BUCKET) && (mainHandItem == Items.MILK_BUCKET || mainHandItem instanceof BucketItem)) ||
-            (client.player.getInventory().getSelectedStack().isOf(Items.BOWL) && (mainHandItem == Items.SUSPICIOUS_STEW || mainHandItem == Items.MUSHROOM_STEW || mainHandItem == Items.RABBIT_STEW || mainHandItem == Items.BEETROOT_SOUP))
+            client.player.getInventory().getSelectedItem().isEmpty() && mainHandItem != Items.AIR ||
+            (client.player.getInventory().getSelectedItem().is(Items.GLASS_BOTTLE) && ((mainHandItem == Items.HONEY_BOTTLE) || mainHandItem == Items.POTION)) ||
+            (client.player.getInventory().getSelectedItem().is(Items.BUCKET) && (mainHandItem == Items.MILK_BUCKET || mainHandItem instanceof BucketItem)) ||
+            (client.player.getInventory().getSelectedItem().is(Items.BOWL) && (mainHandItem == Items.SUSPICIOUS_STEW || mainHandItem == Items.MUSHROOM_STEW || mainHandItem == Items.RABBIT_STEW || mainHandItem == Items.BEETROOT_SOUP))
         ) {
             return mainHandSlot;
         } else if (
-            client.player.getInventory().getStack(offHandSlot).isEmpty() && offHandItem != Items.AIR ||
-            (client.player.getInventory().getStack(offHandSlot).isOf(Items.GLASS_BOTTLE) && ((offHandItem == Items.HONEY_BOTTLE) || offHandItem == Items.POTION)) ||
-            (client.player.getInventory().getStack(offHandSlot).isOf(Items.BUCKET) && (offHandItem == Items.MILK_BUCKET || offHandItem instanceof BucketItem)) ||
-            (client.player.getInventory().getStack(offHandSlot).isOf(Items.BOWL) && (offHandItem == Items.SUSPICIOUS_STEW || offHandItem == Items.MUSHROOM_STEW || offHandItem == Items.RABBIT_STEW || offHandItem == Items.BEETROOT_SOUP))
+            client.player.getInventory().getItem(offHandSlot).isEmpty() && offHandItem != Items.AIR ||
+            (client.player.getInventory().getItem(offHandSlot).is(Items.GLASS_BOTTLE) && ((offHandItem == Items.HONEY_BOTTLE) || offHandItem == Items.POTION)) ||
+            (client.player.getInventory().getItem(offHandSlot).is(Items.BUCKET) && (offHandItem == Items.MILK_BUCKET || offHandItem instanceof BucketItem)) ||
+            (client.player.getInventory().getItem(offHandSlot).is(Items.BOWL) && (offHandItem == Items.SUSPICIOUS_STEW || offHandItem == Items.MUSHROOM_STEW || offHandItem == Items.RABBIT_STEW || offHandItem == Items.BEETROOT_SOUP))
         ) {
             return offHandSlot;
         }
         return -1;
     }
     
-    @SuppressWarnings("DataFlowIssue")
-    public static void refillStack(MinecraftClient client, int slot, Item item, ComponentMap components) {
+    public static void refillStack(Minecraft client, int slot, Item item, DataComponentMap components) {
+        if (client.player == null || client.gameMode == null) {
+            return;
+        }
         // Refill potion or suspicious stew only if the target item has the same effects as the depleted item
         if (item instanceof PotionItem || item == Items.SUSPICIOUS_STEW) {
             for (int i = 35; i > 8; i--) {
                 if ((
-                    components.contains(DataComponentTypes.POTION_CONTENTS) &&
-                    client.player.getInventory().getStack(i).contains(DataComponentTypes.POTION_CONTENTS) &&
-                    Objects.equals(components.get(DataComponentTypes.POTION_CONTENTS), client.player.getInventory().getStack(i).get(DataComponentTypes.POTION_CONTENTS))
+                    components.has(DataComponents.POTION_CONTENTS) &&
+                    client.player.getInventory().getItem(i).has(DataComponents.POTION_CONTENTS) &&
+                    Objects.equals(components.get(DataComponents.POTION_CONTENTS), client.player.getInventory().getItem(i).get(DataComponents.POTION_CONTENTS))
                 ) || (
-                    components.contains(DataComponentTypes.SUSPICIOUS_STEW_EFFECTS) &&
-                    client.player.getInventory().getStack(i).contains(DataComponentTypes.SUSPICIOUS_STEW_EFFECTS) &&
-                    Objects.equals(components.get(DataComponentTypes.SUSPICIOUS_STEW_EFFECTS), client.player.getInventory().getStack(i).get(DataComponentTypes.SUSPICIOUS_STEW_EFFECTS))
+                    components.has(DataComponents.SUSPICIOUS_STEW_EFFECTS) &&
+                    client.player.getInventory().getItem(i).has(DataComponents.SUSPICIOUS_STEW_EFFECTS) &&
+                    Objects.equals(components.get(DataComponents.SUSPICIOUS_STEW_EFFECTS), client.player.getInventory().getItem(i).get(DataComponents.SUSPICIOUS_STEW_EFFECTS))
                 )) {
-                    assert client.interactionManager != null;
-                    client.interactionManager.clickSlot(client.player.playerScreenHandler.syncId, i, slot, SlotActionType.SWAP, client.player.getInventory().player);
-                    client.player.getInventory().markDirty();
-                    client.player.playerScreenHandler.sendContentUpdates();
-                    client.player.playerScreenHandler.updateToClient();
+                    client.gameMode.handleContainerInput(client.player.inventoryMenu.containerId, i, slot, ContainerInput.SWAP, client.player);
                     return;
                 }
             }
@@ -97,39 +95,33 @@ public class StackRefiller implements HudRenderCallback {
 
         // Refill all other items
         for (int i = 35; i > 8; i--) {
-            if (item == client.player.getInventory().getStack(i).getItem()) {
-                client.interactionManager.clickSlot(client.player.playerScreenHandler.syncId, i, slot, SlotActionType.SWAP, client.player.getInventory().player);
-                client.player.getInventory().markDirty();
-                client.player.playerScreenHandler.sendContentUpdates();
-                client.player.playerScreenHandler.updateToClient();
+            if (item == client.player.getInventory().getItem(i).getItem()) {
+                client.gameMode.handleContainerInput(client.player.inventoryMenu.containerId, i, slot, ContainerInput.SWAP, client.player);
                 return;
             }
         }
 
         // If the refill target is a food item and no match is found, refill with a different food item
-        if (item.getComponents().contains(DataComponentTypes.FOOD)) {
+        if (item.components().has(DataComponents.FOOD)) {
             for (int i = 35; i > 8; i--) {
-                if (client.player.getInventory().getStack(i).getItem().getComponents().contains(DataComponentTypes.FOOD)) {
+                if (client.player.getInventory().getItem(i).getItem().components().has(DataComponents.FOOD)) {
                     for (Item blacklist : FOOD_REFILL_BLACKLIST) {
-                        if (client.player.getInventory().getStack(i).isOf(blacklist)) {
+                        if (client.player.getInventory().getItem(i).is(blacklist)) {
                             return;
                         }
                     }
-                    client.interactionManager.clickSlot(client.player.playerScreenHandler.syncId, i, slot, SlotActionType.SWAP, client.player.getInventory().player);
-                    client.player.getInventory().markDirty();
-                    client.player.playerScreenHandler.sendContentUpdates();
-                    client.player.playerScreenHandler.updateToClient();
+                    client.gameMode.handleContainerInput(client.player.inventoryMenu.containerId, i, slot, ContainerInput.SWAP, client.player);
                     return;
                 }
             }
         }
     }
 
-    public static void tryRefillStack(MinecraftClient client) {
+    public static void tryRefillStack(Minecraft client) {
         if (client.player == null) {
             return;
         }
-        if (client.currentScreen == null) {
+        if (client.screen == null) {
             int targetSlot = slotToRefill(client);
             if (targetSlot == client.player.getInventory().getSelectedSlot()) {
                 refillStack(client, targetSlot, mainHandItem, mainHandComponents);
@@ -147,8 +139,7 @@ public class StackRefiller implements HudRenderCallback {
         }
     }
 
-    @SuppressWarnings("DuplicatedCode")
-    public static void updateRefillPreview(MinecraftClient client) {
+    public static void updateRefillPreview(Minecraft client) {
         if (client.player == null) {
             return;
         }
@@ -156,43 +147,45 @@ public class StackRefiller implements HudRenderCallback {
         mainHandStackSize = 0;
         for (int i = 35; i > 8; i--) {
             if (mainHandItem instanceof PotionItem || mainHandItem == Items.SUSPICIOUS_STEW) {
-                if (client.player.getInventory().getSelectedStack().getComponents().equals(client.player.getInventory().getStack(i).getComponents())) {
-                    mainHandStackSize += client.player.getInventory().getStack(i).getCount();
+                if (client.player.getInventory().getSelectedItem().getComponents().equals(client.player.getInventory().getItem(i).getComponents())) {
+                    mainHandStackSize += client.player.getInventory().getItem(i).getCount();
                 }
-            } else if (mainHandItem == client.player.getInventory().getStack(i).getItem()) {
-                mainHandStackSize += client.player.getInventory().getStack(i).getCount();
+            } else if (mainHandItem == client.player.getInventory().getItem(i).getItem()) {
+                mainHandStackSize += client.player.getInventory().getItem(i).getCount();
             }
         }
         offHandStackSize = 0;
         for (int i = 35; i > 8; i--) {
             if (offHandItem instanceof PotionItem || offHandItem == Items.SUSPICIOUS_STEW) {
-                if (client.player.getInventory().getSelectedStack().getComponents().equals(client.player.getInventory().getStack(i).getComponents())) {
-                    offHandStackSize += client.player.getInventory().getStack(i).getCount();
+                if (client.player.getInventory().getSelectedItem().getComponents().equals(client.player.getInventory().getItem(i).getComponents())) {
+                    offHandStackSize += client.player.getInventory().getItem(i).getCount();
                 }
-            } else if (offHandItem == client.player.getInventory().getStack(i).getItem()) {
-                offHandStackSize += client.player.getInventory().getStack(i).getCount();
+            } else if (offHandItem == client.player.getInventory().getItem(i).getItem()) {
+                offHandStackSize += client.player.getInventory().getItem(i).getCount();
             }
         }
     }
 
-    @SuppressWarnings({"DataFlowIssue", "NullableProblems"})
     @Override
-    public void onHudRender(DrawContext drawContext, RenderTickCounter tickCounter) {
-        MinecraftClient client = MinecraftClient.getInstance();
-        if (ImprovedInventoryConfig.stackRefillPreview && !client.player.isSpectator() && !client.options.hudHidden && client.currentScreen == null) {
-            drawContext.getMatrices().pushMatrix();
-            drawContext.getMatrices().scale(0.5F, 0.5F);
+    public void extractRenderState(@NonNull GuiGraphicsExtractor graphics, @NonNull DeltaTracker deltaTracker) {
+        Minecraft client = Minecraft.getInstance();
+        if (client.player == null) {
+            return;
+        }
+        if (ImprovedInventoryConfig.stackRefillPreview && !client.player.isSpectator() && !client.options.hideGui && client.screen == null) {
+            graphics.pose().pushMatrix();
+            graphics.pose().scale(0.5F, 0.5F);
             if (mainHandStackSize > 0) {
-                drawContext.drawText(client.textRenderer, Text.of("+ " + mainHandStackSize), 2 * (drawContext.getScaledWindowWidth() / 2 - 90 + mainHandSlot * 20 + 2), 2 * (drawContext.getScaledWindowHeight() - 20), ImprovedInventoryConfig.stackRefillPreviewColor.getRGB(), true);
+                graphics.text(client.font, Component.literal("+ " + mainHandStackSize), 2 * (client.getWindow().getGuiScaledWidth() / 2 - 90 + mainHandSlot * 20 + 2), 2 * (client.getWindow().getGuiScaledHeight() - 20), ImprovedInventoryConfig.stackRefillPreviewColor.getRGB(), true);
             }
             if (offHandStackSize > 0) {
-                if (client.player.getMainArm() == Arm.RIGHT) {
-                    drawContext.drawText(client.textRenderer, Text.of("+ " + offHandStackSize), 2 * (drawContext.getScaledWindowWidth() / 2 - 90 - 29 + 2), 2 * (drawContext.getScaledWindowHeight() - 20), ImprovedInventoryConfig.stackRefillPreviewColor.getRGB(), true);
+                if (client.player.getMainArm() == HumanoidArm.RIGHT) {
+                    graphics.text(client.font, Component.literal("+ " + offHandStackSize), 2 * (client.getWindow().getGuiScaledWidth() / 2 - 90 - 29 + 2), 2 * (client.getWindow().getGuiScaledHeight() - 20), ImprovedInventoryConfig.stackRefillPreviewColor.getRGB(), true);
                 } else {
-                    drawContext.drawText(client.textRenderer, Text.of("+ " + offHandStackSize), 2 * (drawContext.getScaledWindowWidth() / 2 + 90 + 9 + 2), 2 * (drawContext.getScaledWindowHeight() - 20), ImprovedInventoryConfig.stackRefillPreviewColor.getRGB(), true);
+                    graphics.text(client.font, Component.literal("+ " + offHandStackSize), 2 * (client.getWindow().getGuiScaledWidth() / 2 + 90 + 9 + 2), 2 * (client.getWindow().getGuiScaledHeight() - 20), ImprovedInventoryConfig.stackRefillPreviewColor.getRGB(), true);
                 }
             }
-            drawContext.getMatrices().popMatrix();
+            graphics.pose().popMatrix();
         }
     }
 }
