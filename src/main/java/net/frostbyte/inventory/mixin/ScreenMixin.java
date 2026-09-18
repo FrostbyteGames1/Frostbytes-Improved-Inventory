@@ -99,22 +99,22 @@ public abstract class ScreenMixin {
     
     @Inject(method = "init(II)V", at = @At("HEAD"))
     public void init(int width, int height, CallbackInfo ci) {
-        if (ImprovedInventoryConfig.containerTab && !ImprovedInventoryConfig.containerTabKeybindOnly && !containers.isEmpty() && minecraft.level != null && minecraft.player != null && minecraft.screen instanceof AbstractContainerScreen<?> containerScreen && !(minecraft.screen instanceof CreativeModeInventoryScreen) && !(minecraft.screen instanceof MerchantScreen)) {
+        if (ImprovedInventoryConfig.containerTab && !ImprovedInventoryConfig.containerTabKeybindOnly && !containers.isEmpty() && minecraft.level != null && minecraft.player != null && minecraft.gui.screen() instanceof AbstractContainerScreen<?> containerScreen && !(minecraft.gui.screen() instanceof CreativeModeInventoryScreen) && !(minecraft.gui.screen() instanceof MerchantScreen)) {
             screenWidth = containerScreen.imageWidth;
             screenHeight = containerScreen.imageHeight;
             ItemStack playerHead = new ItemStack(Items.PLAYER_HEAD);
             playerHead.set(DataComponents.PROFILE, ResolvableProfile.createResolved(minecraft.player.getGameProfile()));
             TexturedButtonWithItemStackWidget tab;
-            if (minecraft.screen instanceof InventoryScreen) {
+            if (minecraft.gui.screen() instanceof InventoryScreen) {
                 tab = new TexturedButtonWithItemStackWidget(width / 2 - screenWidth / 2, height / 2 - screenHeight / 2 - 28, 26, 32, TEXTURES_LEFT_SELECTED, playerHead, button -> {
                     if (minecraft.player.getVehicle() != null && minecraft.player.getVehicle() instanceof AbstractHorse horse) {
                         minecraft.player.openHorseInventory(horse, minecraft.player.getInventory());
                     } else if (minecraft.player.getVehicle() != null && minecraft.player.getVehicle() instanceof AbstractChestBoat boat) {
                         boat.interactWithContainerVehicle(minecraft.player);
                     } else {
-                        minecraft.screen.onClose();
+                        minecraft.gui.screen().onClose();
                         minecraft.getTutorial().onOpenInventory();
-                        minecraft.setScreen(new InventoryScreen(minecraft.player));
+                        minecraft.gui.setScreen(new InventoryScreen(minecraft.player));
                     }
                 });
             } else {
@@ -124,9 +124,10 @@ public abstract class ScreenMixin {
                     } else if (minecraft.player.getVehicle() != null && minecraft.player.getVehicle() instanceof AbstractChestBoat boat) {
                         boat.interactWithContainerVehicle(minecraft.player);
                     } else {
-                        minecraft.screen.onClose();
+                        //noinspection DataFlowIssue
+                        minecraft.gui.screen().onClose();
                         minecraft.getTutorial().onOpenInventory();
-                        minecraft.setScreen(new InventoryScreen(minecraft.player));
+                        minecraft.gui.setScreen(new InventoryScreen(minecraft.player));
                     }
                 });
             }
@@ -140,13 +141,13 @@ public abstract class ScreenMixin {
                 Component displayName = getDisplayName(containers.get(container));
                 ItemStack displayStack = getDisplayStack(containers.get(container));
                 if (i == maxTabs - 1) {
-                    if (!(minecraft.screen instanceof InventoryScreen) && current == container) {
+                    if (!(minecraft.gui.screen() instanceof InventoryScreen) && current == container) {
                         tab = new TexturedButtonWithItemStackWidget(width / 2 + screenWidth / 2 - 26, height / 2 - screenHeight / 2 - 28, 26, 32, TEXTURES_RIGHT_SELECTED, displayStack, button -> openContainer(container));
                     } else {
                         tab = new TexturedButtonWithItemStackWidget(width / 2 + screenWidth / 2 - 26, height / 2 - screenHeight / 2 - 28, 26, 28, TEXTURES_RIGHT, displayStack, button -> openContainer(container));
                     }
                 } else {
-                    if (!(minecraft.screen instanceof InventoryScreen) && current == container) {
+                    if (!(minecraft.gui.screen() instanceof InventoryScreen) && current == container) {
                         tab = new TexturedButtonWithItemStackWidget(width / 2 - screenWidth / 2 + (i + 1) * 25, height / 2 - screenHeight / 2 - 28, 26, 32, TEXTURES_MID_SELECTED, displayStack, button -> openContainer(container));
                     } else {
                         tab = new TexturedButtonWithItemStackWidget(width / 2 - screenWidth / 2 + (i + 1) * 25, height / 2 - screenHeight / 2 - 28, 26, 28, TEXTURES_MID, displayStack, button -> openContainer(container));

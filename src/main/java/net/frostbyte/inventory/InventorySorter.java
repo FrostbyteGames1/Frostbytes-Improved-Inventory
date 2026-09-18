@@ -25,7 +25,7 @@ public class InventorySorter {
     }
 
     public static void inventorySortHandler(Minecraft client) {
-        if (client.screen instanceof AbstractContainerScreen<?> containerScreen) {
+        if (client.gui.screen() instanceof AbstractContainerScreen<?> containerScreen) {
             int keyCode = KeyMappingHelper.getBoundKeyOf(sortKey).getValue();
             if ((keyCode >= 0 && keyCode <= 8 && GLFW.glfwGetMouseButton(client.getWindow().handle(), keyCode) == 1) || GLFW.glfwGetKey(client.getWindow().handle(), keyCode) == 1) {
                 if (shouldSort(client, containerScreen)) {

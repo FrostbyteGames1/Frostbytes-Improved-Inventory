@@ -94,7 +94,7 @@ public class WAILA implements HudElement {
     @Override
     public void extractRenderState(@NonNull GuiGraphicsExtractor graphics, @NonNull DeltaTracker deltaTracker) {
         Minecraft client = Minecraft.getInstance();
-        if (ImprovedInventoryConfig.waila && client.player != null && !client.player.isSpectator() && !client.options.hideGui && client.screen == null) {
+        if (ImprovedInventoryConfig.waila && client.player != null && !client.player.isSpectator() && !client.gui.hud.isHidden() && client.gui.screen() == null) {
             x = ImprovedInventoryConfig.wailaHorizontalAnchor ? ImprovedInventoryConfig.wailaOffsetX : client.getWindow().getGuiScaledWidth() - 130 - ImprovedInventoryConfig.wailaOffsetX;
             y = ImprovedInventoryConfig.wailaVerticalAnchor ? ImprovedInventoryConfig.wailaOffsetY : client.getWindow().getGuiScaledHeight() - 32 - ImprovedInventoryConfig.wailaOffsetY;
             if (client.getCameraEntity() != null) {

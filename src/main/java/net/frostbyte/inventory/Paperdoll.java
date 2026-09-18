@@ -17,7 +17,7 @@ public class Paperdoll implements HudElement {
     public void extractRenderState(@NonNull GuiGraphicsExtractor graphics, @NonNull DeltaTracker deltaTracker) {
         Minecraft client = Minecraft.getInstance();
         assert client.player != null;
-        if (!client.player.isSpectator() && ImprovedInventoryConfig.paperdoll && !client.options.hideGui && client.screen == null) {
+        if (!client.player.isSpectator() && ImprovedInventoryConfig.paperdoll && !client.gui.hud.isHidden() && client.gui.screen() == null) {
             if (ImprovedInventoryConfig.paperdollVerticalAnchor) {
                 if (ImprovedInventoryConfig.paperdollHorizontalAnchor) {
                     extractEntityInInventoryFollowsMouse(

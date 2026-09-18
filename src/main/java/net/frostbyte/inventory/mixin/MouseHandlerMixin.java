@@ -29,7 +29,7 @@ public abstract class MouseHandlerMixin {
 
     @Inject(method = "grabMouse", at = @At("HEAD"), cancellable = true)
     public void lockCursor(CallbackInfo ci) {
-        if (!FabricLoader.getInstance().isModLoaded("itemswapper") || !(minecraft.screen instanceof ItemSwapperUIAbstractInput)) {
+        if (!FabricLoader.getInstance().isModLoaded("itemswapper") || !(minecraft.gui.screen() instanceof ItemSwapperUIAbstractInput)) {
             if (ImprovedInventoryConfig.containerTab && ImprovedInventoryConfig.containerTabFreeCursor) {
                 if (minecraft.isWindowActive()) {
                     if (!this.mouseGrabbed) {
@@ -38,7 +38,7 @@ public abstract class MouseHandlerMixin {
                         }
                         this.mouseGrabbed = true;
                         InputConstants.grabOrReleaseMouse(this.minecraft.getWindow(), 212995, this.xpos, this.ypos);
-                        minecraft.setScreen(null);
+                        minecraft.gui.setScreen(null);
                         minecraft.missTime = 10000;
                         this.ignoreFirstMove = true;
                     }
@@ -50,7 +50,7 @@ public abstract class MouseHandlerMixin {
 
     @Inject(method = "releaseMouse", at = @At("HEAD"), cancellable = true)
     public void unlockCursor(CallbackInfo ci) {
-        if (!FabricLoader.getInstance().isModLoaded("itemswapper") || !(minecraft.screen instanceof ItemSwapperUIAbstractInput)) {
+        if (!FabricLoader.getInstance().isModLoaded("itemswapper") || !(minecraft.gui.screen() instanceof ItemSwapperUIAbstractInput)) {
             if (ImprovedInventoryConfig.containerTab && ImprovedInventoryConfig.containerTabFreeCursor) {
                 if (this.mouseGrabbed) {
                     this.mouseGrabbed = false;

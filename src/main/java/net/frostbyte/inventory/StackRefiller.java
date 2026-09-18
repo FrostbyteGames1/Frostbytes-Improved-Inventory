@@ -121,7 +121,7 @@ public class StackRefiller implements HudElement {
         if (client.player == null) {
             return;
         }
-        if (client.screen == null) {
+        if (client.gui.screen() == null) {
             int targetSlot = slotToRefill(client);
             if (targetSlot == client.player.getInventory().getSelectedSlot()) {
                 refillStack(client, targetSlot, mainHandItem, mainHandComponents);
@@ -172,7 +172,7 @@ public class StackRefiller implements HudElement {
         if (client.player == null) {
             return;
         }
-        if (ImprovedInventoryConfig.stackRefillPreview && !client.player.isSpectator() && !client.options.hideGui && client.screen == null) {
+        if (ImprovedInventoryConfig.stackRefillPreview && !client.player.isSpectator() && !client.gui.hud.isHidden() && client.gui.screen() == null) {
             graphics.pose().pushMatrix();
             graphics.pose().scale(0.5F, 0.5F);
             if (mainHandStackSize > 0) {

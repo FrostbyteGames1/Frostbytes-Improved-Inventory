@@ -18,7 +18,7 @@ public class DurabilityDisplayer implements HudElement {
     @Override
     public void extractRenderState(@NonNull GuiGraphicsExtractor graphics, @NonNull DeltaTracker deltaTracker) {
         assert mc.player != null;
-        if (!mc.player.isSpectator() && ImprovedInventoryConfig.duraDisplay && !mc.options.hideGui) {
+        if (!mc.player.isSpectator() && ImprovedInventoryConfig.duraDisplay && !mc.gui.hud.isHidden()) {
             int x = mc.getWindow().getGuiScaledWidth() - ImprovedInventoryConfig.duraDisplayOffsetX;
             if (ImprovedInventoryConfig.duraDisplayHorizontalAnchor) {
                 x = 22 + ImprovedInventoryConfig.duraDisplayOffsetX;

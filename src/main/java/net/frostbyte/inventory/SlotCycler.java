@@ -98,7 +98,7 @@ public class SlotCycler implements HudElement {
     public void extractRenderState(@NonNull GuiGraphicsExtractor graphics, @NonNull DeltaTracker deltaTracker) {
         client = Minecraft.getInstance();
         assert client.player != null;
-        if (!client.player.isSpectator() && ImprovedInventoryConfig.slotCycle && !client.options.hideGui) {
+        if (!client.player.isSpectator() && ImprovedInventoryConfig.slotCycle && !client.gui.hud.isHidden()) {
             int width = client.getWindow().getGuiScaledWidth();
             int height = client.getWindow().getGuiScaledHeight() - ImprovedInventoryConfig.slotCycleOffsetY;
             int x = width / 2;

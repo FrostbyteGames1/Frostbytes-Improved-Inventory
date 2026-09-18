@@ -15,7 +15,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 @Mixin(OptionInstance.class)
 public abstract class OptionInstanceMixin<T> {
@@ -33,7 +32,7 @@ public abstract class OptionInstanceMixin<T> {
 
     @Shadow
     @Final
-    private Consumer<T> onValueUpdate;
+    private OptionInstance.ValueUpdateListener<? super T> onValueUpdate;
 
     @Inject(method = "set", at = @At("HEAD"), cancellable = true)
     public void set(T value, CallbackInfo ci) {
@@ -44,7 +43,7 @@ public abstract class OptionInstanceMixin<T> {
             } else {
                 if (!Objects.equals(this.value, newValue)) {
                     this.value = newValue;
-                    this.onValueUpdate.accept(this.value);
+                    this.onValueUpdate.valueChanged(this.value);
                 }
 
             }
@@ -57,7 +56,7 @@ public abstract class OptionInstanceMixin<T> {
             } else {
                 if (!Objects.equals(this.value, newValue)) {
                     this.value = newValue;
-                    this.onValueUpdate.accept(this.value);
+                    this.onValueUpdate.valueChanged(this.value);
                 }
             }
             ci.cancel();

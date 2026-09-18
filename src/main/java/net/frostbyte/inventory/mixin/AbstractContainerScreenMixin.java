@@ -95,37 +95,37 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             if (ImprovedInventoryConfig.shulkerBoxTooltip && hoveredSlot.getItem().getComponents().has(DataComponents.CONTAINER)) {
                 int color = -1;
                 if (ImprovedInventoryConfig.shulkerBoxTooltipColors) {
-                    if (hoveredSlot.getItem().getItem() == Items.WHITE_SHULKER_BOX) {
+                    if (hoveredSlot.getItem().getItem() == Items.DYED_SHULKER_BOX.white()) {
                         color = DyeColor.WHITE.getTextureDiffuseColor();
-                    } else if (hoveredSlot.getItem().getItem() == Items.ORANGE_SHULKER_BOX) {
+                    } else if (hoveredSlot.getItem().getItem() == Items.DYED_SHULKER_BOX.orange()) {
                         color = DyeColor.ORANGE.getTextureDiffuseColor();
-                    } else if (hoveredSlot.getItem().getItem() == Items.MAGENTA_SHULKER_BOX) {
+                    } else if (hoveredSlot.getItem().getItem() == Items.DYED_SHULKER_BOX.magenta()) {
                         color = DyeColor.MAGENTA.getTextureDiffuseColor();
-                    } else if (hoveredSlot.getItem().getItem() == Items.LIGHT_BLUE_SHULKER_BOX) {
+                    } else if (hoveredSlot.getItem().getItem() == Items.DYED_SHULKER_BOX.lightBlue()) {
                         color = DyeColor.LIGHT_BLUE.getTextureDiffuseColor();
-                    } else if (hoveredSlot.getItem().getItem() == Items.YELLOW_SHULKER_BOX) {
+                    } else if (hoveredSlot.getItem().getItem() == Items.DYED_SHULKER_BOX.yellow()) {
                         color = DyeColor.YELLOW.getTextureDiffuseColor();
-                    } else if (hoveredSlot.getItem().getItem() == Items.LIME_SHULKER_BOX) {
+                    } else if (hoveredSlot.getItem().getItem() == Items.DYED_SHULKER_BOX.lime()) {
                         color = DyeColor.LIME.getTextureDiffuseColor();
-                    } else if (hoveredSlot.getItem().getItem() == Items.PINK_SHULKER_BOX) {
+                    } else if (hoveredSlot.getItem().getItem() == Items.DYED_SHULKER_BOX.pink()) {
                         color = DyeColor.PINK.getTextureDiffuseColor();
-                    } else if (hoveredSlot.getItem().getItem() == Items.GRAY_SHULKER_BOX) {
+                    } else if (hoveredSlot.getItem().getItem() == Items.DYED_SHULKER_BOX.gray()) {
                         color = DyeColor.GRAY.getTextureDiffuseColor();
-                    } else if (hoveredSlot.getItem().getItem() == Items.LIGHT_GRAY_SHULKER_BOX) {
+                    } else if (hoveredSlot.getItem().getItem() == Items.DYED_SHULKER_BOX.lightGray()) {
                         color = DyeColor.LIGHT_GRAY.getTextureDiffuseColor();
-                    } else if (hoveredSlot.getItem().getItem() == Items.CYAN_SHULKER_BOX) {
+                    } else if (hoveredSlot.getItem().getItem() == Items.DYED_SHULKER_BOX.cyan()) {
                         color = DyeColor.CYAN.getTextureDiffuseColor();
-                    } else if (hoveredSlot.getItem().getItem() == Items.PURPLE_SHULKER_BOX) {
+                    } else if (hoveredSlot.getItem().getItem() == Items.DYED_SHULKER_BOX.purple()) {
                         color = DyeColor.PURPLE.getTextureDiffuseColor();
-                    } else if (hoveredSlot.getItem().getItem() == Items.BLUE_SHULKER_BOX) {
+                    } else if (hoveredSlot.getItem().getItem() == Items.DYED_SHULKER_BOX.blue()) {
                         color = DyeColor.BLUE.getTextureDiffuseColor();
-                    } else if (hoveredSlot.getItem().getItem() == Items.BROWN_SHULKER_BOX) {
+                    } else if (hoveredSlot.getItem().getItem() == Items.DYED_SHULKER_BOX.brown()) {
                         color = DyeColor.BROWN.getTextureDiffuseColor();
-                    } else if (hoveredSlot.getItem().getItem() == Items.GREEN_SHULKER_BOX) {
+                    } else if (hoveredSlot.getItem().getItem() == Items.DYED_SHULKER_BOX.green()) {
                         color = DyeColor.GREEN.getTextureDiffuseColor();
-                    } else if (hoveredSlot.getItem().getItem() == Items.RED_SHULKER_BOX) {
+                    } else if (hoveredSlot.getItem().getItem() == Items.DYED_SHULKER_BOX.red()) {
                         color = DyeColor.RED.getTextureDiffuseColor();
-                    } else if (hoveredSlot.getItem().getItem() == Items.BLACK_SHULKER_BOX) {
+                    } else if (hoveredSlot.getItem().getItem() == Items.DYED_SHULKER_BOX.black()) {
                         color = DyeColor.BLACK.getTextureDiffuseColor();
                     } else if (hoveredSlot.getItem().getItem() == Items.SHULKER_BOX) {
                         color = new Color(148, 100, 148).getRGB();

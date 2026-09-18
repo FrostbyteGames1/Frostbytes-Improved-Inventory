@@ -27,7 +27,7 @@ public class StatusEffectTimerBar {
     @SuppressWarnings("DataFlowIssue")
     public static void statusEffectTimerHandler(GuiGraphicsExtractor graphics, Minecraft client) {
         Collection<MobEffectInstance> collection = client.player.getActiveEffects();
-        if (!collection.isEmpty() && (client.screen == null || !client.screen.showsActiveEffects())) {
+        if (!collection.isEmpty() && (client.gui.screen() == null || !client.gui.screen().showsActiveEffects())) {
             int i = 0;
             int j = 0;
             List<Runnable> list = Lists.newArrayListWithExpectedSize(collection.size());

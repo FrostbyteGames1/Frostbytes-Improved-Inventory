@@ -26,7 +26,7 @@ public class Zoom {
         if (client.player == null) {
             return;
         }
-        if (client.screen == null) {
+        if (client.gui.screen() == null) {
             if (zoomKey.isDown()) {
                 if (client.options.fov().get() != ImprovedInventoryConfig.zoomFOV - scrollAmount) {
                     if (ImprovedInventoryConfig.zoomSound) {
@@ -46,7 +46,7 @@ public class Zoom {
                 }
             }
         } else {
-            if (client.screen.isPauseScreen()) {
+            if (client.gui.screen().isPauseScreen()) {
                 if (client.options.fov().get() == ImprovedInventoryConfig.zoomFOV - scrollAmount) {
                     if (ImprovedInventoryConfig.zoomSound) {
                         client.player.playSound(SoundEvents.SPYGLASS_STOP_USING, 1.0F, 1.0F);

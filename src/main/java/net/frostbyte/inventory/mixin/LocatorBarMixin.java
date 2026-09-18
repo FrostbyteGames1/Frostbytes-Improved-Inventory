@@ -5,8 +5,8 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.PlayerFaceExtractor;
-import net.minecraft.client.gui.contextualbar.ContextualBarRenderer;
-import net.minecraft.client.gui.contextualbar.LocatorBarRenderer;
+import net.minecraft.client.gui.contextualbar.ContextualBar;
+import net.minecraft.client.gui.contextualbar.LocatorBar;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.WaypointStyle;
@@ -29,8 +29,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.awt.*;
 
-@Mixin(LocatorBarRenderer.class)
-public abstract class LocatorBarRendererMixin implements ContextualBarRenderer {
+@Mixin(LocatorBar.class)
+public abstract class LocatorBarMixin implements ContextualBar {
     @Shadow
     @Final
     private Minecraft minecraft;
@@ -92,17 +92,17 @@ public abstract class LocatorBarRendererMixin implements ContextualBarRenderer {
                 PartialTickSupplier partialTickSupplier = (entity) -> deltaTracker.getGameTimeDeltaPartialTick(!tickRateManager.isEntityFrozen(entity));
                 this.minecraft.player.connection.getWaypointManager().forEachWaypoint(cameraEntity, (waypoint) -> {
                     if (!(Boolean)waypoint.id().left().map((uuid) -> uuid.equals(cameraEntity.getUUID())).orElse(false)) {
-                        double angle = waypoint.yawAngleToCamera(level, this.minecraft.gameRenderer.getMainCamera(), partialTickSupplier);
+                        double angle = waypoint.yawAngleToCamera(level, this.minecraft.gameRenderer.mainCamera(), partialTickSupplier);
                         if (!(angle <= (double)-60.0F) && !(angle > (double)60.0F)) {
                             int screenMiddle = Mth.ceil((float)(graphics.guiWidth() - 9) / 2.0F);
-                            WaypointStyle waypointStyle = minecraft.getWaypointStyles().get(waypoint.icon().style);
+                            WaypointStyle waypointStyle = this.minecraft.gui.hud.getWaypointStyles().get(waypoint.icon().style);
                             int dotPosition = Mth.floor(angle * (double)173.0F / (double)2.0F / (double)60.0F);
                             if (waypoint.id().left().isPresent() && minecraft.getConnection().getPlayerInfo(waypoint.id().left().get()) != null) {
                                 int size = getSizeForDistance(waypointStyle, Mth.sqrt((float)waypoint.distanceSquared(cameraEntity)));
                                 PlayerFaceExtractor.extractRenderState(graphics, minecraft.getConnection().getPlayerInfo(waypoint.id().left().get()).getSkin(), screenMiddle + dotPosition, top - 2 + (9 - size) / 2, size, Color.WHITE.getRGB());
                             } else {
                                 Waypoint.Icon icon = waypoint.icon();
-                                WaypointStyle style = this.minecraft.getWaypointStyles().get(icon.style);
+                                WaypointStyle style = this.minecraft.gui.hud.getWaypointStyles().get(icon.style);
                                 float distance = Mth.sqrt((float)waypoint.distanceSquared(cameraEntity));
                                 Identifier sprite = style.sprite(distance);
                                 int color = icon.color.orElseGet(() -> waypoint.id().map((uuid) -> ARGB.setBrightness(ARGB.color(255, uuid.hashCode()), 0.9F), (name) -> ARGB.setBrightness(ARGB.color(255, name.hashCode()), 0.9F)));

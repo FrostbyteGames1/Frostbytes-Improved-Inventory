@@ -20,7 +20,7 @@ public class Gamma {
     }
 
     public static void gammaHandler(Minecraft client) {
-        if (client.screen != null && client.screen.isPauseScreen() && !enabled) {
+        if (client.gui.screen() != null && client.gui.screen().isPauseScreen() && !enabled) {
             standardBrightness = Math.min(client.options.gamma().get(), 100);
         }
 
@@ -31,12 +31,12 @@ public class Gamma {
                 client.options.gamma().set((double) ImprovedInventoryConfig.gamma);
                 Component message = Component.translatable("info.gamma_changed").append(ImprovedInventoryConfig.gamma + "%");
                 message.getStyle().applyFormat(ChatFormatting.GREEN);
-                client.gui.setOverlayMessage(message, false);
+                client.gui.hud.setOverlayMessage(message, false);
             } else {
                 client.options.gamma().set(standardBrightness);
                 Component message = Component.translatable("info.gamma_changed").append((int) (standardBrightness * 100) + "%");
                 message.getStyle().applyFormat(ChatFormatting.RED);
-                client.gui.setOverlayMessage(message, false);
+                client.gui.hud.setOverlayMessage(message, false);
             }
         }
 

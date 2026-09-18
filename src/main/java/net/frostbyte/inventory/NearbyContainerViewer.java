@@ -56,7 +56,7 @@ public class NearbyContainerViewer {
         if (tabButtonCooldown > 0) {
             tabButtonCooldown--;
         }
-        if (client.screen instanceof AbstractContainerScreen<?> && !(client.screen instanceof CreativeModeInventoryScreen)) {
+        if (client.gui.screen() instanceof AbstractContainerScreen<?> && !(client.gui.screen() instanceof CreativeModeInventoryScreen)) {
             if (containers.isEmpty()) {
                 return;
             }
@@ -129,7 +129,7 @@ public class NearbyContainerViewer {
         }
 
         // Get name of item in item frame
-        List<ItemFrame> itemFrames = client.level.getEntitiesOfClass(ItemFrame.class, new AABB(new BlockPos(blockPos).getCenter(), new BlockPos(blockPos).getCenter()).expandTowards(0.55, 0.55, 0.55));
+        List<ItemFrame> itemFrames = client.level.getEntitiesOfClass(ItemFrame.class, new AABB(Vec3.atCenterOf(blockPos), Vec3.atCenterOf(blockPos)).expandTowards(0.55, 0.55, 0.55));
         if (!itemFrames.isEmpty()) {
             name = itemFrames.getFirst().getItem().getHoverName();
         }
@@ -149,7 +149,7 @@ public class NearbyContainerViewer {
         stack = new ItemStack(client.level.getBlockState(new BlockPos(blockPos)).getBlock());
 
         // Get item in item frame
-        List<ItemFrame> itemFrames = client.level.getEntitiesOfClass(ItemFrame.class, new AABB(new BlockPos(blockPos).getCenter(), new BlockPos(blockPos).getCenter()).expandTowards(0.55, 0.55, 0.55));
+        List<ItemFrame> itemFrames = client.level.getEntitiesOfClass(ItemFrame.class, new AABB(Vec3.atCenterOf(blockPos), Vec3.atCenterOf(blockPos)).expandTowards(0.55, 0.55, 0.55));
         if (!itemFrames.isEmpty()) {
             stack = itemFrames.getFirst().getItem();
         }
@@ -209,7 +209,7 @@ public class NearbyContainerViewer {
         }
         current = container;
         Vec3i targetPos = containers.get(current);
-        client.player.lookAt(EntityAnchorArgument.Anchor.EYES, new BlockPos(targetPos).getCenter());
+        client.player.lookAt(EntityAnchorArgument.Anchor.EYES, Vec3.atCenterOf(targetPos));
         client.gameMode.useItemOn(client.player, InteractionHand.MAIN_HAND, new BlockHitResult(Vec3.atCenterOf(targetPos), Direction.EAST, new BlockPos(targetPos), false));
     }
 
