@@ -5,13 +5,13 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
+import net.frostbyte.inventory.util.InputUtil;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.item.ItemStack;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 
@@ -26,14 +26,10 @@ public class InventorySorter {
 
     public static void inventorySortHandler(Minecraft client) {
         if (client.gui.screen() instanceof AbstractContainerScreen<?> containerScreen) {
-            int keyCode = KeyMappingHelper.getBoundKeyOf(sortKey).getValue();
-            if ((keyCode >= 0 && keyCode <= 8 && GLFW.glfwGetMouseButton(client.getWindow().handle(), keyCode) == 1) || GLFW.glfwGetKey(client.getWindow().handle(), keyCode) == 1) {
-                if (shouldSort(client, containerScreen)) {
-                    interactions = 0;
-                    sortStacks(client, containerScreen.getMenu());
-                }
+            if (InputUtil.isKeyDown(KeyMappingHelper.getBoundKeyOf(sortKey)) && shouldSort(client, containerScreen)) {
+                interactions = 0;
+                sortStacks(client, containerScreen.getMenu());
             }
-
         }
     }
 

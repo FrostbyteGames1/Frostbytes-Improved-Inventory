@@ -32,7 +32,7 @@ public class ExpandedTooltipInfo {
     @SuppressWarnings("DataFlowIssue")
     public static void shulkerBoxTooltipHandler(GuiGraphicsExtractor graphics, int x, int y, Slot focusedSlot, int backgroundWidth, int color) {
         List<ItemStack> items = new ArrayList<>();
-        List<ItemStack> inventory = focusedSlot.getItem().getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY).allItemsCopyStream().toList();
+        List<ItemStack> inventory = focusedSlot.getItem().getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY).itemCopies().toList();
         for (int i = 0; i < inventory.size(); i++) {
             items.add(i, inventory.get(i));
         }

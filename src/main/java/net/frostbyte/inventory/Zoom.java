@@ -16,7 +16,7 @@ public class Zoom {
     public static KeyMapping zoomKey;
 
     public void setKeyMappings() {
-        KeyMappingHelper.registerKeyMapping(zoomKey = new KeyMapping("key.zoom", InputConstants.Type.KEYSYM, InputConstants.KEY_C, ImprovedInventory.KEYBIND_CATEGORY));
+        KeyMappingHelper.registerKeyMapping(zoomKey = new KeyMapping("key.zoom", InputConstants.Type.KEYBOARD, InputConstants.KEY_C, ImprovedInventory.KEYBIND_CATEGORY));
     }
 
     public static void zoomHandler(Minecraft client) {

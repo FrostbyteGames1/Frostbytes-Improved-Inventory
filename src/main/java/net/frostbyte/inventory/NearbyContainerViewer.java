@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
 import net.frostbyte.inventory.tags.ModTags;
+import net.frostbyte.inventory.util.InputUtil;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -12,6 +13,7 @@ import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.MenuProvider;
@@ -22,6 +24,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
+import net.minecraft.world.level.block.entity.SignTextSlot;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.ChestType;
@@ -30,10 +33,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
-import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -45,7 +46,7 @@ public class NearbyContainerViewer {
     public static int current = 0;
     static int tabButtonCooldown;
     public void setKeyMappings() {
-        KeyMappingHelper.registerKeyMapping(containerKey = new KeyMapping("key.next_container", InputConstants.Type.KEYSYM, InputConstants.KEY_TAB, ImprovedInventory.KEYBIND_CATEGORY));
+        KeyMappingHelper.registerKeyMapping(containerKey = new KeyMapping("key.next_container", InputConstants.Type.KEYBOARD, InputConstants.KEY_TAB, ImprovedInventory.KEYBIND_CATEGORY));
     }
 
 
@@ -60,9 +61,9 @@ public class NearbyContainerViewer {
             if (containers.isEmpty()) {
                 return;
             }
-            int keyCode = KeyMappingHelper.getBoundKeyOf(containerKey).getValue();
-            if (InputConstants.isKeyDown(client.getWindow(), keyCode)) {
-                if (InputConstants.isKeyDown(client.getWindow(), KeyEvent.VK_SHIFT)) {
+            InputConstants.Key key = KeyMappingHelper.getBoundKeyOf(containerKey);
+            if (InputUtil.isKeyDown(key)) {
+                if (InputConstants.isKeyDown(KeyEvent.VK_SHIFT)) {
                     current--;
                     if (current < 0) {
                         current = containers.size() - 1;
@@ -84,8 +85,8 @@ public class NearbyContainerViewer {
                 double d = target.distanceTo(client.player);
                 int closest = 0;
                 for (int i = 0; i < containers.size(); i++) {
-                    if (target.getBlockPos().distChessboard(new BlockPos(containers.get(i))) < d) {
-                        d = target.getBlockPos().distChessboard(new BlockPos(containers.get(i)));
+                    if (target.getBlockPos().distChessboard(containers.get(i)) < d) {
+                        d = target.getBlockPos().distChessboard(containers.get(i));
                         closest = i;
                     }
                 }
@@ -116,22 +117,22 @@ public class NearbyContainerViewer {
         Component name;
 
         // Get name of block
-        if (client.level.getBlockEntity(new BlockPos(blockPos)) instanceof MenuProvider menuProvider) {
+        if (client.level.getBlockEntity(new BlockPos(blockPos.getX(), blockPos.getY(), blockPos.getZ())) instanceof MenuProvider menuProvider) {
             name = menuProvider.getDisplayName();
         } else {
-            name = client.level.getBlockState(new BlockPos(blockPos)).getBlock().getName();
+            name = client.level.getBlockState(new BlockPos(blockPos.getX(), blockPos.getY(), blockPos.getZ())).getBlock().getName();
         }
 
         // Get text from sign
-        List<SignBlockEntity> signs = getAttachedBlocks(client.level, new BlockPos(blockPos), (w, p) -> w.getBlockEntity(p) instanceof SignBlockEntity sbe ? sbe : null);
-        if (!signs.isEmpty()) {
-            name = Arrays.stream(signs.getFirst().getFrontText().getMessages(false)).map(Component::getString).filter(s -> !s.isBlank()).collect(Collectors.joining("\n")).isBlank() ? name : Component.literal(Arrays.stream(signs.getFirst().getFrontText().getMessages(false)).map(Component::getString).filter(s -> !s.isBlank()).collect(Collectors.joining("\n")));
+        List<SignBlockEntity> signs = getAttachedBlocks(client.level, new BlockPos(blockPos.getX(), blockPos.getY(), blockPos.getZ()), (w, p) -> w.getBlockEntity(p) instanceof SignBlockEntity sbe ? sbe : null);
+        if (!signs.isEmpty() && signs.getFirst().getText(SignTextSlot.FRONT).hasMessage(false)) {
+            name = Component.literal(signs.getFirst().getText(SignTextSlot.FRONT).getMessages(false).stream().map(Component::getString).filter(s -> !s.isBlank()).collect(Collectors.joining("\n")));
         }
 
         // Get name of item in item frame
         List<ItemFrame> itemFrames = client.level.getEntitiesOfClass(ItemFrame.class, new AABB(Vec3.atCenterOf(blockPos), Vec3.atCenterOf(blockPos)).expandTowards(0.55, 0.55, 0.55));
-        if (!itemFrames.isEmpty()) {
-            name = itemFrames.getFirst().getItem().getHoverName();
+        if (!itemFrames.isEmpty() && !itemFrames.getFirst().getItem().isEmpty() && itemFrames.getFirst().getItem().has(DataComponents.CUSTOM_NAME)) {
+            name = itemFrames.getFirst().getItem().getCustomName();
         }
 
         return name;
@@ -146,7 +147,7 @@ public class NearbyContainerViewer {
         ItemStack stack;
 
         // Get container stack
-        stack = new ItemStack(client.level.getBlockState(new BlockPos(blockPos)).getBlock());
+        stack = new ItemStack(client.level.getBlockState(new BlockPos(blockPos.getX(), blockPos.getY(), blockPos.getZ())).getBlock());
 
         // Get item in item frame
         List<ItemFrame> itemFrames = client.level.getEntitiesOfClass(ItemFrame.class, new AABB(Vec3.atCenterOf(blockPos), Vec3.atCenterOf(blockPos)).expandTowards(0.55, 0.55, 0.55));
@@ -210,7 +211,7 @@ public class NearbyContainerViewer {
         current = container;
         Vec3i targetPos = containers.get(current);
         client.player.lookAt(EntityAnchorArgument.Anchor.EYES, Vec3.atCenterOf(targetPos));
-        client.gameMode.useItemOn(client.player, InteractionHand.MAIN_HAND, new BlockHitResult(Vec3.atCenterOf(targetPos), Direction.EAST, new BlockPos(targetPos), false));
+        client.gameMode.useItemOn(client.player, InteractionHand.MAIN_HAND, new BlockHitResult(Vec3.atCenterOf(targetPos), Direction.EAST, new BlockPos(targetPos.getX(), targetPos.getY(), targetPos.getZ()), false));
     }
 
 }

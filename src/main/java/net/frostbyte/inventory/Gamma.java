@@ -16,7 +16,7 @@ public class Gamma {
     public static boolean enabled;
     public static KeyMapping gammaKey;
     public void setKeyMappings() {
-        KeyMappingHelper.registerKeyMapping(gammaKey = new KeyMapping("key.toggle_gamma", InputConstants.Type.KEYSYM, InputConstants.KEY_G, ImprovedInventory.KEYBIND_CATEGORY));
+        KeyMappingHelper.registerKeyMapping(gammaKey = new KeyMapping("key.toggle_gamma", InputConstants.Type.KEYBOARD, InputConstants.KEY_G, ImprovedInventory.KEYBIND_CATEGORY));
     }
 
     public static void gammaHandler(Minecraft client) {

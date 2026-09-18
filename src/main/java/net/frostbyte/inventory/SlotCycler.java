@@ -25,8 +25,8 @@ public class SlotCycler implements HudElement {
     final Identifier PREVIEW_SLOTS = Identifier.fromNamespaceAndPath(ImprovedInventory.MOD_ID, "textures/extra_slots.png");
 
     public void setKeyMappings() {
-        KeyMappingHelper.registerKeyMapping(cycleUpKey = new KeyMapping("key.cycle_up", InputConstants.Type.KEYSYM, InputConstants.KEY_J, ImprovedInventory.KEYBIND_CATEGORY));
-        KeyMappingHelper.registerKeyMapping(cycleDownKey = new KeyMapping("key.cycle_down", InputConstants.Type.KEYSYM, InputConstants.KEY_H, ImprovedInventory.KEYBIND_CATEGORY));
+        KeyMappingHelper.registerKeyMapping(cycleUpKey = new KeyMapping("key.cycle_up", InputConstants.Type.KEYBOARD, InputConstants.KEY_J, ImprovedInventory.KEYBIND_CATEGORY));
+        KeyMappingHelper.registerKeyMapping(cycleDownKey = new KeyMapping("key.cycle_down", InputConstants.Type.KEYBOARD, InputConstants.KEY_H, ImprovedInventory.KEYBIND_CATEGORY));
     }
 
     public static void slotCycleHandler(Minecraft client) {

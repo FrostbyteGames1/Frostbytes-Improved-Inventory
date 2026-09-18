@@ -10,7 +10,7 @@
     "ClientBundleTooltipMixin",
     "DebugScreenDislayer_DebugScreenOverlayMixin",
     "HudMixin",
-    "HeldItemRendererMixin",
+    "FirstPersonHandsAndItemsMixin",
     "ItemMixin",
     "KeyMappingMixin",
     "LivingEntityMixin",
@@ -27,7 +27,6 @@
   "client": [
     "DebugOptionsScreen_OptionEntryMixin",
     "DebugScreenEntryListMixin",
-    "DebugScreenOverlayMixin",
-    "WindowMixin"
+    "DebugScreenOverlayMixin"
   ]
 }

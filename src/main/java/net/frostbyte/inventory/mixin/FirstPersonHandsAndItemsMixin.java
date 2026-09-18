@@ -2,37 +2,18 @@ package net.frostbyte.inventory.mixin;
 
 import net.frostbyte.inventory.config.ImprovedInventoryConfig;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.FirstPersonHandsAndItems;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ItemInHandRenderer.class)
-public abstract class HeldItemRendererMixin {
-    @Shadow
-    @Final
-    private Minecraft minecraft;
-
-    @Shadow
-    private float oMainHandHeight;
-
-    @Shadow
-    private float mainHandHeight;
-
-    @Shadow
-    private float oOffHandHeight;
-
-    @Shadow
-    private float offHandHeight;
-
-    @Shadow
-    protected abstract boolean shouldInstantlyReplaceVisibleItem(ItemStack currentlyVisibleItem, ItemStack expectedItem);
+@Mixin(FirstPersonHandsAndItems.class)
+public abstract class FirstPersonHandsAndItemsMixin {
 
     @Shadow
     private ItemStack mainHandItem;
@@ -40,19 +21,35 @@ public abstract class HeldItemRendererMixin {
     @Shadow
     private ItemStack offHandItem;
 
+    @Shadow
+    private float mainHandHeight;
+
+    @Shadow
+    private float oMainHandHeight;
+
+    @Shadow
+    private float offHandHeight;
+
+    @Shadow
+    private float oOffHandHeight;
+
+    @Shadow
+    protected abstract boolean shouldInstantlyReplaceVisibleItem(final ItemStack currentlyVisibleItem, final ItemStack expectedItem, final LocalPlayer player);
+
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     public void tick(CallbackInfo ci) {
+        Minecraft minecraft = Minecraft.getInstance();
         if (ImprovedInventoryConfig.heldItemsVisibleInBoat && minecraft.player != null) {
             this.oMainHandHeight = this.mainHandHeight;
             this.oOffHandHeight = this.offHandHeight;
-            LocalPlayer player = this.minecraft.player;
+            LocalPlayer player = minecraft.player;
             ItemStack nextMainHand = player.getMainHandItem();
             ItemStack nextOffHand = player.getOffhandItem();
-            if (this.shouldInstantlyReplaceVisibleItem(this.mainHandItem, nextMainHand)) {
+            if (this.shouldInstantlyReplaceVisibleItem(this.mainHandItem, nextMainHand, minecraft.player)) {
                 this.mainHandItem = nextMainHand;
             }
 
-            if (this.shouldInstantlyReplaceVisibleItem(this.offHandItem, nextOffHand)) {
+            if (this.shouldInstantlyReplaceVisibleItem(this.offHandItem, nextOffHand, minecraft.player)) {
                 this.offHandItem = nextOffHand;
             }
 

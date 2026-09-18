@@ -37,7 +37,7 @@ public abstract class MouseHandlerMixin {
                             KeyMapping.setAll();
                         }
                         this.mouseGrabbed = true;
-                        InputConstants.grabOrReleaseMouse(this.minecraft.getWindow(), 212995, this.xpos, this.ypos);
+                        InputConstants.grabMouse(this.minecraft.getWindow(), this.xpos, this.ypos);
                         minecraft.gui.setScreen(null);
                         minecraft.missTime = 10000;
                         this.ignoreFirstMove = true;
@@ -54,7 +54,7 @@ public abstract class MouseHandlerMixin {
             if (ImprovedInventoryConfig.containerTab && ImprovedInventoryConfig.containerTabFreeCursor) {
                 if (this.mouseGrabbed) {
                     this.mouseGrabbed = false;
-                    InputConstants.grabOrReleaseMouse(this.minecraft.getWindow(), 212993, this.xpos, this.ypos);
+                    InputConstants.releaseMouse(this.minecraft.getWindow(), this.xpos, this.ypos);
                 }
                 ci.cancel();
             }
@@ -66,7 +66,7 @@ public abstract class MouseHandlerMixin {
         if (handle == minecraft.getWindow().handle()) {
             if (Zoom.zoomKey.isDown()) {
                 if (ImprovedInventoryConfig.zoomScrollRequiresControl) {
-                    if (InputConstants.isKeyDown(minecraft.getWindow(), InputConstants.KEY_LCONTROL) || InputConstants.isKeyDown(minecraft.getWindow(), InputConstants.KEY_RCONTROL)) {
+                    if (InputConstants.isKeyDown(InputConstants.KEY_LCONTROL) || InputConstants.isKeyDown(InputConstants.KEY_RCONTROL)) {
                         Zoom.scrollAmount = Mth.clamp(Zoom.scrollAmount + Mth.sign(yoffset), 0, ImprovedInventoryConfig.zoomFOV - 1);
                         ci.cancel();
                     }
@@ -76,7 +76,7 @@ public abstract class MouseHandlerMixin {
                 }
             }
             if (ImprovedInventoryConfig.slotCycleAltScroll) {
-                if (InputConstants.isKeyDown(minecraft.getWindow(), InputConstants.KEY_LALT) || InputConstants.isKeyDown(minecraft.getWindow(), InputConstants.KEY_RALT)) {
+                if (InputConstants.isKeyDown(InputConstants.KEY_LALT) || InputConstants.isKeyDown(InputConstants.KEY_RALT)) {
                     if (Mth.sign(yoffset) > 0) {
                         SlotCycler.cycleUp(minecraft, minecraft.player);
                         ci.cancel();
