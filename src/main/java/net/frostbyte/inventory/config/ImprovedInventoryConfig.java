@@ -25,6 +25,7 @@ public class ImprovedInventoryConfig {
     public static final Path configFile = FabricLoader.getInstance().getConfigDir().resolve("frostbyte/improved-inventory.json");
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     public static boolean duraDisplay = true;
+    public static boolean duraDisplayOrientation = false;
     public static boolean duraDisplayHorizontalAnchor = false;
     public static boolean duraDisplayVerticalAnchor = false;
     public static int duraDisplayOffsetX = 0;
@@ -207,6 +208,12 @@ public class ImprovedInventoryConfig {
                         .binding(true, () -> duraDisplay, newVal -> duraDisplay = newVal)
                         .controller(TickBoxControllerBuilder::create)
                         .build())
+                    .option(Option.<Boolean>createBuilder()
+                            .name(Component.literal("Durability Display Orientation"))
+                            .description(OptionDescription.of(Component.literal("Whether the armor durability slots are vertical or horizontal on the screen")))
+                            .binding(false, () -> duraDisplayOrientation, newVal -> duraDisplayOrientation = newVal)
+                            .controller(ImprovedInventoryConfig::horizontalVerticalController)
+                            .build())
                     .option(Option.<Boolean>createBuilder()
                         .name(Component.literal("Durability Display Horizontal Anchor"))
                         .description(OptionDescription.of(Component.literal("The side of the screen to display the armor durability on")))
@@ -527,6 +534,11 @@ public class ImprovedInventoryConfig {
             .formatValue(value -> value ? Component.literal("LEFT") : Component.literal("RIGHT"));
     }
 
+    private static BooleanControllerBuilder horizontalVerticalController(Option<Boolean> option) {
+        return BooleanControllerBuilder.create(option)
+                .formatValue(value -> value ? Component.literal("HORIZONTAL") : Component.literal("VERTICAL"));
+    }
+
     private static BooleanControllerBuilder topBottomController(Option<Boolean> option) {
         return BooleanControllerBuilder.create(option)
             .formatValue(value -> value ? Component.literal("TOP") : Component.literal("BOTTOM"));
@@ -567,6 +579,7 @@ public class ImprovedInventoryConfig {
             Files.deleteIfExists(configFile);
             JsonObject json = new JsonObject();
             json.addProperty("duraDisplay", duraDisplay);
+            json.addProperty("duraDisplayOrientation", duraDisplayOrientation ? "HORIZONTAL" : "VERTICAL");
             json.addProperty("duraDisplayHorizontalAnchor", duraDisplayHorizontalAnchor ? "LEFT" : "RIGHT");
             json.addProperty("duraDisplayVerticalAnchor", duraDisplayVerticalAnchor ? "TOP" : "BOTTOM");
             json.addProperty("duraDisplayOffsetX", duraDisplayOffsetX);
@@ -628,6 +641,9 @@ public class ImprovedInventoryConfig {
             JsonObject json = gson.fromJson(Files.readString(configFile), JsonObject.class);
             if (json.has("duraDisplay")) {
                 duraDisplay = json.getAsJsonPrimitive("duraDisplay").getAsBoolean();
+            }
+            if (json.has("duraDisplayOrientation")) {
+                duraDisplayOrientation = json.getAsJsonPrimitive("duraDisplayOrientation").getAsString().equalsIgnoreCase("HORIZONTAL");
             }
             if (json.has("duraDisplayHorizontalAnchor")) {
                 duraDisplayHorizontalAnchor = json.getAsJsonPrimitive("duraDisplayHorizontalAnchor").getAsString().equalsIgnoreCase("LEFT");

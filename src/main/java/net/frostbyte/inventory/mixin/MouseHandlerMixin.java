@@ -9,11 +9,14 @@ import net.frostbyte.inventory.config.ImprovedInventoryConfig;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.InputQuirks;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -27,36 +30,34 @@ public abstract class MouseHandlerMixin {
     @Shadow private boolean mouseGrabbed;
     @Shadow private boolean ignoreFirstMove;
 
-    @Inject(method = "grabMouse", at = @At("HEAD"), cancellable = true)
-    public void lockCursor(CallbackInfo ci) {
-        if (!FabricLoader.getInstance().isModLoaded("itemswapper") || !(minecraft.gui.screen() instanceof ItemSwapperUIAbstractInput)) {
-            if (ImprovedInventoryConfig.containerTab && ImprovedInventoryConfig.containerTabFreeCursor) {
-                if (minecraft.isWindowActive()) {
-                    if (!this.mouseGrabbed) {
-                        if (InputQuirks.RESTORE_KEY_STATE_AFTER_MOUSE_GRAB) {
-                            KeyMapping.setAll();
-                        }
-                        this.mouseGrabbed = true;
-                        InputConstants.grabMouse(this.minecraft.getWindow(), this.xpos, this.ypos);
-                        minecraft.gui.setScreen(null);
-                        minecraft.missTime = 10000;
-                        this.ignoreFirstMove = true;
+    @Unique private double prevxpos;
+    @Unique private double prevypos;
+
+    @Inject(method = "grabMouse", at = @At("HEAD"))
+    public void grabMouse(CallbackInfo ci) {
+        if (ImprovedInventoryConfig.containerTab && ImprovedInventoryConfig.containerTabFreeCursor) {
+            if (this.minecraft.isWindowActive()) {
+                if (!this.mouseGrabbed) {
+                    if (InputQuirks.RESTORE_KEY_STATE_AFTER_MOUSE_GRAB) {
+                        KeyMapping.setAll();
                     }
+                    this.prevxpos = this.xpos;
+                    this.prevypos = this.ypos;
                 }
-                ci.cancel();
             }
         }
     }
 
-    @Inject(method = "releaseMouse", at = @At("HEAD"), cancellable = true)
-    public void unlockCursor(CallbackInfo ci) {
+    @Inject(method = "releaseMouse", at = @At("HEAD"))
+    public void releaseMouse(CallbackInfo ci) {
         if (!FabricLoader.getInstance().isModLoaded("itemswapper") || !(minecraft.gui.screen() instanceof ItemSwapperUIAbstractInput)) {
             if (ImprovedInventoryConfig.containerTab && ImprovedInventoryConfig.containerTabFreeCursor) {
                 if (this.mouseGrabbed) {
                     this.mouseGrabbed = false;
+                    this.xpos = prevxpos;
+                    this.ypos = prevypos;
                     InputConstants.releaseMouse(this.minecraft.getWindow(), this.xpos, this.ypos);
                 }
-                ci.cancel();
             }
         }
     }

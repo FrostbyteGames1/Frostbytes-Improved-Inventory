@@ -30,11 +30,11 @@ public class SlotCycler implements HudElement {
     }
 
     public static void slotCycleHandler(Minecraft client) {
-        if (SlotCycler.cycleUpKey.isDown()){
+        if (SlotCycler.cycleUpKey.consumeClick()){
             SlotCycler.cycleUp(client, client.player);
             
         }
-        if (SlotCycler.cycleDownKey.isDown()){
+        if (SlotCycler.cycleDownKey.consumeClick()){
             SlotCycler.cycleDown(client, client.player);
             
         }

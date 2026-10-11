@@ -12,6 +12,7 @@ import net.minecraft.client.gui.components.PlayerFaceExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.Avatar;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.OwnableEntity;
@@ -19,7 +20,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.equine.AbstractHorse;
 import net.minecraft.world.entity.animal.equine.Llama;
 import net.minecraft.world.entity.item.FallingBlockEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -90,7 +90,6 @@ public class WAILA implements HudElement {
         Items.NETHERITE_SWORD
     ));
 
-    @SuppressWarnings("DataFlowIssue")
     @Override
     public void extractRenderState(@NonNull GuiGraphicsExtractor graphics, @NonNull DeltaTracker deltaTracker) {
         Minecraft client = Minecraft.getInstance();
@@ -122,9 +121,9 @@ public class WAILA implements HudElement {
                     }
                     drawBox(graphics, textWidth);
                     if (entity instanceof LivingEntity livingEntity) {
-                        if (entity instanceof Player player && client.getConnection() != null) {
-                            PlayerFaceExtractor.extractRenderState(graphics, client.getConnection().getPlayerInfo(player.getUUID()).getSkin(), x + 8, x + 8, 8, Color.WHITE.getRGB());
-                        } else {
+                        if (entity instanceof Avatar avatar) {
+                            PlayerFaceExtractor.extractRenderState(graphics, avatar.getProfile(), x + 8, y + 8, 16);
+                        }else {
                             graphics.item(livingEntity.isPickable() && livingEntity.getPickResult() != null ? livingEntity.getPickResult() : ItemStack.EMPTY, x + 8, y + 8);
                         }
                         graphics.text(client.font, name, x + 30, y + 8, Color.WHITE.getRGB());

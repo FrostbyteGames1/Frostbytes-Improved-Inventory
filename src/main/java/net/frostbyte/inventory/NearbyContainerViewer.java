@@ -62,7 +62,7 @@ public class NearbyContainerViewer {
                 return;
             }
             InputConstants.Key key = KeyMappingHelper.getBoundKeyOf(containerKey);
-            if (InputUtil.isKeyDown(key)) {
+            if (InputUtil.isKeyDown(key) && tabButtonCooldown == 0) {
                 if (InputConstants.isKeyDown(KeyEvent.VK_SHIFT)) {
                     current--;
                     if (current < 0) {
@@ -75,7 +75,7 @@ public class NearbyContainerViewer {
                     }
                 }
                 openContainer(current);
-                tabButtonCooldown = 6;
+                tabButtonCooldown = 20;
             }
         } else {
             updateContainerList();

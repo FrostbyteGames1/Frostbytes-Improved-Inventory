@@ -92,7 +92,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     @Inject(method = "extractTooltip", at = @At("HEAD"), cancellable = true)
     protected void drawMouseoverTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY, CallbackInfo ci) {
         if (hoveredSlot != null && hoveredSlot.hasItem() ) {
-            if (ImprovedInventoryConfig.shulkerBoxTooltip && hoveredSlot.getItem().getComponents().has(DataComponents.CONTAINER)) {
+            if (ImprovedInventoryConfig.shulkerBoxTooltip && hoveredSlot.getItem().getComponents().has(DataComponents.CONTAINER) && hoveredSlot.getItem().getComponents().get(DataComponents.CONTAINER).size() > 0) {
                 int color = -1;
                 if (ImprovedInventoryConfig.shulkerBoxTooltipColors) {
                     if (hoveredSlot.getItem().getItem() == Items.DYED_SHULKER_BOX.white()) {

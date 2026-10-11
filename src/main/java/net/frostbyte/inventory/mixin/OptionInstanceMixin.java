@@ -49,7 +49,7 @@ public abstract class OptionInstanceMixin<T> {
             }
             ci.cancel();
         }
-        if (Zoom.zoomKey.isDown() && this.caption.equals(Component.translatable("options.fov"))) {
+        if (Minecraft.getInstance().level != null && Zoom.zoomKey.isDown() && this.caption.equals(Component.translatable("options.fov"))) {
             T newValue = validateFov(value).orElseGet(() -> this.initialValue);
             if (!Minecraft.getInstance().isRunning()) {
                 this.value = newValue;

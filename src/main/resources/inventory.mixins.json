@@ -18,8 +18,7 @@
     "MobEffectInstanceMixin",
     "MouseHandlerMixin",
     "OptionInstanceMixin",
-    "ScreenMixin",
-    "TooltipDisplayMixin"
+    "ScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1
